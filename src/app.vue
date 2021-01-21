@@ -12,7 +12,9 @@
       stripe
       border
       :pagination="{
-        layout: 'prev, pager, next',
+        pageSizes: [10, 20, 50, 70],
+        pageSize: 10,
+        layout: 'prev, pager, next, sizes, jumper, ->, total',
         background: true,
         small: true,
       }"
@@ -28,7 +30,7 @@
         </el-button>
         <el-button type="danger" @lick="this.delHandle(row)">删除</el-button>
       </template>
-      <template #handleTitle="column">
+      <template #handleTitle="{ column, $index }">
         <el-input size="mini" placeholder="输入关键字搜索" />
         <!-- {{column}} -->
       </template>
@@ -61,9 +63,6 @@
             label: 'ID',
             prop: 'id',
             width: '80px',
-            formatter: (row, column, value) => {
-              console.log(value, 1)
-            },
           },
           { label: '存储卷名', prop: 'name', type: 'copy' },
           { label: '总容量', prop: 'storage', fn: val => `${val}G` },
@@ -84,8 +83,8 @@
               customRender: 'handle',
               customTitle: 'handleTitle',
             },
-            // customRender: (val, row, column, index, h) => h('el-button', '查看详情')
-            // customRender: (val, row, column, index) => {
+            // customRender: ({cellValue, row, column, $index, h}) => h('el-button', '查看详情')
+            // customRender: ({cellValue, row, column, $index}) => {
             //   return (<div>
             //     <el-button type="primary" onClick={() => this.detailHandle(row)}>查看详情</el-button>
             //     <el-button type="danger" onClick={() => this.delHandle(row)}>删除</el-button>
