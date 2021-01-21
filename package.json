@@ -1,0 +1,73 @@
+{
+  "name": "@ame/el-table-plus",
+  "version": "1.0.0",
+  "main": "dist/el-table-plus.common.js",
+  "author": "ame",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lq782655835/el-table-plus"
+  },
+  "keywords": [
+    "vue",
+    "element",
+    "element-ui",
+    "components"
+  ],
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build --target lib --name el-table-plus ./src/components/index.js",
+    "release": "standard-version -i CHANGELOG.md -r patch",
+    "dev:docs": "vuepress dev docs",
+    "build:docs": "vuepress build docs",
+    "release:docs": "npm run build:docs && gh-pages -d docs/.vuepress/dist",
+    "lint": "vue-cli-service lint",
+    "format": "prettier --write './**/*.{js,ts,vue,json}'",
+    "prepublishOnly": "npm run build && npm run release && git push"
+  },
+  "dependencies": {
+    "core-js": "^2.6.5",
+    "lodash": "^4.17.15",
+    "standard-version": "^8.0.0",
+    "vue": "^2.6.10"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.0.3",
+    "@vue/cli-plugin-eslint": "^3.0.3",
+    "@vue/cli-service": "^3.0.3",
+    "babel-eslint": "^10.0.1",
+    "chalk": "^3.0.0",
+    "element-ui": "^2.13.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "gh-pages": "^2.1.1",
+    "prettier": "^1.19.1",
+    "shelljs": "^0.8.3",
+    "vue-template-compiler": "^2.6.10",
+    "vuepress": "^1.4.1",
+    "vuepress-plugin-leo-demo-block": "^0.1.1"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "eslint:recommended"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}
