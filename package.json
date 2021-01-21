@@ -26,10 +26,10 @@
     "prepublishOnly": "npm run build && npm run release && git push"
   },
   "dependencies": {
-    "core-js": "^2.6.5",
-    "lodash": "^4.17.15",
-    "standard-version": "^8.0.0",
-    "vue": "^2.6.10"
+    "core-js": "^2.6.12",
+    "lodash": "^4.17.20",
+    "standard-version": "^8.0.2",
+    "vue": "^2.6.12"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.3",
@@ -37,14 +37,14 @@
     "@vue/cli-service": "^3.0.3",
     "babel-eslint": "^10.0.1",
     "chalk": "^3.0.0",
-    "element-ui": "^2.13.0",
+    "element-ui": "^2.15.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "gh-pages": "^2.1.1",
     "prettier": "^1.19.1",
-    "shelljs": "^0.8.3",
-    "vue-template-compiler": "^2.6.10",
-    "vuepress": "^1.4.1",
+    "shelljs": "^0.8.4",
+    "vue-template-compiler": "^2.6.12",
+    "vuepress": "^1.8.0",
     "vuepress-plugin-leo-demo-block": "^0.1.1"
   },
   "eslintConfig": {

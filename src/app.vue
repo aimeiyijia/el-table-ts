@@ -32,7 +32,7 @@
       </template>
       <template #handleTitle="{ column, $index }">
         <el-input size="mini" placeholder="输入关键字搜索" />
-        <!-- {{column}} -->
+        {{ $index }}
       </template>
     </el-table-plus>
   </div>
@@ -51,7 +51,7 @@
           {
             label: '',
             type: 'expand',
-            customRender: (val, row, column) => {
+            customRender: ({ cellValue, row, column }) => {
               return (
                 <div>
                   {row.name}、{row.storage}
