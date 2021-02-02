@@ -4,10 +4,6 @@
   "main": "dist/el-table-plus.common.js",
   "author": "ame",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/lq782655835/el-table-plus"
-  },
   "keywords": [
     "vue",
     "element",
@@ -17,21 +13,18 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --target lib --name el-table-plus ./src/components/index.js",
-    "release": "standard-version -i CHANGELOG.md -r patch",
-    "dev:docs": "vuepress dev docs",
-    "build:docs": "vuepress build docs",
-    "release:docs": "npm run build:docs && gh-pages -d docs/.vuepress/dist",
-    "lint": "vue-cli-service lint",
-    "format": "prettier --write './**/*.{js,ts,vue,json}'",
-    "prepublishOnly": "npm run build && npm run release && git push"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@babel/runtime": "^7.12.5",
     "core-js": "^2.6.12",
     "lodash": "^4.17.20",
     "standard-version": "^8.0.2",
     "vue": "^2.6.12"
   },
   "devDependencies": {
+    "@babel/plugin-transform-modules-umd": "^7.12.1",
+    "@babel/plugin-transform-runtime": "^7.12.10",
     "@vue/cli-plugin-babel": "^3.0.3",
     "@vue/cli-plugin-eslint": "^3.0.3",
     "@vue/cli-service": "^3.0.3",
@@ -43,9 +36,7 @@
     "gh-pages": "^2.1.1",
     "prettier": "^1.19.1",
     "shelljs": "^0.8.4",
-    "vue-template-compiler": "^2.6.12",
-    "vuepress": "^1.8.0",
-    "vuepress-plugin-leo-demo-block": "^0.1.1"
+    "vue-template-compiler": "^2.6.12"
   },
   "eslintConfig": {
     "root": true,
