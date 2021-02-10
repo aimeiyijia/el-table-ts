@@ -1,7 +1,7 @@
 {
-  "name": "@ame/el-table-plus",
+  "name": "@ame/el-table-ts",
   "version": "1.0.0",
-  "main": "dist/el-table-plus.common.js",
+  "main": "dist/el-table-ts.common.js",
   "author": "ame",
   "license": "MIT",
   "keywords": [
@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target lib --name el-table-plus ./src/components/index.js",
+    "build": "vue-cli-service build --target lib --name el-table-ts ./src/components/index.js",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

@@ -1,10 +1,10 @@
-import component from './el-table-plus.jsx'
+import component from './el-table-ts.jsx'
 
 function install(Vue, options = {}) {
   if (install.installed) return
   install.installed = true
 
-  Vue.component('el-table-plus', component)
+  Vue.component('el-table-ts', component)
   Vue.prototype.$ELEMENT_PLUS = options
 }
 component.install = install

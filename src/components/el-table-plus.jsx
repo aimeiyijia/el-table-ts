@@ -1,7 +1,7 @@
 import omit from 'lodash/omit'
 
 export default {
-  name: 'el-table-plus',
+  name: 'el-table-ts',
   props: {
     loading: { type: Boolean }, // 动效loading
     data: { type: Array, default: () => [] }, // 列表数据
