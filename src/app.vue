@@ -1,10 +1,6 @@
 <template>
   <div id="app">
-    <!-- <el-table-plus
-      :data="list"
-      :columns="columns"
-    /> -->
-    <el-table-plus
+    <el-table-ts
       :data="list"
       :columns="columns"
       @row-click="rowClickHandle"
@@ -32,9 +28,10 @@
       </template>
       <template #handleTitle="{ column, $index }">
         <el-input size="mini" placeholder="输入关键字搜索" />
+        {{ column }}
         {{ $index }}
       </template>
-    </el-table-plus>
+    </el-table-ts>
   </div>
 </template>
 

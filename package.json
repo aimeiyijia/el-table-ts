@@ -1,42 +1,76 @@
 {
-  "name": "@ame/el-table-ts",
+  "name": "el-lists",
   "version": "1.0.0",
-  "main": "dist/el-table-ts.common.js",
-  "author": "ame",
-  "license": "MIT",
-  "keywords": [
-    "vue",
-    "element",
-    "element-ui",
-    "components"
-  ],
+  "main": "dist/el-lists.common.js",
+  "typings": "types/index.d.ts",
+  "private": true,
+  "author": "broke",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --target lib --name el-table-ts ./src/components/index.js",
-    "lint": "vue-cli-service lint"
+    "test:unit": "jest --clearCache && vue-cli-service test:unit",
+    "lint": "vue-cli-service lint",
+    "build": "vue-cli-service build --target lib --name el-lists ./src/components/index.js"
   },
   "dependencies": {
-    "@babel/runtime": "^7.12.5",
-    "core-js": "^2.6.12",
+    "codemirror": "^5.58.2",
+    "core-js": "^3.7.0",
+    "cors": "^2.8.5",
+    "element-ui": "^2.14.0",
     "lodash": "^4.17.20",
-    "standard-version": "^8.0.2",
-    "vue": "^2.6.12"
+    "normalize.css": "^8.0.1",
+    "script-loader": "^0.7.2",
+    "vue": "^2.6.12",
+    "vue-class-component": "^7.2.6",
+    "vue-property-decorator": "^9.0.2"
   },
   "devDependencies": {
-    "@babel/plugin-transform-modules-umd": "^7.12.1",
-    "@babel/plugin-transform-runtime": "^7.12.10",
-    "@vue/cli-plugin-babel": "^3.0.3",
-    "@vue/cli-plugin-eslint": "^3.0.3",
-    "@vue/cli-service": "^3.0.3",
-    "babel-eslint": "^10.0.1",
-    "chalk": "^3.0.0",
-    "element-ui": "^2.15.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
-    "gh-pages": "^2.1.1",
-    "prettier": "^1.19.1",
-    "shelljs": "^0.8.4",
-    "vue-template-compiler": "^2.6.12"
+    "@types/compression": "^1.7.0",
+    "@types/cors": "^2.8.8",
+    "@types/express": "^4.17.8",
+    "@types/jest": "^26.0.15",
+    "@types/lodash": "^4.14.168",
+    "@types/morgan": "^1.9.2",
+    "@types/node": "^14.14.6",
+    "@types/webpack-env": "^1.15.3",
+    "@typescript-eslint/eslint-plugin": "^4.6.1",
+    "@typescript-eslint/parser": "^4.6.1",
+    "@vue/cli-plugin-babel": "^4.5.8",
+    "@vue/cli-plugin-eslint": "^4.5.8",
+    "@vue/cli-plugin-typescript": "^4.5.8",
+    "@vue/cli-plugin-unit-jest": "^4.5.8",
+    "@vue/cli-service": "^4.5.8",
+    "@vue/eslint-config-standard": "^5.1.2",
+    "@vue/eslint-config-typescript": "^7.0.0",
+    "@vue/test-utils": "^1.1.1",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.1.0",
+    "eslint": "^7.13.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.2",
+    "eslint-plugin-vue": "^7.1.0",
+    "lint-staged": "^10.5.1",
+    "sass": "^1.29.0",
+    "sass-loader": "^10.0.5",
+    "ts-jest": "^26.4.3",
+    "ts-node-dev": "^1.0.0",
+    "typescript": "3.8.3",
+    "vue-cli-plugin-element": "^1.0.1",
+    "vue-template-compiler": "^2.6.12",
+    "webpack": "^4.4.2"
+  },
+  "keywords": [
+    "vue",
+    "typescript",
+    "el-table-ts",
+    "template",
+    "element-ui"
+  ],
+  "lint-staged": {
+    "*.{js,jsx,vue,ts,tsx}": [
+      "vue-cli-service lint"
+    ]
   },
   "eslintConfig": {
     "root": true,
@@ -47,18 +81,9 @@
       "plugin:vue/essential",
       "eslint:recommended"
     ],
-    "rules": {},
     "parserOptions": {
       "parser": "babel-eslint"
-    }
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions"
-  ]
+    },
+    "rules": {}
+  }
 }

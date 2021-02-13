@@ -1,13 +1,19 @@
 import Vue from 'vue'
-import App from './app.vue'
+
+import 'normalize.css'
 import ElementUI from 'element-ui'
+
 import 'element-ui/lib/theme-chalk/index.css'
+
+import ElTableTs from './components/index.js'
+
+import App from '@/App.vue'
+
 Vue.use(ElementUI)
-import ElTablePlus from '../dist/el-table-plus.common.js'
-Vue.use(ElTablePlus)
+Vue.use(ElTableTs)
 
 Vue.config.productionTip = false
 
 new Vue({
-  render: h => h(App),
+  render: h => h(App)
 }).$mount('#app')
