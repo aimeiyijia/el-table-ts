@@ -137,7 +137,7 @@ export default class ElTableTs extends Vue {
         })
 
     return (
-      <div class="el-table-plus" v-loading={this.loading}>
+      <div class="el-table-ts" v-loading={this.loading}>
         <el-table
           ref="table"
           data={this.data}
