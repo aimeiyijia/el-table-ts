@@ -1,16 +1,17 @@
 module.exports = {
-  parser: '@typescript-eslint/parser',
+  parser: 'vue-eslint-parser',
   plugins: ['@typescript-eslint', 'prettier'],
   root: true,
   env: {
     node: true,
   },
   extends: [
+    '@vue/typescript/recommended',
     'plugin:vue/essential',
     '@vue/standard',
-    '@vue/typescript/recommended',
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
+    'prettier',
   ],
   parserOptions: {
     ecmaVersion: 2020,

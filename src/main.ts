@@ -7,7 +7,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 import ElTableTs from './components/index.js'
 
-import App from '@/App.vue'
+import App from './app.vue'
 
 Vue.use(ElementUI)
 Vue.use(ElTableTs)
@@ -15,5 +15,5 @@ Vue.use(ElTableTs)
 Vue.config.productionTip = false
 
 new Vue({
-  render: h => h(App)
+  render: h => h(App),
 }).$mount('#app')

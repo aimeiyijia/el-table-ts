@@ -52,12 +52,12 @@ export default {
           },
           customTitle: ({ $index }) => {
             return $index + 1
-          }
+          },
         },
         {
           label: 'ID',
           prop: 'id',
-          width: '80px'
+          width: '80px',
         },
         { label: '存储卷名', prop: 'name', type: 'copy' },
         { label: '总容量', prop: 'storage', fn: val => `${val}G` },
@@ -66,7 +66,7 @@ export default {
           prop: 'member.userId',
           type: 'el-tag',
           sortable: 'custom',
-          'sort-orders': ['ascending', 'descending']
+          'sort-orders': ['ascending', 'descending'],
         },
         { label: '邮箱', prop: 'member.email' },
         { label: '创建时间', prop: 'gmtCreate' },
@@ -76,8 +76,8 @@ export default {
           prop: 'handle',
           scopedSlots: {
             customRender: 'handle',
-            customTitle: 'handleTitle'
-          }
+            customTitle: 'handleTitle',
+          },
           // customRender: ({cellValue, row, column, $index, h}) => h('el-button', '查看详情')
           // customRender: ({cellValue, row, column, $index}) => {
           //   return (<div>
@@ -85,8 +85,8 @@ export default {
           //     <el-button type="danger" onClick={() => this.delHandle(row)}>删除</el-button>
           //   </div>)
           // }
-        }
-      ]
+        },
+      ],
     }
   },
   methods: {
@@ -113,7 +113,7 @@ export default {
     formatter(row, column, cellValue, index) {
       console.log(row, column, cellValue, index)
       return 111
-    }
-  }
+    },
+  },
 }
 </script>
