@@ -60,7 +60,7 @@ export default {
           width: '80px',
         },
         { label: '存储卷名', prop: 'name', type: 'copy' },
-        { label: '总容量', prop: 'storage', fn: val => `${val}G` },
+        { label: '总容量', prop: 'storage' },
         {
           label: '创建人',
           prop: 'member.userId',

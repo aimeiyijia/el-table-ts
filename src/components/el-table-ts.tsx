@@ -83,7 +83,7 @@ export default class ElTableTs extends Vue {
           const options = Object.assign({ scopedSlots: {}, prop: '' }, c)
 
           const scopedSlots = {
-            default: ({ row, column: elColumn, $index }: { row: any, column: ElTableColumn, $index: number }) => {
+            default: ({ row, column: elColumn, $index, store, _self }: { row: any, column: ElTableColumn, $index: number, store: any, _self: any }) => {
               const column: any = Object.assign({}, options, elColumn)
               // 支持链式. 如：xxx.xxx
               const cellValue = getCellValue(column, row)
@@ -98,29 +98,38 @@ export default class ElTableTs extends Vue {
                   row,
                   column,
                   $index,
-                  h
+                  h,
+                  store,
+                  _self
                 })
               }
               // 兼容element-ui formatter属性 因为formatter是格式化cellValue的，所以需要拦截下
               if (column.formatter) {
                 return column.formatter({
+                  cellValue,
                   row,
                   column,
-                  cellValue,
-                  $index
+                  $index,
+                  store,
+                  _self
                 })
               }
 
               return cellValue
             },
-            header: ({ column: elColumn, $index }: { column: ElTableColumn, $index: number }) => {
+            header: ({ column: elColumn, $index, store, _self }: { column: ElTableColumn, $index: number, store: any, _self: any }) => {
               const column: any = Object.assign({}, options, elColumn)
 
               column.customTitle =
                 column.customTitle ||
                 this.$scopedSlots[column.scopedSlots.customTitle]
               if (column.customTitle) {
-                return column.customTitle({ column, $index })
+                return column.customTitle({
+                  column,
+                  $index,
+                  store,
+                  _self
+                })
               }
               return column.label
             }
