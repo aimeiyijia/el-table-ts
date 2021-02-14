@@ -3,6 +3,7 @@
     <el-table-ts
       :data="list"
       :columns="columns"
+      height="250"
       @row-click="rowClickHandle"
       @sort-change="sortChangeHandle"
       stripe
@@ -16,11 +17,12 @@
       }"
       :total="100"
       @page-change="pageChangeHandle"
+      @scroll="scroll"
     >
-      <template #handle="{defaultValue, row, column}">
+      <template #handle="{cellValue, row, column}">
         <el-button
           type="primary"
-          @click="detailHandle({defaultValue, row, column})"
+          @click="detailHandle({cellValue, row, column})"
         >
           查看详情
         </el-button>
@@ -90,7 +92,7 @@ export default {
     }
   },
   methods: {
-    detailHandle(row) {
+    detailHandle({row}) {
       console.log(row)
     },
     delHandle({ name }) {
@@ -105,6 +107,10 @@ export default {
       console.log(o)
     },
     pageChangeHandle(e) {
+      console.log(e)
+      // console.log(pageSize, currentPage)
+    },
+    scroll(e) {
       console.log(e)
       // console.log(pageSize, currentPage)
     },

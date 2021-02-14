@@ -8,7 +8,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "test:unit": "jest --clearCache && vue-cli-service test:unit",
-    "build": "vue-cli-service build --target lib --name el-lists ./src/components/index.js"
+    "build": "vue-cli-service build --target lib --name el-table-ts ./src/components/index.js"
   },
   "dependencies": {
     "codemirror": "^5.58.2",

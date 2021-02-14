@@ -2,16 +2,7 @@ import Vue, { VNode, CreateElement } from 'vue'
 import { Component, Prop, Emit } from 'vue-property-decorator'
 import omit from 'lodash/omit'
 import keys from 'lodash/keys'
-import { Pagination as ElPagination, Table as ElTable, TableColumn as ElTableColumn } from 'element-ui'
-
-interface ICustomColumn {
-  customRender: any
-  customTitle: any
-  formatter: any
-  scopedSlots: {
-    customRender: any
-  }
-}
+import { Pagination as ElPagination, TableColumn as ElTableColumn } from 'element-ui'
 
 @Component
 export default class ElTableTs extends Vue {
@@ -21,7 +12,7 @@ export default class ElTableTs extends Vue {
   @Prop({ type: Array, default: () => [] }) readonly data!: undefined[]
   @Prop({ type: Array, default: () => [] }) readonly columns!: ElTableColumn[]
   // 分页
-  @Prop({ type: Object, default: () => { } }) readonly pagination: ElPagination | undefined
+  @Prop({ type: Object, default: () => {} }) readonly pagination: ElPagination | undefined
   @Prop({ type: Number, default: 0 }) readonly total: number | undefined
 
   private tableWrap: any = null
@@ -48,9 +39,10 @@ export default class ElTableTs extends Vue {
     })
   }
 
+  @Emit('scroll')
   tableScroll(e: MouseEvent) {
     e.preventDefault()
-    this.$emit('scroll', e)
+    return e
   }
 
   pageSizeChange(pageSize: number): void {
@@ -63,11 +55,12 @@ export default class ElTableTs extends Vue {
     this.emitPageChangeEvent()
   }
 
+  @Emit('page-change')
   emitPageChangeEvent() {
-    this.$emit('page-change', {
+    return {
       pageSize: this.pageSize,
       currentPage: this.currentPage
-    })
+    }
   }
 
   render(h: CreateElement): VNode {
