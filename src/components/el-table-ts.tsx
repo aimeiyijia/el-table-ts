@@ -2,12 +2,12 @@ import Vue, { VNode, CreateElement } from 'vue'
 import { Component, Prop, Emit } from 'vue-property-decorator'
 import omit from 'lodash/omit'
 import keys from 'lodash/keys'
-import { Pagination as ElPagination, Table as ElTable, TableColumn as ElTableColumn } from 'element-ui';
+import { Pagination as ElPagination, Table as ElTable, TableColumn as ElTableColumn } from 'element-ui'
 
 interface ICustomColumn {
-  customRender: any,
-  customTitle: any,
-  formatter: any,
+  customRender: any
+  customTitle: any
+  formatter: any
   scopedSlots: {
     customRender: any
   }
@@ -26,10 +26,9 @@ export default class ElTableTs extends Vue {
 
   private tableWrap: any = null
 
-  private pageSize: number = 10
+  private pageSize = 10
 
-  private currentPage: number = 1
-
+  private currentPage = 1
 
   mounted() {
     // 分页相关
@@ -39,7 +38,6 @@ export default class ElTableTs extends Vue {
     if (this.pagination && this.pagination.currentPage) {
       this.currentPage = this.pagination.currentPage
     }
-
 
     const table: any = this.$refs.table
     this.tableWrap = table.bodyWrapper
@@ -68,9 +66,10 @@ export default class ElTableTs extends Vue {
   emitPageChangeEvent() {
     this.$emit('page-change', {
       pageSize: this.pageSize,
-      currentPage: this.currentPage,
+      currentPage: this.currentPage
     })
   }
+
   render(h: CreateElement): VNode {
     const tableListeners = omit(this.$listeners, ['page-change'])
 
@@ -99,7 +98,7 @@ export default class ElTableTs extends Vue {
                   row,
                   column,
                   $index,
-                  h,
+                  h
                 })
               }
               // 兼容element-ui formatter属性 因为formatter是格式化cellValue的，所以需要拦截下
@@ -108,7 +107,7 @@ export default class ElTableTs extends Vue {
                   row,
                   column,
                   cellValue,
-                  $index,
+                  $index
                 })
               }
 
@@ -124,7 +123,7 @@ export default class ElTableTs extends Vue {
                 return column.customTitle({ column, $index })
               }
               return column.label
-            },
+            }
           }
 
           return (

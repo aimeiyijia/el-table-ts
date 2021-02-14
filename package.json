@@ -8,7 +8,6 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "test:unit": "jest --clearCache && vue-cli-service test:unit",
-    "lint": "vue-cli-service lint",
     "build": "vue-cli-service build --target lib --name el-lists ./src/components/index.js"
   },
   "dependencies": {
@@ -47,6 +46,7 @@
     "eslint": "^7.13.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.2",
     "eslint-plugin-vue": "^7.1.0",
