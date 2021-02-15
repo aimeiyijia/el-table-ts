@@ -17,9 +17,9 @@ export default class ElTableTs extends Vue {
 
   private tableWrap: any = null
 
-  private pageSize = 10
+  private pageSize: number = 10
 
-  private currentPage = 1
+  private currentPage: number = 1
 
   mounted() {
     // 分页相关
@@ -47,7 +47,7 @@ export default class ElTableTs extends Vue {
 
   pageSizeChange(pageSize: number): void {
     this.pageSize = pageSize
-    this.emitPageChangeEvent()
+    this.emitSizeChangeEvent()
   }
 
   currentChange(currentPage: number): void {
@@ -57,6 +57,14 @@ export default class ElTableTs extends Vue {
 
   @Emit('page-change')
   emitPageChangeEvent() {
+    return {
+      pageSize: this.pageSize,
+      currentPage: this.currentPage
+    }
+  }
+
+  @Emit('size-change')
+  emitSizeChangeEvent() {
     return {
       pageSize: this.pageSize,
       currentPage: this.currentPage
