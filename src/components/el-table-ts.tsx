@@ -2,6 +2,7 @@ import Vue, { VNode, CreateElement } from 'vue'
 import { Component, Prop, Emit } from 'vue-property-decorator'
 import omit from 'lodash/omit'
 import keys from 'lodash/keys'
+import isString from 'lodash/isString'
 import { Pagination as ElPagination, TableColumn as ElTableColumn } from 'element-ui'
 
 @Component
@@ -89,6 +90,11 @@ export default class ElTableTs extends Vue {
               // 支持链式. 如：xxx.xxx
               const cellValue = getCellValue(column, row)
 
+              if(column.scopedSlots && !isString(column.scopedSlots.customRender)){
+                console.error("插槽名必须是String类型")
+                return
+              }
+
               // 自定义组件
               column.customRender =
                 column.customRender ||
@@ -120,6 +126,11 @@ export default class ElTableTs extends Vue {
             },
             header: ({ column: elColumn, $index, store, _self }: { column: ElTableColumn, $index: number, store: any, _self: any }) => {
               const column: any = Object.assign({}, options, elColumn)
+
+              if(column.scopedSlots && !isString(column.scopedSlots.customRender)){
+                console.error("插槽名必须是String类型")
+                return
+              }
 
               column.customTitle =
                 column.customTitle ||
