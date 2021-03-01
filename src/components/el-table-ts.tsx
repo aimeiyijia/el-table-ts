@@ -90,7 +90,7 @@ export default class ElTableTs extends Vue {
               // 支持链式. 如：xxx.xxx
               const cellValue = getCellValue(column, row)
 
-              if(column.scopedSlots && !isString(column.scopedSlots.customRender)){
+              if(column.scopedSlots && column.scopedSlots.customRender && !isString(column.scopedSlots.customRender)){
                 console.error("插槽名必须是String类型")
                 return
               }
@@ -127,7 +127,7 @@ export default class ElTableTs extends Vue {
             header: ({ column: elColumn, $index, store, _self }: { column: ElTableColumn, $index: number, store: any, _self: any }) => {
               const column: any = Object.assign({}, options, elColumn)
 
-              if(column.scopedSlots && !isString(column.scopedSlots.customRender)){
+              if(column.scopedSlots && column.scopedSlots.customRender && !isString(column.scopedSlots.customRender)){
                 console.error("插槽名必须是String类型")
                 return
               }
