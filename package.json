@@ -1,10 +1,10 @@
 {
-  "name": "el-lists",
+  "name": "el-table-ts",
   "version": "1.0.0",
   "main": "dist/el-lists.common.js",
   "typings": "types/index.d.ts",
-  "private": true,
-  "author": "broke",
+  "private": false,
+  "author": "ame",
   "scripts": {
     "serve": "vue-cli-service serve",
     "test:unit": "jest --clearCache && vue-cli-service test:unit",
