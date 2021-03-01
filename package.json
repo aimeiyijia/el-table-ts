@@ -1,7 +1,7 @@
 {
   "name": "el-table-ts",
-  "version": "1.0.2",
-  "main": "dist/el-lists.common.js",
+  "version": "1.0.4",
+  "main": "dist/el-table-ts.common.js",
   "typings": "types/index.d.ts",
   "private": false,
   "author": "ame",
