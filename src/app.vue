@@ -102,14 +102,14 @@ export default {
   },
   methods: {
     detailHandle({row}) {
-      console.log(row)
+      console.log(row, '详情')
     },
     delHandle({ name }) {
       this.$message.error(`删除 ${name}`)
     },
 
     rowClickHandle(row, column, event) {
-      console.log(column)
+      console.log(column, '行点击')
       // console.log(row, column, event)
     },
     sortChangeHandle(o) {

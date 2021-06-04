@@ -6,6 +6,8 @@ import isString from 'lodash/isString'
 import isBoolean from 'lodash/isBoolean'
 import isObject from 'lodash/isObject'
 import { Pagination as ElPagination, TableColumn as ElTableColumn } from 'element-ui'
+// 样式
+import './index.scss'
 // 默认分页配置
 declare class ElTableTsDefPagination {
   currentPage: number
@@ -113,7 +115,10 @@ export default class ElTableTs extends Vue {
   }
 
   render(h: CreateElement): VNode {
-    const tableListeners = omit(this.$listeners, ['page-change'])
+    console.log(this.$listeners)
+
+    // 移除非表格事件
+    const tableListeners = omit(this.$listeners, ['page-change', 'size-change'])
 
     const getCellValue = (column: ElTableColumn, row: any) =>
       column.prop.split('.').reduce((obj, cur) => obj[cur], row)
