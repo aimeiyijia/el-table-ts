@@ -80,6 +80,7 @@ export default {
           fixed: 'right',
           prop: 'handle',
           scopedSlots: {
+            // slot name
             customRender: 'handle',
             customTitle: 'handleTitle',
           },
