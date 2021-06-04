@@ -3,7 +3,7 @@
     <el-table-ts
       :data="list"
       :columns="columns"
-      height="250"
+      height="0"
       @row-click="rowClickHandle"
       @sort-change="sortChangeHandle"
       stripe
@@ -136,3 +136,8 @@ export default {
   },
 }
 </script>
+<style lang="scss">
+ html, body, #app {
+   height: 100%;
+ }
+</style>

@@ -1,4 +1,5 @@
 import Vue, { VNode, CreateElement } from 'vue'
+import './directives.js'
 import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
 import omit from 'lodash/omit'
 import keys from 'lodash/keys'
@@ -115,9 +116,12 @@ export default class ElTableTs extends Vue {
   }
 
   render(h: CreateElement): VNode {
-    console.log(this.$listeners)
 
-    // 移除非表格事件
+    const directives = [
+      { name: 'height-adaptive', value: {topOffset: 10, bottomOffset: 10, hOffset: 50} }
+    ]
+
+    // 移除分页事件
     const tableListeners = omit(this.$listeners, ['page-change', 'size-change'])
 
     const getCellValue = (column: ElTableColumn, row: any) =>
@@ -206,6 +210,7 @@ export default class ElTableTs extends Vue {
         <el-table
           ref="table"
           data={this.data}
+          {...{ directives }}
           {...{ props: this.$attrs, on: tableListeners }}
         >
           {renderColumns(this.columns)}
