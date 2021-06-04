@@ -8,15 +8,10 @@
       @sort-change="sortChangeHandle"
       stripe
       border
-      :pagination="{
-        pageSizes: [10, 20, 50, 70],
-        pageSize: 10,
-        layout: 'prev, pager, next, sizes, jumper, ->, total',
-        background: true,
-        small: true
-      }"
+      :pagination="pagination"
       :total="100"
       @page-change="pageChangeHandle"
+      @size-change="sizeChangeHandle"
       @scroll="scroll"
     >
       <template #handle="{cellValue, row, column}">
@@ -40,6 +35,14 @@ export default {
   name: 'app',
   data() {
     return {
+      pagination: {
+        pageSizes: [10, 20, 50, 70],
+        pageSize: 10,
+        layout: 'prev, pager, next, sizes, jumper, ->, total',
+        background: true,
+        currentPage: 3,
+        small: true
+      },
       list: listData,
       columns: [
         {
@@ -91,6 +94,12 @@ export default {
       ],
     }
   },
+  mounted(){
+    const timer = setTimeout(() =>{
+      console.log('分页变化')
+      this.pagination.pageSize = 20
+    }, 2000)
+  },
   methods: {
     detailHandle({row}) {
       console.log(row)
@@ -107,6 +116,10 @@ export default {
       console.log(o)
     },
     pageChangeHandle(e) {
+      console.log(e)
+      // console.log(pageSize, currentPage)
+    },
+    sizeChangeHandle(e) {
       console.log(e)
       // console.log(pageSize, currentPage)
     },

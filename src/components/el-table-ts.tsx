@@ -1,9 +1,19 @@
 import Vue, { VNode, CreateElement } from 'vue'
-import { Component, Prop, Emit } from 'vue-property-decorator'
+import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
 import omit from 'lodash/omit'
 import keys from 'lodash/keys'
 import isString from 'lodash/isString'
+import isBoolean from 'lodash/isBoolean'
+import isObject from 'lodash/isObject'
 import { Pagination as ElPagination, TableColumn as ElTableColumn } from 'element-ui'
+// 默认分页配置
+declare class ElTableTsDefPagination {
+  currentPage: number
+  pageSizes: number[]
+  pageSize: number
+  layout: string
+  background: boolean
+}
 
 @Component
 export default class ElTableTs extends Vue {
@@ -13,23 +23,38 @@ export default class ElTableTs extends Vue {
   @Prop({ type: Array, default: () => [] }) readonly data!: undefined[]
   @Prop({ type: Array, default: () => [] }) readonly columns!: ElTableColumn[]
   // 分页
-  @Prop({ type: Object, default: () => {} }) readonly pagination: ElPagination | undefined
+  @Prop({ type: [Boolean, Object], default: () => { return { pageSize: 10, currentPage: 1 } } }) readonly pagination: ElPagination | undefined | boolean
   @Prop({ type: Number, default: 0 }) readonly total: number | undefined
 
+  // 表格组件的 bodyWrapper元素
   private tableWrap: any = null
 
-  private pageSize: number = 10
+  // 是否展示分页器
+  isShowPag: boolean = true
 
-  private currentPage: number = 1
+  // 默认分页配置
+  private defPagination: ElTableTsDefPagination = {
+    currentPage: 1,
+    pageSizes: [10, 20, 30, 50],
+    pageSize: 10,
+    layout: 'prev, pager, next, sizes, total',
+    background: true,
+  }
+
+  // 传递给外部的分页指示参数
+  private pageSize: number = 0
+
+  private currentPage: number = 0
+
+  @Watch('pagination', { deep: true })
+  onPaginationChanged(val: ElPagination) {
+    this.setPagination()
+  }
 
   mounted() {
-    // 分页相关
-    if (this.pagination && this.pagination.pageSize) {
-      this.pageSize = this.pagination.pageSize
-    }
-    if (this.pagination && this.pagination.currentPage) {
-      this.currentPage = this.pagination.currentPage
-    }
+    this.setPagination()
+
+    console.log(this.defPagination, '分页值')
 
     const table: any = this.$refs.table
     this.tableWrap = table.bodyWrapper
@@ -46,7 +71,22 @@ export default class ElTableTs extends Vue {
     return e
   }
 
+  // 设置分页参数
+  setPagination(){
+    const pagination = this.pagination
+    if(isBoolean(pagination)){
+      this.isShowPag = (pagination as boolean)
+    }
+    if(isObject(pagination)){
+      this.isShowPag = true
+      Object.assign(this.defPagination, pagination)
+      this.pageSize = this.defPagination.pageSize
+      this.currentPage = this.defPagination.currentPage
+    }
+  }
+
   pageSizeChange(pageSize: number): void {
+    console.log(1)
     this.pageSize = pageSize
     this.emitSizeChangeEvent()
   }
@@ -90,7 +130,7 @@ export default class ElTableTs extends Vue {
               // 支持链式. 如：xxx.xxx
               const cellValue = getCellValue(column, row)
 
-              if(column.scopedSlots && column.scopedSlots.customRender && !isString(column.scopedSlots.customRender)){
+              if (column.scopedSlots && column.scopedSlots.customRender && !isString(column.scopedSlots.customRender)) {
                 console.error("插槽名必须是String类型")
                 return
               }
@@ -127,7 +167,7 @@ export default class ElTableTs extends Vue {
             header: ({ column: elColumn, $index, store, _self }: { column: ElTableColumn, $index: number, store: any, _self: any }) => {
               const column: any = Object.assign({}, options, elColumn)
 
-              if(column.scopedSlots && column.scopedSlots.customRender && !isString(column.scopedSlots.customRender)){
+              if (column.scopedSlots && column.scopedSlots.customRender && !isString(column.scopedSlots.customRender)) {
                 console.error("插槽名必须是String类型")
                 return
               }
@@ -165,9 +205,9 @@ export default class ElTableTs extends Vue {
         >
           {renderColumns(this.columns)}
         </el-table>
-        {this.pagination && keys(this.pagination).length > 0 && (
+        {this.isShowPag && (
           <el-pagination
-            {...{ props: this.pagination }}
+            {...{ props: this.defPagination }}
             total={this.total}
             on-size-change={this.pageSizeChange}
             on-current-change={this.currentChange}
