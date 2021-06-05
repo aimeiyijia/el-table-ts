@@ -2,7 +2,6 @@ import Vue, { VNode, CreateElement } from 'vue'
 import './directives.js'
 import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
 import omit from 'lodash/omit'
-import keys from 'lodash/keys'
 import isString from 'lodash/isString'
 import isBoolean from 'lodash/isBoolean'
 import isObject from 'lodash/isObject'
@@ -176,7 +175,7 @@ export default class ElTableTs extends Vue {
             header: ({ column: elColumn, $index, store, _self }: { column: ElTableColumn, $index: number, store: any, _self: any }) => {
               const column: any = Object.assign({}, options, elColumn)
 
-              if (column.scopedSlots && column.scopedSlots.customRender && !isString(column.scopedSlots.customRender)) {
+              if (column.scopedSlots && column.scopedSlots.customTitle && !isString(column.scopedSlots.customTitle)) {
                 console.error("插槽名必须是String类型")
                 return
               }
