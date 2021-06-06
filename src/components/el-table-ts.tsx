@@ -6,6 +6,8 @@ import isString from 'lodash/isString'
 import isBoolean from 'lodash/isBoolean'
 import isObject from 'lodash/isObject'
 import { Pagination as ElPagination, TableColumn as ElTableColumn } from 'element-ui'
+import { AxiosRequestConfig, AxiosResponse } from 'axios'
+import http from './http'
 // 样式
 import './index.scss'
 // 默认分页配置
@@ -27,6 +29,8 @@ export default class ElTableTs extends Vue {
   // 分页
   @Prop({ type: [Boolean, Object], default: () => { return { pageSize: 10, currentPage: 1 } } }) readonly pagination: ElPagination | undefined | boolean
   @Prop({ type: Number, default: 0 }) readonly total: number | undefined
+
+  @Prop({ type: [Boolean, Object], default: () => {} }) readonly axiosCfg: AxiosRequestConfig | undefined
 
   // 表格组件的 bodyWrapper元素
   private tableWrap: any = null
@@ -54,6 +58,9 @@ export default class ElTableTs extends Vue {
   }
 
   mounted() {
+    http(this.axiosCfg as AxiosRequestConfig).then(res => {
+      console.log(res, '456F')
+    })
     this.setPagination()
 
     console.log(this.defPagination, '分页值')

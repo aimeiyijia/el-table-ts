@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
 // 定义request
 class request {
-  private config
+  private config: AxiosRequestConfig
   constructor(config: AxiosRequestConfig) {
     this.config = config
   }

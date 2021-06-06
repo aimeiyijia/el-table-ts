@@ -9,6 +9,8 @@ import ElTableTs from './components/index.js'
 
 import App from './app.vue'
 
+import '../mock/index'
+
 Vue.use(ElementUI)
 Vue.use(ElTableTs)
 
