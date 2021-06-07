@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <el-table-ts
-      :data="list"
       :columns="columns"
       height="0"
       @row-click="rowClickHandle"
@@ -9,7 +8,7 @@
       stripe
       border
       :pagination="pagination"
-      :axiosCfg="axiosConfig"
+      :httpConfig="axiosConfig"
       :total="100"
       @page-change="pageChangeHandle"
       @size-change="sizeChangeHandle"

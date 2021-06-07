@@ -5,6 +5,7 @@ import omit from 'lodash/omit'
 import isString from 'lodash/isString'
 import isBoolean from 'lodash/isBoolean'
 import isObject from 'lodash/isObject'
+import isPromise from 'is-promise'
 import { Pagination as ElPagination, TableColumn as ElTableColumn } from 'element-ui'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import http from './http'
@@ -23,14 +24,19 @@ declare class ElTableTsDefPagination {
 export default class ElTableTs extends Vue {
   // 数据加载提示
   @Prop(Boolean) readonly loading: boolean | undefined
-  // 数据相关
-  @Prop({ type: Array, default: () => [] }) readonly data!: undefined[]
+
+  // 表格每列配置项
   @Prop({ type: Array, default: () => [] }) readonly columns!: ElTableColumn[]
+
+  // 数据相关
+  @Prop({ type: Array, default: undefined }) readonly data!: undefined[] | Promise<undefined>
+  @Prop({ type: [Boolean, Object], default: () => { } }) readonly httpConfig: AxiosRequestConfig | undefined
+
   // 分页
   @Prop({ type: [Boolean, Object], default: () => { return { pageSize: 10, currentPage: 1 } } }) readonly pagination: ElPagination | undefined | boolean
   @Prop({ type: Number, default: 0 }) readonly total: number | undefined
 
-  @Prop({ type: [Boolean, Object], default: () => {} }) readonly axiosCfg: AxiosRequestConfig | undefined
+
 
   // 表格组件的 bodyWrapper元素
   private tableWrap: any = null
@@ -47,6 +53,8 @@ export default class ElTableTs extends Vue {
     background: true,
   }
 
+  private tableData: undefined[] = []
+
   // 传递给外部的分页指示参数
   private pageSize: number = 0
 
@@ -58,13 +66,56 @@ export default class ElTableTs extends Vue {
   }
 
   mounted() {
-    http(this.axiosCfg as AxiosRequestConfig).then(res => {
-      console.log(res, '456F')
-    })
+
+    this.checkDataSource()
+
     this.setPagination()
 
-    console.log(this.defPagination, '分页值')
+    this.setTableScrollListener()
 
+  }
+
+  checkDataSource() {
+    const data = this.data
+    if (data) {
+      if (isPromise(data)) {
+
+      } else {
+
+      }
+      return
+    }
+    const httpConfig = this.httpConfig
+    console.log(12)
+    if (httpConfig) {
+      this.getDataByAxios()
+    }
+  }
+
+
+  async getDataByAxios() {
+    const res = await http(this.httpConfig as AxiosRequestConfig)
+    const { data } = res.data
+    console.log(data, '数据')
+    this.tableData = data.list
+  }
+
+  // 设置分页参数
+  setPagination() {
+    const pagination = this.pagination
+    if (isBoolean(pagination)) {
+      this.isShowPag = (pagination as boolean)
+    }
+    if (isObject(pagination)) {
+      this.isShowPag = true
+      Object.assign(this.defPagination, pagination)
+      this.pageSize = this.defPagination.pageSize
+      this.currentPage = this.defPagination.currentPage
+    }
+  }
+
+  // 设置表格滚动监听器
+  setTableScrollListener() {
     const table: any = this.$refs.table
     this.tableWrap = table.bodyWrapper
 
@@ -74,28 +125,7 @@ export default class ElTableTs extends Vue {
     })
   }
 
-  @Emit('scroll')
-  tableScroll(e: MouseEvent) {
-    e.preventDefault()
-    return e
-  }
-
-  // 设置分页参数
-  setPagination(){
-    const pagination = this.pagination
-    if(isBoolean(pagination)){
-      this.isShowPag = (pagination as boolean)
-    }
-    if(isObject(pagination)){
-      this.isShowPag = true
-      Object.assign(this.defPagination, pagination)
-      this.pageSize = this.defPagination.pageSize
-      this.currentPage = this.defPagination.currentPage
-    }
-  }
-
   pageSizeChange(pageSize: number): void {
-    console.log(1)
     this.pageSize = pageSize
     this.emitSizeChangeEvent()
   }
@@ -104,6 +134,14 @@ export default class ElTableTs extends Vue {
     this.currentPage = currentPage
     this.emitPageChangeEvent()
   }
+
+
+  @Emit('scroll')
+  tableScroll(e: MouseEvent) {
+    e.preventDefault()
+    return e
+  }
+
 
   @Emit('page-change')
   emitPageChangeEvent() {
@@ -124,7 +162,7 @@ export default class ElTableTs extends Vue {
   render(h: CreateElement): VNode {
 
     const directives = [
-      { name: 'height-adaptive', value: {topOffset: 10, bottomOffset: 10, hOffset: 50} }
+      { name: 'height-adaptive', value: { topOffset: 10, bottomOffset: 10, hOffset: 50 } }
     ]
 
     // 移除分页事件
@@ -215,7 +253,7 @@ export default class ElTableTs extends Vue {
       <div class="el-table-ts" v-loading={this.loading}>
         <el-table
           ref="table"
-          data={this.data}
+          data={this.tableData}
           {...{ directives }}
           {...{ props: this.$attrs, on: tableListeners }}
         >

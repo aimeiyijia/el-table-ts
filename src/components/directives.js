@@ -13,18 +13,13 @@ const debounce = fn => {
 }
 
 const calcTableHeight = (element, offset) => {
-  console.log(window.innerHeight)
-  console.log(offset)
   const elP = element.parentNode
   return (
     elP.clientHeight - offset.hOffset - offset.topOffset - offset.bottomOffset
   )
 }
 const calcHeight = (element, offset) => {
-  // console.log(offset)
   const elP = element.parentNode
-  // console.log(element.parentNode)
-  // console.log(elP.clientHeight)
   return (
     elP.clientHeight - offset.hOffset - offset.topOffset - offset.bottomOffset
   )
@@ -46,8 +41,6 @@ const doTableResize = (el, binding, vnode) => {
 
   if (!$table) return
   const height = calcTableHeight(el, offset)
-
-  console.log(height, '计算的高')
   $table.$nextTick(() => {
     $table.layout.setHeight(height)
     $table.doLayout()
