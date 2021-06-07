@@ -11,14 +11,11 @@
     "build": "vue-cli-service build --target lib --name el-table-ts ./src/components/index.js"
   },
   "dependencies": {
-    "axios": "^0.21.1",
     "codemirror": "^5.58.2",
     "core-js": "^3.7.0",
     "cors": "^2.8.5",
     "element-ui": "^2.14.0",
-    "is-promise": "^4.0.0",
     "lodash": "^4.17.20",
-    "mockjs": "^1.1.0",
     "normalize.css": "^8.0.1",
     "script-loader": "^0.7.2",
     "vue": "^2.6.12",

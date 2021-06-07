@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <el-table-ts
+      :data="list"
       :columns="columns"
       height="0"
       @row-click="rowClickHandle"
@@ -8,7 +9,6 @@
       stripe
       border
       :pagination="pagination"
-      :httpConfig="axiosConfig"
       :total="100"
       @page-change="pageChangeHandle"
       @size-change="sizeChangeHandle"
@@ -36,10 +36,6 @@ export default {
   name: 'app',
   data() {
     return {
-      axiosConfig: {
-        url: '/api/data',
-        method: 'get',
-      },
       pagination: {
         pageSizes: [10, 20, 50, 70],
         pageSize: 10,

@@ -5,10 +5,7 @@ import omit from 'lodash/omit'
 import isString from 'lodash/isString'
 import isBoolean from 'lodash/isBoolean'
 import isObject from 'lodash/isObject'
-import isPromise from 'is-promise'
 import { Pagination as ElPagination, TableColumn as ElTableColumn } from 'element-ui'
-import { AxiosRequestConfig, AxiosResponse } from 'axios'
-import http from './http'
 // 样式
 import './index.scss'
 // 默认分页配置
@@ -29,8 +26,7 @@ export default class ElTableTs extends Vue {
   @Prop({ type: Array, default: () => [] }) readonly columns!: ElTableColumn[]
 
   // 数据相关
-  @Prop({ type: Array, default: undefined }) readonly data!: undefined[] | Promise<undefined>
-  @Prop({ type: [Boolean, Object], default: () => { } }) readonly httpConfig: AxiosRequestConfig | undefined
+  @Prop({ type: Array, default: undefined }) readonly data!: undefined[] | undefined
 
   // 分页
   @Prop({ type: [Boolean, Object], default: () => { return { pageSize: 10, currentPage: 1 } } }) readonly pagination: ElPagination | undefined | boolean
@@ -53,7 +49,7 @@ export default class ElTableTs extends Vue {
     background: true,
   }
 
-  private tableData: undefined[] = []
+  private tableData: undefined[] | undefined = []
 
   // 传递给外部的分页指示参数
   private pageSize: number = 0
@@ -67,7 +63,7 @@ export default class ElTableTs extends Vue {
 
   mounted() {
 
-    this.checkDataSource()
+    this.tableData = this.data
 
     this.setPagination()
 
@@ -75,32 +71,7 @@ export default class ElTableTs extends Vue {
 
   }
 
-  checkDataSource() {
-    const data = this.data
-    if (data) {
-      if (isPromise(data)) {
-
-      } else {
-
-      }
-      return
-    }
-    const httpConfig = this.httpConfig
-    console.log(12)
-    if (httpConfig) {
-      this.getDataByAxios()
-    }
-  }
-
-
-  async getDataByAxios() {
-    const res = await http(this.httpConfig as AxiosRequestConfig)
-    const { data } = res.data
-    console.log(data, '数据')
-    this.tableData = data.list
-  }
-
-  // 设置分页参数
+  // 设置分页配置
   setPagination() {
     const pagination = this.pagination
     if (isBoolean(pagination)) {
@@ -109,8 +80,9 @@ export default class ElTableTs extends Vue {
     if (isObject(pagination)) {
       this.isShowPag = true
       Object.assign(this.defPagination, pagination)
-      this.pageSize = this.defPagination.pageSize
-      this.currentPage = this.defPagination.currentPage
+      const { pageSize, currentPage } = this.defPagination
+      this.pageSize = pageSize
+      this.currentPage = currentPage
     }
   }
 
