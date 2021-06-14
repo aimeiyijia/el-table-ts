@@ -1,9 +1,6 @@
 module.exports = {
   lintOnSave: false,
   publicPath: process.env.NODE_ENV === 'production' ? '/el-table-ts/' : '/',
-  css: {
-    extract: false,
-  },
   chainWebpack: config => {
     // GraphQL Loader
     config.module
