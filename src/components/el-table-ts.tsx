@@ -5,7 +5,7 @@ import omit from 'lodash/omit'
 import isString from 'lodash/isString'
 import isBoolean from 'lodash/isBoolean'
 import isObject from 'lodash/isObject'
-import { Pagination as ElPagination, TableColumn as ElTableColumn } from 'element-ui'
+import { Pagination, TableColumn } from 'element-ui'
 // 样式
 import './index.scss'
 // 默认分页配置
@@ -23,13 +23,13 @@ export default class ElTableTs extends Vue {
   @Prop(Boolean) readonly loading: boolean | undefined
 
   // 表格每列配置项
-  @Prop({ type: Array, default: () => [] }) readonly columns!: ElTableColumn[]
+  @Prop({ type: Array, default: () => [] }) readonly columns!: TableColumn[]
 
   // 数据相关
   @Prop({ type: Array, default: undefined }) readonly data!: undefined[] | undefined
 
   // 分页
-  @Prop({ type: [Boolean, Object], default: () => { return { pageSize: 10, currentPage: 1 } } }) readonly pagination: ElPagination | undefined | boolean
+  @Prop({ type: [Boolean, Object], default: () => { return { pageSize: 10, currentPage: 1 } } }) readonly pagination: Pagination | undefined | boolean
   @Prop({ type: Number, default: 0 }) readonly total: number | undefined
 
 
@@ -57,7 +57,7 @@ export default class ElTableTs extends Vue {
   private currentPage: number = 0
 
   @Watch('pagination', { deep: true })
-  onPaginationChanged(val: ElPagination) {
+  onPaginationChanged(val: Pagination) {
     this.setPagination()
   }
 
@@ -140,17 +140,17 @@ export default class ElTableTs extends Vue {
     // 移除分页事件
     const tableListeners = omit(this.$listeners, ['page-change', 'size-change'])
 
-    const getCellValue = (column: ElTableColumn, row: any) =>
+    const getCellValue = (column: TableColumn, row: any) =>
       column.prop.split('.').reduce((obj, cur) => obj[cur], row)
 
-    const renderColumns = (columns: ElTableColumn[]) =>
+    const renderColumns = (columns: TableColumn[]) =>
       columns
         .filter((i: any) => !i.hidden)
         .map(c => {
           const options = Object.assign({ scopedSlots: {}, prop: '' }, c)
 
           const scopedSlots = {
-            default: ({ row, column: elColumn, $index, store, _self }: { row: any, column: ElTableColumn, $index: number, store: any, _self: any }) => {
+            default: ({ row, column: elColumn, $index, store, _self }: { row: any, column: TableColumn, $index: number, store: any, _self: any }) => {
               const column: any = Object.assign({}, options, elColumn)
               // 支持链式. 如：xxx.xxx
               const cellValue = getCellValue(column, row)
@@ -189,7 +189,7 @@ export default class ElTableTs extends Vue {
 
               return cellValue
             },
-            header: ({ column: elColumn, $index, store, _self }: { column: ElTableColumn, $index: number, store: any, _self: any }) => {
+            header: ({ column: elColumn, $index, store, _self }: { column: TableColumn, $index: number, store: any, _self: any }) => {
               const column: any = Object.assign({}, options, elColumn)
 
               if (column.scopedSlots && column.scopedSlots.customTitle && !isString(column.scopedSlots.customTitle)) {
