@@ -3,7 +3,6 @@
     <el-table-ts
       :data="list"
       :columns="columns"
-      height="0"
       @row-click="rowClickHandle"
       @sort-change="sortChangeHandle"
       stripe

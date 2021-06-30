@@ -225,6 +225,7 @@ export default class ElTableTs extends Vue {
       <div class="el-table-ts" v-loading={this.loading}>
         <el-table
           ref="table"
+          height="0"
           data={this.tableData}
           {...{ directives }}
           {...{ props: this.$attrs, on: tableListeners }}
