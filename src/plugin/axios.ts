@@ -17,12 +17,8 @@ import axios, {
 } from 'axios'
 
 interface HTTPRequestConfig {
-  (url: string, data: any, contentType?: string): any
+  (url: string, data: any, httpConfig?: AxiosRequestConfig): AxiosPromise
 }
-
-const AJSON = 'application/json'
-const AFUE = 'application/x-www-form-urlencoded;charset=UTF-8'
-
 export default class AxiosPlugin {
   // 创建axios实例时传入的参数
   public cCfg: AxiosRequestConfig = {
@@ -55,28 +51,23 @@ export default class AxiosPlugin {
   }
 
   // 以下为请求快捷方式
-  public initPost: HTTPRequestConfig = (url, data, contentType): AxiosPromise =>  {
-    const ct = contentType || AJSON
+  public initPost: HTTPRequestConfig = (url, data, httpConfig) =>  {
     const http = this.http
     return http({
       method: 'post',
       url: url,
       data: data,
-      headers: { 'Content-Type': ct }
+      ...httpConfig
     })
   }
 
-  public initGet: HTTPRequestConfig = (url, data, contentType): AxiosPromise => {
-    const ct = contentType || AFUE
-    data = data || {}
+  public initGet: HTTPRequestConfig = (url, data, httpConfig) => {
     const http = this.http
     return http({
       method: 'get',
       url: url,
       params: data,
-      headers: {
-        'Content-Type': ct
-      }
+      ...httpConfig
     })
   }
 
