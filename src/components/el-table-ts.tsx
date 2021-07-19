@@ -129,6 +129,7 @@ export default class ElTableTs extends Vue {
 
   render(h: CreateElement): VNode {
 
+    // 高度自适应指令
     const directives = [
       { name: 'height-adaptive', value: { topOffset: 10, bottomOffset: 10, hOffset: 50 } }
     ]
@@ -137,7 +138,7 @@ export default class ElTableTs extends Vue {
     // 移除不支持自定义插槽的列类型 type[index/selection]
     const noSlots = ['index', 'selection']
 
-    // 移除分页事件
+    // 移除分页事件，防止事件冲突
     const tableListeners = omit(this.$listeners, ['page-change', 'size-change'])
 
     const getCellValue = (column: TableColumn, row: any) =>
@@ -156,21 +157,15 @@ export default class ElTableTs extends Vue {
 
               const column: any = Object.assign({}, options, elColumn)
 
-              console.log(column, '单元格')
-
               // 获取单元格的原始值
               const cellValue = getCellValue(column, row)
-
-              console.log(cellValue, '单元格原始值')
-
-
 
               if (column.scopedSlots && column.scopedSlots.customRender && !isString(column.scopedSlots.customRender)) {
                 console.error("插槽名必须是String类型")
                 return
               }
 
-              // 自定义组件 指定slot name的优先级比直接指定自定义渲染函数优先级高
+              // 自定义单元格 指定slot name的优先级比自定义渲染函数优先级高
               column.customRender =
                 column.customRender ||
                 this.$scopedSlots[column.scopedSlots.customRender]
