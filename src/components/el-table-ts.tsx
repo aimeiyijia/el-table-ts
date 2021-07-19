@@ -49,8 +49,6 @@ export default class ElTableTs extends Vue {
     background: true,
   }
 
-  private tableData: undefined[] | undefined = []
-
   // 传递给外部的分页指示参数
   private pageSize: number = 0
 
@@ -62,8 +60,6 @@ export default class ElTableTs extends Vue {
   }
 
   mounted() {
-
-    this.tableData = this.data
 
     this.setPagination()
 
@@ -137,6 +133,10 @@ export default class ElTableTs extends Vue {
       { name: 'height-adaptive', value: { topOffset: 10, bottomOffset: 10, hOffset: 50 } }
     ]
 
+
+    // 移除不支持自定义插槽的列类型 type[index/selection]
+    const noSlots = ['index', 'selection']
+
     // 移除分页事件
     const tableListeners = omit(this.$listeners, ['page-change', 'size-change'])
 
@@ -148,12 +148,22 @@ export default class ElTableTs extends Vue {
         .filter((i: any) => !i.hidden)
         .map(c => {
           const options = Object.assign({ scopedSlots: {}, prop: '' }, c)
+          let customScopedSlots = {}
+
 
           const scopedSlots = {
             default: ({ row, column: elColumn, $index, store, _self }: { row: any, column: TableColumn, $index: number, store: any, _self: any }) => {
+
               const column: any = Object.assign({}, options, elColumn)
-              // 支持链式. 如：xxx.xxx
+
+              console.log(column, '单元格')
+
+              // 获取单元格的原始值
               const cellValue = getCellValue(column, row)
+
+              console.log(cellValue, '单元格原始值')
+
+
 
               if (column.scopedSlots && column.scopedSlots.customRender && !isString(column.scopedSlots.customRender)) {
                 console.error("插槽名必须是String类型")
@@ -212,11 +222,17 @@ export default class ElTableTs extends Vue {
             }
           }
 
+          if(!noSlots.includes(options.type)){
+            customScopedSlots = {
+              scopedSlots
+            }
+          }
+
           return (
             <el-table-column
               key={options.prop}
               {...{ props: options }}
-              scopedSlots={scopedSlots}
+              {...customScopedSlots}
             />
           )
         })
@@ -226,7 +242,7 @@ export default class ElTableTs extends Vue {
         <el-table
           ref="table"
           height="0"
-          data={this.tableData}
+          data={this.data}
           {...{ directives }}
           {...{ props: this.$attrs, on: tableListeners }}
         >
