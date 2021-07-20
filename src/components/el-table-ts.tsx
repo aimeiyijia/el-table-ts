@@ -38,7 +38,7 @@ export default class ElTableTs extends Vue {
   private tableWrap: any = null
 
   // 是否展示分页器
-  isShowPag: boolean = true
+  isShowPag = true
 
   // 默认分页配置
   private defPagination: ElTableTsDefPagination = {
@@ -50,9 +50,9 @@ export default class ElTableTs extends Vue {
   }
 
   // 传递给外部的分页指示参数
-  private pageSize: number = 0
+  private pageSize = 0
 
-  private currentPage: number = 0
+  private currentPage = 0
 
   @Watch('pagination', { deep: true })
   onPaginationChanged(val: Pagination) {
@@ -231,6 +231,8 @@ export default class ElTableTs extends Vue {
             />
           )
         })
+
+    console.log(this.$attrs, '345')
 
     return (
       <div class="el-table-ts" v-loading={this.loading}>

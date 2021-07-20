@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <el-table-ts
+    <!-- <el-table-ts
       :data="list"
       :columns="columns"
       @row-click="rowClickHandle"
@@ -23,17 +23,42 @@
         </el-button>
         <el-button type="danger" @lick="this.delHandle(row)">删除</el-button>
       </template>
-    </el-table-ts>
+    </el-table-ts> -->
+    <el-table-http
+      data="[]"
+      :columns="columnsHttp"
+      @row-click="rowClickHandle"
+      @sort-change="sortChangeHandle"
+      stripe
+      border
+      :pagination="pagination"
+      :total="100"
+      @page-change="pageChangeHandle"
+      @size-change="sizeChangeHandle"
+      @scroll="scroll"
+      @select="select"
+    >
+      <template #handle="{cellValue, row, column}">
+        <el-button
+          type="primary"
+          @click="detailHandle({cellValue, row, column})"
+        >
+          查看详情
+        </el-button>
+        <el-button type="danger" @lick="this.delHandle(row)">删除</el-button>
+      </template>
+    </el-table-http>
   </div>
 </template>
 
 <script>
-import AxiosPlugin from '@/plugin/axios'
+import ElTableHttp from '@/components/el-table-http.tsx'
 const listData = JSON.parse(
   '{"code":200,"message":"success","data":[{"id":50745,"name":"rtBNhgqCDR","storage":8620,"member":{"id":50961,"userId":"51262","email":"Nu87YypnB@AK22e.rgu","projectRole":"Qa4ohl6qhT"},"mount":[{"mountType":"M8Rhh2Ntp6","mountName":"bFTDHyixr3","mountPath":"uwDTMtnbCW","userName":"nYIE5YoQve"},{"mountType":"8pUyKzNPjL","mountName":"TVaV7bjr1y","mountPath":"HoazVStmm5","userName":"nbGzaRjLjK"},{"mountType":"nD3hnojrY0","mountName":"vtJvtG05Jw","mountPath":"p5VWi1ptsi","userName":"8ERyVxGL3R"}],"gmtCreate":34327},{"id":51414,"name":"1A6ogTNZl1","storage":36580,"member":{"id":51767,"userId":"52603","email":"606UKO@AgasP.qmt","projectRole":"q8KkeQyD8f"},"mount":[{"mountType":"VG3JPYd4n5","mountName":"ijPznKZnUQ","mountPath":"SiQIq2ypee","userName":"rAhVP1UTUQ"},{"mountType":"B900pSNnAf","mountName":"MGFUwpuZq2","mountPath":"RQJOgsV806","userName":"acfdNaETLA"},{"mountType":"L81aEPhXWJ","mountName":"7hWszN6MpP","mountPath":"e99n7mLoHe","userName":"t2d5oVwRqV"}],"gmtCreate":78533},{"id":52659,"name":"srO0gfnHho","storage":46240,"member":{"id":52998,"userId":"53927","email":"M37YXor@949Y0.acq","projectRole":"2ikIgsSabL"},"mount":[{"mountType":"YjxjSNSyOv","mountName":"lRsFRwSWgc","mountPath":"Z1rMIGu0cR","userName":"CoUSbae92N"},{"mountType":"N716xNCa4q","mountName":"uxYPo7TGcG","mountPath":"pXyJpuZ1CX","userName":"oiubmGJ4dQ"},{"mountType":"r3PqYBkT9y","mountName":"Pp6B1yZXhi","mountPath":"SjbANI8SmS","userName":"9h8k3elmdM"}],"gmtCreate":98416}]}'
 ).data
 export default {
   name: 'app',
+  components: { ElTableHttp },
   data() {
     return {
       pagination: {
@@ -106,6 +131,27 @@ export default {
           // }
         },
       ],
+      columnsHttp: [
+        {
+          align: 'center',
+          type: 'selection',
+          prop: 'selection',
+        },
+        {
+          label: '序号',
+          align: 'center',
+          type: 'index',
+          prop: 'index',
+        },
+        {
+          label: '机构名称',
+          prop: 'organizationName',
+        },
+        {
+          label: '区划',
+          prop: 'administrativeRegion',
+        },
+      ],
     }
   },
   mounted() {
@@ -116,7 +162,7 @@ export default {
     // $post('/broke/meetingManagement/list', {})
   },
   methods: {
-    select(selection, row){
+    select(selection, row) {
       console.log(selection, row)
     },
     detailHandle({ row }) {

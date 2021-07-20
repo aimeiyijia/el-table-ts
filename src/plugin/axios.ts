@@ -51,7 +51,7 @@ export default class AxiosPlugin {
   }
 
   // 以下为请求快捷方式
-  public initPost: HTTPRequestConfig = (url, data, httpConfig) =>  {
+  public initPost: HTTPRequestConfig = (url, data, httpConfig = {}) => {
     const http = this.http
     return http({
       method: 'post',
@@ -61,7 +61,7 @@ export default class AxiosPlugin {
     })
   }
 
-  public initGet: HTTPRequestConfig = (url, data, httpConfig) => {
+  public initGet: HTTPRequestConfig = (url, data, httpConfig = {}) => {
     const http = this.http
     return http({
       method: 'get',
@@ -72,7 +72,3 @@ export default class AxiosPlugin {
   }
 
 }
-
-const a = new AxiosPlugin()
-console.log(a.http, 'axios实例')
-console.log(a.initPost('/broke/meetingManagement/list', {}))
