@@ -8,15 +8,15 @@ import ElTableTs from './el-table-ts'
 
 interface Ipath {
   // data的解析路径,不指定就按照标准格式路径去解析
-  dataPath?: string,
+  dataPath?: string
   // 不指定就默认dataName为data
-  dataName?: string,
-  // 分页解析路径 默认dataname同级
-  pagPath?: string,
-  // 页码名称 默认pageNo
-  pageNoName?: string,
-  // 每页显示条数指示器名称 默认pageSize
-  pageSizeName?: string
+  dataName?: string
+  // // 分页解析路径 默认dataname同级
+  // pagPath?: string,
+  // // 页码名称 默认pageNo
+  // pageNoName?: string,
+  // // 每页显示条数指示器名称 默认pageSize
+  // pageSizeName?: string
 }
 interface InetWork {
   method: string
@@ -83,7 +83,7 @@ export default class ElTableHttp extends Vue {
     // data的解析路径（从axios response.data之后开始算）
     // 取配置项
     const { path } = this.netWork
-    const { dataPath, dataName, pagPath, pageNoName, pageSizeName } = path as Ipath
+    const { dataPath, dataName } = path as Ipath
     // 找到表格数据所在位置（数据仓库）
     const dataDepository = res[dataPath as string]
     // 从数据仓库中取表格值，分页参数等
@@ -135,13 +135,15 @@ export default class ElTableHttp extends Vue {
 
     return this.data && <el-table-ts
       data={this.data}
-      on-size-change={this.pageSizeChange}
-      on-page-change={this.currentChange}
       {...{ attrs }}
       {...{
         // todo props不起效果
         // props: attrs,
-        on: tableListeners,
+        on: {
+          ...tableListeners,
+          'page-change': this.currentChange,
+          'size-change': this.pageSizeChange
+        },
         scopedSlots: this.$scopedSlots
       }}
 
