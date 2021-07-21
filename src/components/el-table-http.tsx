@@ -136,7 +136,7 @@ export default class ElTableHttp extends Vue {
     return this.data && <el-table-ts
       data={this.data}
       on-size-change={this.pageSizeChange}
-      on-current-change={this.currentChange}
+      on-page-change={this.currentChange}
       {...{ attrs }}
       {...{
         // todo props不起效果
