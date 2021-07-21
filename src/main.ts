@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import '../mock/index'
 
 import 'normalize.css'
 import ElementUI from 'element-ui'

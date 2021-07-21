@@ -141,6 +141,10 @@ export default class ElTableTs extends Vue {
     // 移除分页事件，防止事件冲突
     const tableListeners = omit(this.$listeners, ['page-change', 'size-change'])
 
+    // 从插槽中移除内置的插槽 pagination
+    const customScopedSlots = omit(this.$scopedSlots, ['pagination'])
+    // console.log(customScopedSlots, '234')
+
     const getCellValue = (column: TableColumn, row: any) =>
       column.prop.split('.').reduce((obj, cur) => obj[cur], row)
 
@@ -149,7 +153,7 @@ export default class ElTableTs extends Vue {
         .filter((i: any) => !i.hidden)
         .map(c => {
           const options = Object.assign({ scopedSlots: {}, prop: '' }, c)
-          let customScopedSlots = {}
+          let sampleScopedSlots = {}
 
 
           const scopedSlots = {
@@ -168,7 +172,7 @@ export default class ElTableTs extends Vue {
               // 自定义单元格 指定slot name的优先级比自定义渲染函数优先级高
               column.customRender =
                 column.customRender ||
-                this.$scopedSlots[column.scopedSlots.customRender]
+                customScopedSlots[column.scopedSlots.customRender]
               if (column.customRender) {
                 return column.customRender({
                   cellValue,
@@ -204,7 +208,7 @@ export default class ElTableTs extends Vue {
 
               column.customTitle =
                 column.customTitle ||
-                this.$scopedSlots[column.scopedSlots.customTitle]
+                customScopedSlots[column.scopedSlots.customTitle]
               if (column.customTitle) {
                 return column.customTitle({
                   column,
@@ -218,7 +222,7 @@ export default class ElTableTs extends Vue {
           }
 
           if(!noSlots.includes(options.type)){
-            customScopedSlots = {
+            sampleScopedSlots = {
               scopedSlots
             }
           }
@@ -227,12 +231,23 @@ export default class ElTableTs extends Vue {
             <el-table-column
               key={options.prop}
               {...{ props: options }}
-              {...customScopedSlots}
+              {...sampleScopedSlots}
             />
           )
         })
 
-    console.log(this.$attrs, '345')
+    const renderPageSlot= () => {
+      if(!this.$scopedSlots.hasOwnProperty('pagination')) return
+      return this.$scopedSlots.pagination!({
+        total: this.total,
+        config: omit(this.defPagination, ['pageSize', 'currentPage'])
+      })
+    }
+
+    // console.log(this.$attrs, '345')
+
+    // console.log(this)
+    // console.log(this.$scopedSlots)
 
     return (
       <div class="el-table-ts" v-loading={this.loading}>
@@ -251,7 +266,9 @@ export default class ElTableTs extends Vue {
             total={this.total}
             on-size-change={this.pageSizeChange}
             on-current-change={this.currentChange}
-          />
+          >
+            <span class="el-pagination__slot">{renderPageSlot()}</span>
+          </el-pagination>
         )}
       </div>
     )

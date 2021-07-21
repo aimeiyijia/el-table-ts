@@ -19,12 +19,15 @@ import axios, {
 interface HTTPRequestConfig {
   (url: string, data: any, httpConfig?: AxiosRequestConfig): AxiosPromise
 }
-export default class AxiosPlugin {
+
+interface IinitAxios {
+  (httpConfig: AxiosRequestConfig): AxiosPromise
+}
+class AxiosPlugin {
   // 创建axios实例时传入的参数
   public cCfg: AxiosRequestConfig = {
     // 默认超时时间为6s
     timeout: 60000,
-    baseURL: "http://192.168.2.64:8080",
   }
 
   // 初始化实例
@@ -41,13 +44,24 @@ export default class AxiosPlugin {
   // 创建axios实例，可分别传入request/response拦截函数
   private createAxios(): AxiosInstance {
     const instance = axios.create(this.cCfg)
+    instance.interceptors.request.use(
+      config => {
+        return config
+      },
+      error => {
+        Promise.reject(error)
+      }
+    )
+
+    instance.interceptors.response.use(response => {
+      return response.data
+    })
     return instance
   }
 
   // 自定义http请求
-  public initAxios(httpConfig: AxiosRequestConfig) {
-    const http = this.createAxios()
-    return http(httpConfig)
+  public initAxios: IinitAxios = (httpConfig: AxiosRequestConfig) => {
+    return this.http(httpConfig)
   }
 
   // 以下为请求快捷方式
@@ -72,3 +86,5 @@ export default class AxiosPlugin {
   }
 
 }
+
+export default AxiosPlugin

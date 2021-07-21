@@ -4,3 +4,10 @@
 .el-pagination {
   text-align: right;
 }
+.el-pagination__slot {
+  float: right;
+  padding: 2px 5px;
+  font-weight: 400;
+  color: #606266;
+  font-size: 13px;
+}

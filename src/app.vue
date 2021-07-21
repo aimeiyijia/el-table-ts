@@ -23,9 +23,13 @@
         </el-button>
         <el-button type="danger" @lick="this.delHandle(row)">删除</el-button>
       </template>
+      <template #pagination="{total, config}">
+        <div>{{ total }}/第五页{{}}</div>
+        <div>{{ config }}</div>
+      </template>
     </el-table-ts> -->
     <el-table-http
-      data="[]"
+      :netWork="httpConfig"
       :columns="columnsHttp"
       @row-click="rowClickHandle"
       @sort-change="sortChangeHandle"
@@ -47,6 +51,10 @@
         </el-button>
         <el-button type="danger" @lick="this.delHandle(row)">删除</el-button>
       </template>
+      <template #pagination="{total, config}">
+        <div>{{ total }}/第五页{{}}</div>
+        <!-- <div>{{ config }}</div> -->
+      </template>
     </el-table-http>
   </div>
 </template>
@@ -64,7 +72,7 @@ export default {
       pagination: {
         pageSizes: [10, 20, 50, 70],
         pageSize: 10,
-        layout: 'prev, pager, next, sizes, jumper, ->, total',
+        layout: 'slot, prev, pager, next, sizes, jumper, ->, total',
         background: true,
         currentPage: 3,
         small: true,
@@ -144,14 +152,41 @@ export default {
           prop: 'index',
         },
         {
-          label: '机构名称',
-          prop: 'organizationName',
+          label: '姓名',
+          prop: 'name',
         },
         {
-          label: '区划',
-          prop: 'administrativeRegion',
+          label: '年龄',
+          prop: 'age',
+        },
+        {
+          label: '出生日期',
+          prop: 'birthday',
+        },
+        {
+          label: '地址',
+          prop: 'address',
         },
       ],
+      httpConfig: {
+        method: 'get',
+        url: 'http://test.data',
+        // 解析路径
+        // 标准格式为 {code, data: {dataname: 表格数据, total: 总条数}, msg }
+        path: {
+          // data的解析路径(对象取值语法data.data或data[data]),到data的目录为止，不要包含[data]，例如在标准格式下 dataPath为 'data'
+          // 不指定就按照标准格式路径去解析
+          dataPath: 'data',
+          // 不指定就默认dataName为data
+          dataName: 'records'
+          // // 分页解析路径 默认dataname同级
+          // pagPath: 'data',
+          // // 页码名称 默认pageNo
+          // pageNoName: 'pageNo',
+          // // 每页显示条数指示器名称 默认pageSize
+          // pageSizeName: 'pageSize',
+        },
+      },
     }
   },
   mounted() {
