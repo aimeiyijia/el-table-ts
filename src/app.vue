@@ -182,19 +182,13 @@ export default {
           pageNoName: 'pageNoTest',
         },
         // 解析路径
-        // 标准格式为 {code, data: {dataname: 表格数据, total: 总条数}, msg }
+        // 标准格式为 {code, data: {[dataname]: 表格数据, total: 总条数}, msg }
         path: {
-          // data的解析路径(对象取值语法data.data或data[data]),到data的目录为止，不要包含[data]，例如在标准格式下 dataPath为 'data'
+          // data的解析路径(对象取值语法data.data或data[data]),到data的目录为止，不需要包含[dataname]，例如在标准格式下 dataPath为 'data'
           // 不指定就按照标准格式路径去解析
           dataPath: 'data',
           // 不指定就默认dataName为data
           dataName: 'records',
-          // // 分页解析路径 默认dataname同级
-          // pagPath: 'data',
-          // // 页码名称 默认pageNo
-          // pageNoName: 'pageNo',
-          // // 每页显示条数指示器名称 默认pageSize
-          // pageSizeName: 'pageSize',
         },
       },
     }

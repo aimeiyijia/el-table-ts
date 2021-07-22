@@ -11,12 +11,6 @@ interface Ipath {
   dataPath?: string
   // 不指定就默认dataName为data
   dataName?: string
-  // // 分页解析路径 默认dataname同级
-  // pagPath?: string,
-  // // 页码名称 默认pageNo
-  // pageNoName?: string,
-  // // 每页显示条数指示器名称 默认pageSize
-  // pageSizeName?: string
 }
 
 interface Ipag {
@@ -38,7 +32,6 @@ interface InetWork {
 interface ImatchHttpMethods {
   [key: string]: any,
 }
-
 @Component({
   components: {
     ElTableTs
@@ -52,6 +45,7 @@ export default class ElTableHttp extends Vue {
   private requsetData: any = null
   // 分页指示器字段名配置项
   private pag: any = null
+
   // 接口请求来的data
   private data: any = null
 
@@ -100,18 +94,20 @@ export default class ElTableHttp extends Vue {
     console.log(res, '数据')
     if (err) console.error(err, 'ElTable http error')
     // data的解析路径（从axios response.data之后开始算）
-    // 取配置项
-    const { path } = this.netWork
-    const { dataPath, dataName } = path as Ipath
+    // 取解析路径配置项
+    let { path } = this.netWork
+    if(!path) path = {dataPath: 'data', dataName: 'data'}
+    let { dataPath, dataName } = path as Ipath
+
+    // 默认值取值路径为data
+    if(!dataPath) dataPath = 'data'
+    // 默认取值字段为data
+    if(!dataName) dataName = 'data'
     // 找到表格数据所在位置（数据仓库）
     const dataDepository = res[dataPath as string]
     // 从数据仓库中取表格值，分页参数等
     // 取表格数据
     const tableData = dataDepository[dataName as string]
-    // // 取分页数据 页码
-    // const pageNo = dataDepository[pageNoName as string]
-    // // 每页显示条数
-    // const pageSize = dataDepository[pageSizeName as string]
 
     return tableData
   }
