@@ -74,7 +74,7 @@ export default {
         pageSize: 10,
         layout: 'slot, prev, pager, next, sizes, jumper, ->, total',
         background: true,
-        currentPage: 3,
+        currentPage: 1,
         small: true,
       },
       list: listData,
@@ -170,7 +170,17 @@ export default {
       ],
       httpConfig: {
         method: 'get',
+        // 请求数据
+        data: {
+          pageSizeTest: 10,
+          pageNoTest: 1,
+        },
         url: 'http://test.data',
+        // 分页传参名称
+        pag: {
+          pageSizeName: 'pageSizeTest',
+          pageNoName: 'pageNoTest',
+        },
         // 解析路径
         // 标准格式为 {code, data: {dataname: 表格数据, total: 总条数}, msg }
         path: {
@@ -178,7 +188,7 @@ export default {
           // 不指定就按照标准格式路径去解析
           dataPath: 'data',
           // 不指定就默认dataName为data
-          dataName: 'records'
+          dataName: 'records',
           // // 分页解析路径 默认dataname同级
           // pagPath: 'data',
           // // 页码名称 默认pageNo

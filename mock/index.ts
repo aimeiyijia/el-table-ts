@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
 // Mock响应模板
-Mock.mock('http://test.data', {
+Mock.mock(RegExp('http://test.data' + '.*'), {
   code: 200,
   msg: 'ok',
   data: {

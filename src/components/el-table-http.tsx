@@ -18,13 +18,22 @@ interface Ipath {
   // // 每页显示条数指示器名称 默认pageSize
   // pageSizeName?: string
 }
+
+interface Ipag {
+  // 条数指示器名称
+  pageSizeName: string,
+  // 页码参数名称
+  pageNoName: string,
+}
+
 interface InetWork {
-  method: string
+  method?: string
   url?: string
   data?: any
   createConfig?: AxiosRequestConfig
   httpConfig?: AxiosRequestConfig
   path?: Ipath
+  pag?: Ipag
 }
 interface ImatchHttpMethods {
   [key: string]: any,
@@ -39,16 +48,24 @@ export default class ElTableHttp extends Vue {
   // http请求配置
   @Prop({ type: [Object], default: () => { return { method: 'get' } } }) readonly netWork!: InetWork
 
+  // 发起接口请求的参数 也就是 netWork中的data字段
+  private requsetData: any = null
+  // 分页指示器字段名配置项
+  private pag: any = null
   // 接口请求来的data
   private data: any = null
 
-  // 传递给外部的分页指示参数
+  // 分页指示参数
   private pageSize = 0
 
   private currentPage = 0
 
   async created() {
     console.log(this.netWork, '配置项')
+    // 取出请求参数
+    const { data, pag } = this.netWork
+    this.requsetData = data
+    this.pag = pag
     this.data = await this.initHttp()
   }
 
@@ -64,7 +81,9 @@ export default class ElTableHttp extends Vue {
 
     // 如果method存在且为get或者post，那么使用matchHttpMethods结果发起请求
     // 否则就使用initAxios发起请求
-    const { method, url, data, httpConfig } = this.netWork
+    const { method, url, httpConfig } = this.netWork
+    const data = this.requsetData
+    console.log(data, '请求数据')
     if (method && method !== '') {
       const match = matchHttpMethods[method.toLowerCase()]
       if (match) return match(url, data, httpConfig)
@@ -97,30 +116,35 @@ export default class ElTableHttp extends Vue {
     return tableData
   }
 
-  pageSizeChange(pageSize: number): void {
-    this.pageSize = pageSize
+  pageSizeChange(page: any): void {
+    this.pageSize = page.pageSize
     this.emitSizeChangeEvent()
   }
 
-  currentChange(currentPage: number): void {
-    console.log(1)
-    this.currentPage = currentPage
+  currentChange(page: any): void {
+    this.currentPage = page.currentPage
     this.emitPageChangeEvent()
   }
 
   @Emit('page-change')
-  emitPageChangeEvent() {
+  async emitPageChangeEvent() {
+    const { pageSizeName, pageNoName } = this.pag
+    this.requsetData[pageNoName] = this.currentPage
+    this.data = await this.initHttp()
     return {
-      pageSize: this.pageSize,
-      currentPage: this.currentPage
+      [pageSizeName]: this.pageSize,
+      [pageNoName]: this.currentPage
     }
   }
 
   @Emit('size-change')
-  emitSizeChangeEvent() {
+  async emitSizeChangeEvent() {
+    const { pageSizeName, pageNoName } = this.pag
+    this.requsetData[pageSizeName] = this.pageSize
+    this.data = await this.initHttp()
     return {
-      pageSize: this.pageSize,
-      currentPage: this.currentPage
+      [pageSizeName]: this.pageSize,
+      [pageNoName]: this.currentPage
     }
   }
 
@@ -128,7 +152,7 @@ export default class ElTableHttp extends Vue {
   render(h: CreateElement): VNode {
     // 移除掉外部data属性防止干扰内部
     const attrs = omit(this.$attrs, ['data'])
-    console.log(this.$listeners, '监听器')
+    // console.log(this.$listeners, '监听器')
 
     // 拦截分页事件
     const tableListeners = omit(this.$listeners, ['page-change', 'size-change'])
