@@ -199,6 +199,14 @@ export default {
     //   this.pagination.pageSize = 20
     // }, 2000)
     // $post('/broke/meetingManagement/list', {})
+    setInterval(() => {
+      // this.httpConfig.method = 'post'
+      // console.log(1)
+      // this.columnsHttp.push({
+      //   label: '出生日期' + new Date(),
+      //   prop: 'birthday',
+      // })
+    }, 2000)
   },
   methods: {
     select(selection, row) {

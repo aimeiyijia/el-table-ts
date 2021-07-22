@@ -54,7 +54,8 @@ export default class ElTableHttp extends Vue {
 
   private currentPage = 0
 
-  async created() {
+  @Watch('netWork', { immediate: true, deep: true })
+  async getData(){
     console.log(this.netWork, '配置项')
     // 取出请求参数
     const { data, pag } = this.netWork
@@ -63,9 +64,23 @@ export default class ElTableHttp extends Vue {
     this.data = await this.initHttp()
   }
 
+  // async created() {
+  //   console.log(this.netWork, '配置项')
+  //   // 取出请求参数
+  //   const { data, pag } = this.netWork
+  //   this.requsetData = data
+  //   this.pag = pag
+  //   this.data = await this.initHttp()
+  // }
+
   // 判断使用那种方式进行请求
   public decideUseWhichMode() {
-    const http = new AxiosPlugin()
+
+    // 如果method存在且为get或者post，那么使用matchHttpMethods结果发起请求
+    // 否则就使用initAxios发起请求
+    const { method, url, httpConfig, createConfig} = this.netWork
+
+    const http = new AxiosPlugin(createConfig)
     const { initAxios, initPost, initGet } = http
     // 匹配内置的请求方法
     const matchHttpMethods: ImatchHttpMethods = {
@@ -73,9 +88,7 @@ export default class ElTableHttp extends Vue {
       post: initPost
     }
 
-    // 如果method存在且为get或者post，那么使用matchHttpMethods结果发起请求
-    // 否则就使用initAxios发起请求
-    const { method, url, httpConfig } = this.netWork
+
     const data = this.requsetData
     console.log(data, '请求数据')
     if (method && method !== '') {
