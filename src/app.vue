@@ -41,6 +41,7 @@
       @size-change="sizeChangeHandle"
       @scroll="scroll"
       @select="select"
+      @render="render"
     >
       <template #handle="{cellValue, row, column}">
         <el-button
@@ -51,7 +52,7 @@
         </el-button>
         <el-button type="danger" @lick="this.delHandle(row)">删除</el-button>
       </template>
-      <template #pagination="{total, config}">
+      <template #pagination="{total}">
         <div>{{ total }}/第五页{{}}</div>
         <!-- <div>{{ config }}</div> -->
       </template>
@@ -60,13 +61,13 @@
 </template>
 
 <script>
-import ElTableHttp from '@/components/el-table-http.tsx'
+// import ElTableHttp from '@/components/el-table-http.tsx'
 const listData = JSON.parse(
   '{"code":200,"message":"success","data":[{"id":50745,"name":"rtBNhgqCDR","storage":8620,"member":{"id":50961,"userId":"51262","email":"Nu87YypnB@AK22e.rgu","projectRole":"Qa4ohl6qhT"},"mount":[{"mountType":"M8Rhh2Ntp6","mountName":"bFTDHyixr3","mountPath":"uwDTMtnbCW","userName":"nYIE5YoQve"},{"mountType":"8pUyKzNPjL","mountName":"TVaV7bjr1y","mountPath":"HoazVStmm5","userName":"nbGzaRjLjK"},{"mountType":"nD3hnojrY0","mountName":"vtJvtG05Jw","mountPath":"p5VWi1ptsi","userName":"8ERyVxGL3R"}],"gmtCreate":34327},{"id":51414,"name":"1A6ogTNZl1","storage":36580,"member":{"id":51767,"userId":"52603","email":"606UKO@AgasP.qmt","projectRole":"q8KkeQyD8f"},"mount":[{"mountType":"VG3JPYd4n5","mountName":"ijPznKZnUQ","mountPath":"SiQIq2ypee","userName":"rAhVP1UTUQ"},{"mountType":"B900pSNnAf","mountName":"MGFUwpuZq2","mountPath":"RQJOgsV806","userName":"acfdNaETLA"},{"mountType":"L81aEPhXWJ","mountName":"7hWszN6MpP","mountPath":"e99n7mLoHe","userName":"t2d5oVwRqV"}],"gmtCreate":78533},{"id":52659,"name":"srO0gfnHho","storage":46240,"member":{"id":52998,"userId":"53927","email":"M37YXor@949Y0.acq","projectRole":"2ikIgsSabL"},"mount":[{"mountType":"YjxjSNSyOv","mountName":"lRsFRwSWgc","mountPath":"Z1rMIGu0cR","userName":"CoUSbae92N"},{"mountType":"N716xNCa4q","mountName":"uxYPo7TGcG","mountPath":"pXyJpuZ1CX","userName":"oiubmGJ4dQ"},{"mountType":"r3PqYBkT9y","mountName":"Pp6B1yZXhi","mountPath":"SjbANI8SmS","userName":"9h8k3elmdM"}],"gmtCreate":98416}]}'
 ).data
 export default {
   name: 'app',
-  components: { ElTableHttp },
+  // components: { ElTableHttp },
   data() {
     return {
       pagination: {
@@ -170,17 +171,27 @@ export default {
       ],
       httpConfig: {
         method: 'get',
-        // 请求数据
+        // 创建axios实例时传递的参数
+        createConfig: {},
+
+        // 发起请求时的额外参数，
+        // 当已配置 method, url, data时，在httpConfig中这三个配置会失效
+        httpConfig: {},
+
+        // 发起请求时的额外数据
         data: {
           pageSizeTest: 10,
           pageNoTest: 1,
         },
+        // 请求的url
         url: 'http://test.data',
-        // 分页传参名称
+
+        // 分页传参名称配置
         pag: {
           pageSizeName: 'pageSizeTest',
           pageNoName: 'pageNoTest',
         },
+
         // 解析路径
         // 标准格式为 {code, data: {[dataname]: 表格数据, total: 总条数}, msg }
         path: {
@@ -209,6 +220,10 @@ export default {
     }, 2000)
   },
   methods: {
+    render(api) {
+      console.log(api, '组件')
+      api.render()
+    },
     select(selection, row) {
       console.log(selection, row)
     },

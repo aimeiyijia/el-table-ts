@@ -6,12 +6,12 @@ import ElementUI from 'element-ui'
 
 import 'element-ui/lib/theme-chalk/index.css'
 
-import ElTableTs from './components/index.js'
+import ElTable from './components/index'
 
 import App from './app.vue'
 
 Vue.use(ElementUI)
-Vue.use(ElTableTs)
+Vue.use(ElTable)
 
 Vue.config.productionTip = false
 

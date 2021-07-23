@@ -13,6 +13,8 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
+    "declaration": true,
+    "declarationDir": "dist/lib",
     "baseUrl": ".",
     "types": [
       "node",
@@ -37,7 +39,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-, "src/components/index.js"  ],
+  ],
   "exclude": [
     "node_modules"
   ]

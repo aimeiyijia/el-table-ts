@@ -54,8 +54,19 @@ export default class ElTableHttp extends Vue {
 
   private currentPage = 0
 
-  @Watch('netWork', { immediate: true, deep: true })
-  async getData(){
+  // 在组件挂载时将渲染方法暴露出去，由用户自行决定渲染表格时机
+  mounted(){
+    this.$emit('render', this.expostApi())
+  }
+
+  // 决定要暴露出去的
+  private expostApi(){
+    return {
+      render: this.getData,
+    }
+  }
+
+  public async getData(){
     console.log(this.netWork, '配置项')
     // 取出请求参数
     const { data, pag } = this.netWork
@@ -64,17 +75,8 @@ export default class ElTableHttp extends Vue {
     this.data = await this.initHttp()
   }
 
-  // async created() {
-  //   console.log(this.netWork, '配置项')
-  //   // 取出请求参数
-  //   const { data, pag } = this.netWork
-  //   this.requsetData = data
-  //   this.pag = pag
-  //   this.data = await this.initHttp()
-  // }
-
   // 判断使用那种方式进行请求
-  public decideUseWhichMode() {
+  private decideUseWhichMode() {
 
     // 如果method存在且为get或者post，那么使用matchHttpMethods结果发起请求
     // 否则就使用initAxios发起请求
@@ -100,7 +102,7 @@ export default class ElTableHttp extends Vue {
   }
 
   // 发起请求
-  public async initHttp() {
+  private async initHttp() {
     const http = this.decideUseWhichMode()
     // 发起接口请求
     const [err, res] = await to<any>(http);
@@ -125,18 +127,18 @@ export default class ElTableHttp extends Vue {
     return tableData
   }
 
-  pageSizeChange(page: any): void {
+  private pageSizeChange(page: any): void {
     this.pageSize = page.pageSize
     this.emitSizeChangeEvent()
   }
 
-  currentChange(page: any): void {
+  private currentChange(page: any): void {
     this.currentPage = page.currentPage
     this.emitPageChangeEvent()
   }
 
   @Emit('page-change')
-  async emitPageChangeEvent() {
+  private async emitPageChangeEvent() {
     const { pageSizeName, pageNoName } = this.pag
     this.requsetData[pageNoName] = this.currentPage
     this.data = await this.initHttp()
@@ -147,7 +149,7 @@ export default class ElTableHttp extends Vue {
   }
 
   @Emit('size-change')
-  async emitSizeChangeEvent() {
+  private async emitSizeChangeEvent() {
     const { pageSizeName, pageNoName } = this.pag
     this.requsetData[pageSizeName] = this.pageSize
     this.data = await this.initHttp()
@@ -158,7 +160,7 @@ export default class ElTableHttp extends Vue {
   }
 
   // 外界传递的data将失去作用
-  render(h: CreateElement): VNode {
+  private render(h: CreateElement): VNode {
     // 移除掉外部data属性防止干扰内部
     const attrs = omit(this.$attrs, ['data'])
     // console.log(this.$listeners, '监听器')
