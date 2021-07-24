@@ -2,12 +2,13 @@ import Vue, { VNode, CreateElement } from 'vue'
 import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
 import to from 'await-to-js';
 import omit from 'lodash/omit'
+import cloneDeep from 'lodash/cloneDeep'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import AxiosPlugin from '../plugin/axios'
 import ElTableTs from './el-table-ts'
 
 interface Ipath {
-  // data的解析路径,不指定就按照标准格式路径去解析
+  // data的解析路径,不指定就按照默认路径去解析
   dataPath?: string
   // 不指定就默认dataName为data
   dataName?: string
@@ -70,8 +71,8 @@ export default class ElTableHttp extends Vue {
     console.log(this.netWork, '配置项')
     // 取出请求参数
     const { data, pag } = this.netWork
-    this.requsetData = data
-    this.pag = pag
+    this.requsetData = cloneDeep(data)
+    this.pag = cloneDeep(pag)
     this.data = await this.initHttp()
   }
 
@@ -80,16 +81,17 @@ export default class ElTableHttp extends Vue {
 
     // 如果method存在且为get或者post，那么使用matchHttpMethods结果发起请求
     // 否则就使用initAxios发起请求
-    const { method, url, httpConfig, createConfig } = this.netWork
+
+    const { method = "get", url, httpConfig = { method: "get" }, createConfig = {} } = this.netWork
 
     const http = new AxiosPlugin(createConfig)
     const { initAxios, initPost, initGet } = http
-    // 匹配内置的请求方法
+
+    // 内置请求方法匹配表
     const matchHttpMethods: ImatchHttpMethods = {
       get: initGet,
       post: initPost
     }
-
 
     const data = this.requsetData
     console.log(data, '请求数据')
@@ -101,23 +103,26 @@ export default class ElTableHttp extends Vue {
     return initAxios(httpConfig as AxiosRequestConfig)
   }
 
-  // 发起请求
-  private async initHttp() {
+  // 发起请求以及处理错误
+  private async sendRequest(){
     const http = this.decideUseWhichMode()
     // 发起接口请求
     const [err, res] = await to<any>(http);
     console.log(res, '数据')
     if (err) console.error(err, 'ElTable http error')
+    return res
+  }
+
+  // 发起请求并解析出数据
+  private async initHttp() {
+    const res = await this.sendRequest();
+
     // data的解析路径（从axios response.data之后开始算）
     // 取解析路径配置项
-    let { path } = this.netWork
-    if (!path) path = { dataPath: 'data', dataName: 'data' }
-    let { dataPath, dataName } = path as Ipath
+    let { path = { dataPath: 'data', dataName: 'data' } } = this.netWork
 
-    // 默认值取值路径为data
-    if (!dataPath) dataPath = 'data'
-    // 默认取值字段为data
-    if (!dataName) dataName = 'data'
+    let { dataPath = "data", dataName = "data" } = path as Ipath
+
     // 找到表格数据所在位置（数据仓库）
     const dataDepository = res[dataPath as string]
     // 从数据仓库中取表格值，分页参数等
@@ -163,12 +168,11 @@ export default class ElTableHttp extends Vue {
   private render(h: CreateElement): VNode {
     // 移除掉外部data属性防止干扰内部
     const attrs = omit(this.$attrs, ['data'])
-    // console.log(this.$listeners, '监听器')
 
     // 拦截分页事件
     const tableListeners = omit(this.$listeners, ['page-change', 'size-change'])
 
-    return this.data && <el-table-ts
+    return <el-table-ts
       data={this.data}
       {...{ attrs }}
       {...{

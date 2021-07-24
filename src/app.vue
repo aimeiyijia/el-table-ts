@@ -90,6 +90,7 @@ export default {
           align: 'center',
           type: 'index',
           prop: 'index',
+          width: '80px',
         },
         {
           label: '1',
@@ -151,6 +152,7 @@ export default {
           align: 'center',
           type: 'index',
           prop: 'index',
+          width: '80px',
         },
         {
           label: '姓名',
@@ -169,6 +171,8 @@ export default {
           prop: 'address',
         },
       ],
+
+      // 目前判断是否成功发起请求的唯一标识为  内部是否获取到关键数据
       httpConfig: {
         method: 'get',
         // 创建axios实例时传递的参数
@@ -209,20 +213,24 @@ export default {
     //   console.log('分页变化')
     //   this.pagination.pageSize = 20
     // }, 2000)
-    // $post('/broke/meetingManagement/list', {})
-    setInterval(() => {
-      // this.httpConfig.method = 'post'
-      // console.log(1)
-      // this.columnsHttp.push({
-      //   label: '出生日期' + new Date(),
-      //   prop: 'birthday',
-      // })
-    }, 2000)
+    // setInterval(() => {
+    // this.httpConfig.method = 'post'
+    // console.log(1)
+    // this.columnsHttp.push({
+    //   label: '出生日期' + new Date(),
+    //   prop: 'birthday',
+    // })
+    // }, 2000)
   },
   methods: {
     render(api) {
       console.log(api, '组件')
       api.render()
+      // const timer = setTimeout(() => {
+      //   api.render()
+      //   console.log('默认渲染数据')
+      //   clearTimeout(timer)
+      // }, 2000)
     },
     select(selection, row) {
       console.log(selection, row)
