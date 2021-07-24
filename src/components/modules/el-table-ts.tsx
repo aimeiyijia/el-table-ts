@@ -1,5 +1,5 @@
 import Vue, { VNode, CreateElement } from 'vue'
-import '../directives/height-adaptive'
+import '../directives/height-adaptive.ts'
 import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
 import omit from 'lodash/omit'
 import isString from 'lodash/isString'
@@ -132,7 +132,7 @@ export default class ElTableTs extends Vue {
 
     // 高度自适应指令
     const directives = [
-      { name: 'height-adaptive', value: { topOffset: 10, bottomOffset: 10, hOffset: 50 } }
+      { name: 'height-adaptive', value: { bottomOffset: 40 } }
     ]
 
 

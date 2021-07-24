@@ -1,6 +1,6 @@
 {
   "name": "el-table-ts",
-  "version": "1.0.12",
+  "version": "1.2.00",
   "main": "dist/el-table-ts.common.js",
   "typings": "types/index.d.ts",
   "private": false,
@@ -9,7 +9,7 @@
     "serve": "vue-cli-service serve",
     "mock": "npm run ./mock/index.ts",
     "test:unit": "jest --clearCache && vue-cli-service test:unit",
-    "build": "vue-cli-service build --target lib --name el-table-ts ./src/components/index.js"
+    "build": "vue-cli-service build --target lib --name el-table-ts ./src/components/index.ts"
   },
   "dependencies": {
     "@types/mockjs": "^1.0.4",
@@ -24,6 +24,7 @@
     "mockjs": "^1.1.0",
     "normalize.css": "^8.0.1",
     "script-loader": "^0.7.2",
+    "ts-debounce": "^3.0.0",
     "vue": "^2.6.12",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.0.2"

@@ -31,32 +31,10 @@
     <el-table-http
       :netWork="httpConfig"
       :columns="columnsHttp"
-      @row-click="rowClickHandle"
-      @sort-change="sortChangeHandle"
       stripe
       border
-      :pagination="pagination"
-      :total="100"
-      @page-change="pageChangeHandle"
-      @size-change="sizeChangeHandle"
-      @scroll="scroll"
-      @select="select"
       @render="render"
-    >
-      <template #handle="{cellValue, row, column}">
-        <el-button
-          type="primary"
-          @click="detailHandle({cellValue, row, column})"
-        >
-          查看详情
-        </el-button>
-        <el-button type="danger" @lick="this.delHandle(row)">删除</el-button>
-      </template>
-      <template #pagination="{total}">
-        <div>{{ total }}/第五页{{}}</div>
-        <!-- <div>{{ config }}</div> -->
-      </template>
-    </el-table-http>
+    />
   </div>
 </template>
 

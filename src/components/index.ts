@@ -11,14 +11,14 @@ const Components: { [key: string]: VueConstructor } = {
   ElTableHttp: ElTableHttp,
 }
 
-const installer: InstallFunction = (Vue: typeof _Vue) => {
-  if (installer.installed) return
+const install: InstallFunction = (Vue: typeof _Vue) => {
+  if (install.installed) return
 
   Object.keys(Components).forEach((name: any) => {
     Vue.component(name, Components[name])
   })
 
-  installer.installed = true
+  install.installed = true
 }
 
-export default installer
+export default install
