@@ -3,7 +3,7 @@ import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
 import to from 'await-to-js';
 import omit from 'lodash/omit'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
-import AxiosPlugin from '@/plugin/axios'
+import AxiosPlugin from '../plugin/axios'
 import ElTableTs from './el-table-ts'
 
 interface Ipath {
@@ -55,18 +55,18 @@ export default class ElTableHttp extends Vue {
   private currentPage = 0
 
   // 在组件挂载时将渲染方法暴露出去，由用户自行决定渲染表格时机
-  mounted(){
+  mounted() {
     this.$emit('render', this.expostApi())
   }
 
-  // 决定要暴露出去的
-  private expostApi(){
+  // 决定要暴露出去的内部属性及方法
+  private expostApi() {
     return {
       render: this.getData,
     }
   }
 
-  public async getData(){
+  public async getData() {
     console.log(this.netWork, '配置项')
     // 取出请求参数
     const { data, pag } = this.netWork
@@ -80,7 +80,7 @@ export default class ElTableHttp extends Vue {
 
     // 如果method存在且为get或者post，那么使用matchHttpMethods结果发起请求
     // 否则就使用initAxios发起请求
-    const { method, url, httpConfig, createConfig} = this.netWork
+    const { method, url, httpConfig, createConfig } = this.netWork
 
     const http = new AxiosPlugin(createConfig)
     const { initAxios, initPost, initGet } = http
@@ -111,13 +111,13 @@ export default class ElTableHttp extends Vue {
     // data的解析路径（从axios response.data之后开始算）
     // 取解析路径配置项
     let { path } = this.netWork
-    if(!path) path = {dataPath: 'data', dataName: 'data'}
+    if (!path) path = { dataPath: 'data', dataName: 'data' }
     let { dataPath, dataName } = path as Ipath
 
     // 默认值取值路径为data
-    if(!dataPath) dataPath = 'data'
+    if (!dataPath) dataPath = 'data'
     // 默认取值字段为data
-    if(!dataName) dataName = 'data'
+    if (!dataName) dataName = 'data'
     // 找到表格数据所在位置（数据仓库）
     const dataDepository = res[dataPath as string]
     // 从数据仓库中取表格值，分页参数等

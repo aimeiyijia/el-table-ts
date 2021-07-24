@@ -1,5 +1,5 @@
 import Vue, { VNode, CreateElement } from 'vue'
-import './directives.js'
+import '../directives/height-adaptive'
 import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
 import omit from 'lodash/omit'
 import isString from 'lodash/isString'
@@ -7,7 +7,8 @@ import isBoolean from 'lodash/isBoolean'
 import isObject from 'lodash/isObject'
 import { Pagination, TableColumn } from 'element-ui'
 // 样式
-import './index.scss'
+import '../styles/index.scss'
+
 // 默认分页配置
 declare class ElTableTsDefPagination {
   currentPage: number

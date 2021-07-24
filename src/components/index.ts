@@ -1,5 +1,5 @@
-import ElTableTs from './el-table-ts'
-import ElTableHttp from './el-table-http'
+import ElTableTs from './modules/el-table-ts'
+import ElTableHttp from './modules/el-table-http'
 import _Vue, { PluginFunction, VueConstructor } from 'vue'
 
 interface InstallFunction extends PluginFunction<any> {
@@ -11,21 +11,14 @@ const Components: { [key: string]: VueConstructor } = {
   ElTableHttp: ElTableHttp,
 }
 
-const install: InstallFunction = (Vue: typeof _Vue) => {
-  if (install.installed) return
+const installer: InstallFunction = (Vue: typeof _Vue) => {
+  if (installer.installed) return
 
   Object.keys(Components).forEach((name: any) => {
-    Vue.component(name, Components[name]) // X
+    Vue.component(name, Components[name])
   })
 
-  install.installed = true
+  installer.installed = true
 }
 
-export default install
-
-// export default {
-//   install(Vue: typeof _Vue) {
-//     Vue.component(ElTableTs.name, ElTableTs)
-//     Vue.component(ElTableHttp.name, ElTableHttp)
-//   },
-// }
+export default installer
