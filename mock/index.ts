@@ -4,13 +4,16 @@ Mock.mock(RegExp('http://test.data' + '.*'), {
   code: 200,
   msg: 'ok',
   data: {
-    'records|1-5': [
+    'records|2': [
       {
         // 随机生成1到3个数组元素
         name: '@cname', // 中文名称
         'age|18-28': 0, // 18至28以内随机整数, 0只是用来确定类型
         birthday: '@date("yyyy-MM-dd")', // 日期
         address: '@city(true)',
+        // desc: {
+        //   'height|160-180': 165,
+        // }
       },
     ],
     total: 2,

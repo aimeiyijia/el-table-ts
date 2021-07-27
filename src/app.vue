@@ -148,6 +148,10 @@ export default {
           label: '地址',
           prop: 'address',
         },
+        {
+          label: '身高',
+          prop: 'desc.height',
+        },
       ],
 
       // 目前判断是否成功发起请求的唯一标识为  内部是否获取到关键数据

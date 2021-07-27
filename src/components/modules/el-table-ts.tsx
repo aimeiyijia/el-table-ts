@@ -146,8 +146,24 @@ export default class ElTableTs extends Vue {
     const customScopedSlots = omit(this.$scopedSlots, ['pagination'])
     // console.log(customScopedSlots, '234')
 
-    const getCellValue = (column: TableColumn, row: any) =>
-      column.prop.split('.').reduce((obj, cur) => obj[cur], row)
+    const getCellValue = (column: TableColumn, row: any) => {
+      return column.prop.split('.').reduce((obj, cur) => {
+
+        if(!row[cur]){
+          console.error(`'${cur}' property not found in tableData`)
+        }
+
+        if(!obj){
+          console.error(`'${cur}' property not found in tableData`)
+        }
+
+
+        if(obj && obj[cur]){
+          return obj[cur]
+        }
+      }, row)
+    }
+
 
     const renderColumns = (columns: TableColumn[]) =>
       columns
