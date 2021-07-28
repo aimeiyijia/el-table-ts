@@ -11,9 +11,9 @@ Mock.mock(RegExp('http://test.data' + '.*'), {
         'age|18-28': 0, // 18至28以内随机整数, 0只是用来确定类型
         birthday: '@date("yyyy-MM-dd")', // 日期
         address: '@city(true)',
-        // desc: {
-        //   'height|160-180': 165,
-        // }
+        desc: {
+          'height|160-180': 165,
+        }
       },
     ],
     total: 2,

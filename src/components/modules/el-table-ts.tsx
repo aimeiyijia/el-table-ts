@@ -149,13 +149,13 @@ export default class ElTableTs extends Vue {
     const getCellValue = (column: TableColumn, row: any) => {
       return column.prop.split('.').reduce((obj, cur) => {
 
-        if(!row[cur]){
-          console.error(`'${cur}' property not found in tableData`)
-        }
+        // if(!row[cur]){
+        //   console.error(`'${cur}' property not found in tableData`)
+        // }
 
-        if(!obj){
-          console.error(`'${cur}' property not found in tableData`)
-        }
+        // if(!obj){
+        //   console.error(`'${cur}' property not found in tableData`)
+        // }
 
 
         if(obj && obj[cur]){
