@@ -131,32 +131,26 @@ export default class ElTableTs extends Vue {
   render(h: CreateElement): VNode {
 
     // 高度自适应指令
+    // todo 对外暴露出指令的配置项
     const directives = [
       { name: 'height-adaptive', value: { bottomOffset: 40 } }
     ]
 
 
     // 移除不支持自定义插槽的列类型 type[index/selection]
+    // todo index支持插槽
     const noSlots = ['index', 'selection']
 
     // 移除分页事件，防止事件冲突
     const tableListeners = omit(this.$listeners, ['page-change', 'size-change'])
 
     // 从插槽中移除内置的插槽 pagination
+    // todo 分页内置插槽名支持自定义
     const customScopedSlots = omit(this.$scopedSlots, ['pagination'])
     // console.log(customScopedSlots, '234')
 
     const getCellValue = (column: TableColumn, row: any) => {
       return column.prop.split('.').reduce((obj, cur) => {
-
-        // if(!row[cur]){
-        //   console.error(`'${cur}' property not found in tableData`)
-        // }
-
-        // if(!obj){
-        //   console.error(`'${cur}' property not found in tableData`)
-        // }
-
 
         if(obj && obj[cur]){
           return obj[cur]

@@ -138,11 +138,13 @@ export default {
           // 不支持，请使用customRender
           formatter: (row, column, cellValue, index) => {
             return 1123
-          }
+          },
         },
         {
           label: '年龄',
           prop: 'age',
+          // 也可以这样
+          scopedSlots: { customRender: 'handle' },
         },
         {
           label: '出生日期',
