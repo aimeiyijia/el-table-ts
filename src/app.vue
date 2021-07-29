@@ -135,6 +135,10 @@ export default {
         {
           label: '姓名',
           prop: 'name',
+          // 不支持，请使用customRender
+          formatter: (row, column, cellValue, index) => {
+            return 1123
+          }
         },
         {
           label: '年龄',

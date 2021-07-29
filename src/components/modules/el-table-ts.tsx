@@ -201,18 +201,6 @@ export default class ElTableTs extends Vue {
                   _self
                 })
               }
-              // 兼容element-ui formatter属性 因为formatter是格式化cellValue的，所以需要拦截下
-              if (column.formatter) {
-                return column.formatter({
-                  cellValue,
-                  row,
-                  column,
-                  $index,
-                  store,
-                  _self
-                })
-              }
-
               return cellValue
             },
             header: ({ column: elColumn, $index, store, _self }: { column: TableColumn, $index: number, store: any, _self: any }) => {
@@ -230,6 +218,7 @@ export default class ElTableTs extends Vue {
                 return column.customTitle({
                   column,
                   $index,
+                  h,
                   store,
                   _self
                 })
