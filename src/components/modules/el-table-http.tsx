@@ -9,9 +9,9 @@ import ElTableTs from './el-table-ts'
 
 interface Ipath {
   // data的解析路径,不指定就按照默认路径去解析
-  dataPath?: string
+  dataPath: string
   // 不指定就默认dataName为data
-  dataName?: string
+  dataName: string
 }
 
 interface Ipag {
