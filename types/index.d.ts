@@ -1,2 +1,23 @@
+import { AxiosRequestConfig, AxiosResponse } from 'axios'
+export declare class Path {
+  // data的解析路径,不指定就按照默认路径去解析
+  dataPath: string
+  // 不指定就默认dataName为data
+  dataName: string
+}
 
-declare module 'el-table-ts'
+export declare class Pag {
+  // 条数指示器名称
+  pageSizeName: string
+  // 页码参数名称
+  pageNoName: string
+}
+export declare class NetWork {
+  method?: string
+  url?: string
+  data?: any
+  createConfig?: AxiosRequestConfig
+  httpConfig?: AxiosRequestConfig
+  path?: Path
+  pag?: Pag
+}
