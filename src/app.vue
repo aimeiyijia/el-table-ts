@@ -31,6 +31,7 @@
     <el-table-http
       :netWork="httpConfig"
       :columns="columnsHttp"
+      :directives="directives"
       stripe
       border
       @render="render"
@@ -192,6 +193,13 @@ export default {
           dataPath: 'data',
           // 不指定就默认dataName为data
           dataName: 'records',
+        },
+      },
+      // 内置指令配置项
+      directives: {
+        // 高度自适应指令配置项
+        heightAdaptive: {
+          bottomOffset: 100,
         },
       },
     }

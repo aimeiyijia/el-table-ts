@@ -18,16 +18,24 @@ declare class ElTableTsDefPagination {
   background: boolean
 }
 
+declare interface IDirectives {
+  heightAdaptive?: {
+    bottomOffset: number;
+  }
+}
+
 @Component
 export default class ElTableTs extends Vue {
   // 数据加载提示
   @Prop(Boolean) readonly loading: boolean | undefined
 
+  // 内置指令的配置项
+  @Prop({ type: Object, default: () => { return { heightAdaptive: { bottomOffset: 40 } } } }) readonly directives: any | IDirectives
   // 表格每列配置项
   @Prop({ type: Array, default: () => [] }) readonly columns!: TableColumn[]
 
   // 数据相关
-  @Prop({ type: Array, default: undefined }) readonly data!: undefined[] | undefined
+  @Prop({ type: Array, default: () => [] }) readonly data!: any[]
 
   // 分页
   @Prop({ type: [Boolean, Object], default: () => { return { pageSize: 10, currentPage: 1 } } }) readonly pagination: Pagination | undefined | boolean
@@ -128,12 +136,24 @@ export default class ElTableTs extends Vue {
     }
   }
 
+  getheightAdaptiveValue() {
+    const defaultBottomOffset = 40
+    const { heightAdaptive } = this.directives
+    if (heightAdaptive) {
+      const { bottomOffset } = heightAdaptive
+      if (bottomOffset) {
+        return bottomOffset
+      }
+      return defaultBottomOffset
+    }
+    return defaultBottomOffset
+  }
+
   render(h: CreateElement): VNode {
 
     // 高度自适应指令
-    // todo 对外暴露出指令的配置项
     const directives = [
-      { name: 'height-adaptive', value: { bottomOffset: 40 } }
+      { name: 'height-adaptive', value: { bottomOffset: this.getheightAdaptiveValue() } }
     ]
 
 
@@ -152,7 +172,7 @@ export default class ElTableTs extends Vue {
     const getCellValue = (column: TableColumn, row: any) => {
       return column.prop.split('.').reduce((obj, cur) => {
 
-        if(obj && obj[cur]){
+        if (obj && obj[cur]) {
           return obj[cur]
         }
       }, row)
@@ -221,7 +241,7 @@ export default class ElTableTs extends Vue {
             }
           }
 
-          if(!noSlots.includes(options.type)){
+          if (!noSlots.includes(options.type)) {
             sampleScopedSlots = {
               scopedSlots
             }
@@ -236,8 +256,8 @@ export default class ElTableTs extends Vue {
           )
         })
 
-    const renderPageSlot= () => {
-      if(!this.$scopedSlots.hasOwnProperty('pagination')) return
+    const renderPageSlot = () => {
+      if (!this.$scopedSlots.hasOwnProperty('pagination')) return
       return this.$scopedSlots.pagination!({
         total: this.total,
         config: omit(this.defPagination, ['pageSize', 'currentPage'])
