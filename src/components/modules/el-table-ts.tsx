@@ -150,6 +150,7 @@ export default class ElTableTs extends Vue {
   }
 
   render(h: CreateElement): VNode {
+    // todo 增加分页渲染方式  1,使用分页组件 2,上滚（滑）加载更多
 
     // 高度自适应指令
     const directives = [
