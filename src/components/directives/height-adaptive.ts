@@ -1,6 +1,7 @@
 import Vue, { DirectiveOptions, VNode } from 'vue'
 import { DirectiveBinding } from 'vue/types/options'
-import { Table } from 'element-ui'
+// @ts-ignore
+import { addResizeListener, removeResizeListener } from 'element-ui/src/utils/resize-event';
 import { debounce } from 'ts-debounce'
 
 interface HTMLElement {
@@ -9,16 +10,22 @@ interface HTMLElement {
 
 interface IOffset {
   bottomOffset: number
-  offsetTop: number
 }
 
 // 表格从页面底部开始的高度。
 
 const calcTableHeight = (element: HTMLElement, offset: IOffset) => {
+  const wiH = window.innerHeight || 400
 
-  return (
-    window.innerHeight - offset.offsetTop - offset.bottomOffset
-  )
+  const elOB = offset.bottomOffset || 40
+
+  //to fix: Property 'offsetTop' does not exist on type 'Element'.ts
+  // https://github.com/microsoft/TypeScript/issues/34694
+  let elOT = 0
+  if (element instanceof HTMLElement) elOT = element.offsetTop
+
+  const height = wiH - elOT - elOB
+  return height
 }
 
 const doTableResize = (el: HTMLElement, binding: DirectiveBinding, vnode: VNode) => {
@@ -32,33 +39,32 @@ const doTableResize = (el: HTMLElement, binding: DirectiveBinding, vnode: VNode)
       "el-table must set the height. Such as height='10px' or height='0'"
     )
   }
-  const offset: IOffset = {
-    bottomOffset: (value && value.bottomOffset) || 10,
-    offsetTop: (value && value.offsetTop) || 10,
-  }
 
   if (!$table) return
-  const height = calcTableHeight(el, offset)
+  const height = calcTableHeight(el, value)
   $table.$nextTick(() => {
     $table.layout.setHeight(height)
     $table.doLayout()
   })
 }
 
-const directive: DirectiveOptions ={
+const directive: DirectiveOptions = {
   bind(el, binding, vnode) {
     const elType = el as unknown as HTMLElement
     elType.__resizeListener = () => {
       doTableResize(elType, binding, vnode)
     }
-
-    window.addEventListener('resize', debounce(elType.__resizeListener))
+    const f = debounce(elType.__resizeListener, 200)
+    addResizeListener(el, f)
+    window.addEventListener('resize', f)
   },
   update(el, binding, vnode) {
     doTableResize(el as unknown as HTMLElement, binding, vnode)
   },
   unbind(el) {
-    window.removeEventListener('resize', (el as unknown as HTMLElement).__resizeListener)
+    const elType = el as unknown as HTMLElement
+    removeResizeListener(el, elType.__resizeListener)
+    window.removeEventListener('resize', elType.__resizeListener)
   },
 }
 
