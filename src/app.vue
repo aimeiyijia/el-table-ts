@@ -1,13 +1,7 @@
 <template>
   <div id="app">
     <div>
-      <el-button>占位置测试表格高度自适应指令的</el-button>
-      <el-button>占位置测试表格高度自适应指令的</el-button>
-      <el-button>占位置测试表格高度自适应指令的</el-button>
-      <el-button>占位置测试表格高度自适应指令的</el-button>
-      <el-button>占位置测试表格高度自适应指令的</el-button>
-      <el-button>占位置测试表格高度自适应指令的</el-button>
-      <el-button>占位置测试表格高度自适应指令的</el-button>
+      <el-button @click="open">弹出表格</el-button>
     </div>
     <!-- <el-table-ts
       :data="list"
@@ -45,6 +39,18 @@
       border
       @render="render"
     />
+
+    <el-dialog title="提示" :visible.sync="dialogVisible">
+      <el-table-http
+        v-if="dialogVisible"
+        :netWork="httpConfig"
+        :columns="columnsHttp"
+        :directives="directives1"
+        stripe
+        border
+        @render="render"
+      />
+    </el-dialog>
   </div>
 </template>
 
@@ -58,6 +64,7 @@ export default {
   // components: { ElTableHttp },
   data() {
     return {
+      dialogVisible: false,
       pagination: {
         pageSizes: [10, 20, 50, 70],
         pageSize: 10,
@@ -211,6 +218,12 @@ export default {
           bottomOffset: 100,
         },
       },
+      directives1: {
+        // 高度自适应指令配置项
+        heightAdaptive: {
+          bottomOffset: 300,
+        },
+      },
     }
   },
   mounted() {
@@ -228,6 +241,9 @@ export default {
     // }, 2000)
   },
   methods: {
+    open() {
+      this.dialogVisible = true
+    },
     render(api) {
       console.log(api, '组件')
       api.render()

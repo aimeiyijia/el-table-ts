@@ -57,6 +57,8 @@ const directive: DirectiveOptions = {
     const f = debounce(elType.__resizeListener, 200)
     addResizeListener(el, f)
     window.addEventListener('resize', f)
+    // 立刻执行一次
+    doTableResize(elType, binding, vnode)
   },
   update(el, binding, vnode) {
     doTableResize(el as unknown as HTMLElement, binding, vnode)
