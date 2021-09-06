@@ -2,6 +2,12 @@
   <div id="app">
     <div>
       <el-button>占位置测试表格高度自适应指令的</el-button>
+      <el-button>占位置测试表格高度自适应指令的</el-button>
+      <el-button>占位置测试表格高度自适应指令的</el-button>
+      <el-button>占位置测试表格高度自适应指令的</el-button>
+      <el-button>占位置测试表格高度自适应指令的</el-button>
+      <el-button>占位置测试表格高度自适应指令的</el-button>
+      <el-button>占位置测试表格高度自适应指令的</el-button>
     </div>
     <!-- <el-table-ts
       :data="list"
