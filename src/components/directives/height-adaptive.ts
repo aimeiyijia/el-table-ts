@@ -5,11 +5,12 @@ import { addResizeListener, removeResizeListener } from 'element-ui/src/utils/re
 import { debounce } from 'ts-debounce'
 
 interface HTMLElement {
-  __resizeListener: () => void;
+  __resizeListener: () => void
 }
 
 interface IOffset {
   bottomOffset: number
+  topOffset: number
 }
 
 // 表格从页面底部开始的高度。
@@ -19,10 +20,10 @@ const calcTableHeight = (element: HTMLElement, offset: IOffset) => {
 
   const elOB = offset.bottomOffset || 40
 
-  //to fix: Property 'offsetTop' does not exist on type 'Element'.ts
+  // to fix: Property 'offsetTop' does not exist on type 'Element'.ts
   // https://github.com/microsoft/TypeScript/issues/34694
   let elOT = 0
-  if (element instanceof HTMLElement) elOT = element.offsetTop
+  if (element instanceof HTMLElement) elOT = offset.topOffset || element.offsetTop
 
   const height = wiH - elOT - elOB
   return height

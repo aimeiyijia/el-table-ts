@@ -215,6 +215,7 @@ export default {
       directives: {
         // 高度自适应指令配置项
         heightAdaptive: {
+          topOffset: 100,
           bottomOffset: 100,
         },
       },
