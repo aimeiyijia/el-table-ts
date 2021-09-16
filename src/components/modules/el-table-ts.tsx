@@ -174,7 +174,7 @@ export default class ElTableTs extends Vue {
     const getCellValue = (column: TableColumn, row: any) => {
       return column.prop.split('.').reduce((obj, cur) => {
 
-        if (obj && obj[cur]) {
+        if (obj) {
           return obj[cur]
         }
       }, row)
@@ -196,6 +196,8 @@ export default class ElTableTs extends Vue {
 
               // 获取单元格的原始值
               const cellValue = getCellValue(column, row)
+
+              console.log(cellValue, '111')
 
               if (column.scopedSlots && column.scopedSlots.customRender && !isString(column.scopedSlots.customRender)) {
                 console.error("插槽名必须是String类型")
