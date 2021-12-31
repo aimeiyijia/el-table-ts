@@ -143,6 +143,7 @@ export default class ElTableHttp extends Vue {
   }
 
   @Emit('page-change')
+  @Emit('current-change')
   private async emitPageChangeEvent() {
     const { pageSizeName, pageNoName } = this.pag
     this.requsetData[pageNoName] = this.currentPage
@@ -170,14 +171,12 @@ export default class ElTableHttp extends Vue {
     const attrs = omit(this.$attrs, ['data'])
 
     // 拦截分页事件
-    const tableListeners = omit(this.$listeners, ['page-change', 'size-change'])
+    const tableListeners = omit(this.$listeners, ['page-change', 'size-change', 'prev-click', 'next-click'])
 
     return <el-table-ts
       data={this.data}
       {...{ attrs }}
       {...{
-        // todo props不起效果
-        // props: attrs,
         on: {
           ...tableListeners,
           'page-change': this.currentChange,

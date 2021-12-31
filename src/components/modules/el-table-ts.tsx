@@ -122,6 +122,7 @@ export default class ElTableTs extends Vue {
 
 
   @Emit('page-change')
+  @Emit('current-change')
   emitPageChangeEvent() {
     return {
       pageSize: this.pageSize,
@@ -134,6 +135,22 @@ export default class ElTableTs extends Vue {
     return {
       pageSize: this.pageSize,
       currentPage: this.currentPage
+    }
+  }
+
+  @Emit('prev-click')
+  emitPrevClick() {
+    return {
+      pageSize: this.pageSize,
+      currentPage: this.currentPage - 1
+    }
+  }
+
+  @Emit('next-click')
+  emitNextClick() {
+    return {
+      pageSize: this.pageSize,
+      currentPage: this.currentPage + 1
     }
   }
 
@@ -164,16 +181,14 @@ export default class ElTableTs extends Vue {
     const noSlots = ['index', 'selection']
 
     // 移除分页事件，防止事件冲突
-    const tableListeners = omit(this.$listeners, ['page-change', 'size-change'])
+    const tableListeners = omit(this.$listeners, ['page-change', 'size-change', 'prev-click', 'next-click'])
 
     // 从插槽中移除内置的插槽 pagination
     // todo 分页内置插槽名支持自定义
     const customScopedSlots = omit(this.$scopedSlots, ['pagination'])
-    // console.log(customScopedSlots, '234')
 
     const getCellValue = (column: TableColumn, row: any) => {
       return column.prop.split('.').reduce((obj, cur) => {
-
         if (obj) {
           return obj[cur]
         }
@@ -197,10 +212,8 @@ export default class ElTableTs extends Vue {
               // 获取单元格的原始值
               const cellValue = getCellValue(column, row)
 
-              console.log(cellValue, '111')
-
               if (column.scopedSlots && column.scopedSlots.customRender && !isString(column.scopedSlots.customRender)) {
-                console.error("插槽名必须是String类型")
+                console.error("slotName must be string")
                 return
               }
 
@@ -225,7 +238,7 @@ export default class ElTableTs extends Vue {
               const column: any = Object.assign({}, options, elColumn)
 
               if (column.scopedSlots && column.scopedSlots.customTitle && !isString(column.scopedSlots.customTitle)) {
-                console.error("插槽名必须是String类型")
+                console.error("slotName must be string")
                 return
               }
 
@@ -268,11 +281,6 @@ export default class ElTableTs extends Vue {
       })
     }
 
-    // console.log(this.$attrs, '345')
-
-    // console.log(this)
-    // console.log(this.$scopedSlots)
-
     return (
       <div class="el-table-ts" v-loading={this.loading}>
         <el-table
@@ -288,8 +296,14 @@ export default class ElTableTs extends Vue {
           <el-pagination
             {...{ props: this.defPagination }}
             total={this.total}
-            on-size-change={this.pageSizeChange}
-            on-current-change={this.currentChange}
+            {...{
+              on: {
+                'size-change': this.pageSizeChange,
+                'current-change': this.currentChange,
+                'prev-click': this.emitPrevClick,
+                'next-click': this.emitNextClick
+              }
+            }}
           >
             <span class="el-pagination__slot">{renderPageSlot()}</span>
           </el-pagination>

@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <div>
+    <!-- <div>
       <el-button @click="open">弹出表格</el-button>
-    </div>
-    <!-- <el-table-ts
+    </div> -->
+    <el-table-ts
       :data="list"
       :columns="columns"
       @row-click="rowClickHandle"
@@ -12,8 +12,10 @@
       border
       :pagination="pagination"
       :total="100"
-      @page-change="pageChangeHandle"
+      @current-change="pageChangeHandle"
       @size-change="sizeChangeHandle"
+      @prev-click="prevClickHandle"
+      @next-click="nextClickHandle"
       @scroll="scroll"
       @select="select"
     >
@@ -30,17 +32,17 @@
         <div>{{ total }}/第五页{{}}</div>
         <div>{{ config }}</div>
       </template>
-    </el-table-ts> -->
-    <el-table-http
+    </el-table-ts>
+    <!-- <el-table-http
       :netWork="httpConfig"
       :columns="columnsHttp"
       :directives="directives"
       stripe
       border
       @render="render"
-    />
+    /> -->
 
-    <el-dialog title="提示" :visible.sync="dialogVisible">
+    <!-- <el-dialog title="提示" :visible.sync="dialogVisible">
       <el-table-http
         v-if="dialogVisible"
         :netWork="httpConfig"
@@ -50,7 +52,7 @@
         border
         @render="render"
       />
-    </el-dialog>
+    </el-dialog> -->
   </div>
 </template>
 
@@ -270,6 +272,14 @@ export default {
     },
     sortChangeHandle(o) {
       console.log(o)
+    },
+    prevClickHandle(e) {
+      console.log(e, '上一')
+      // console.log(pageSize, currentPage)
+    },
+    nextClickHandle(e) {
+      console.log(e, '下一')
+      // console.log(pageSize, currentPage)
     },
     pageChangeHandle(e) {
       console.log(e)
