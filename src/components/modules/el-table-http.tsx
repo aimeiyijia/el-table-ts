@@ -68,7 +68,6 @@ export default class ElTableHttp extends Vue {
   }
 
   public async getData() {
-    console.log(this.netWork, '配置项')
     // 取出请求参数
     const { data, pag } = this.netWork
     this.requsetData = cloneDeep(data)
@@ -94,7 +93,6 @@ export default class ElTableHttp extends Vue {
     }
 
     const data = this.requsetData
-    console.log(data, '请求数据')
     if (method && method !== '') {
       const match = matchHttpMethods[method.toLowerCase()]
       if (match) return match(url, data, httpConfig)
@@ -108,7 +106,6 @@ export default class ElTableHttp extends Vue {
     const http = this.decideUseWhichMode()
     // 发起接口请求
     const [err, res] = await to<any>(http);
-    console.log(res, '数据')
     if (err) console.error(err, 'ElTable http error')
     return res
   }
