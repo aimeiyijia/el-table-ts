@@ -5,6 +5,7 @@ import omit from 'lodash/omit'
 import isString from 'lodash/isString'
 import isBoolean from 'lodash/isBoolean'
 import isObject from 'lodash/isObject'
+import { generateUUID } from '../utils/uuid'
 import { Pagination, TableColumn } from 'element-ui'
 // 样式
 import '../styles/index.scss'
@@ -166,8 +167,6 @@ export default class ElTableTs extends Vue {
   }
 
   render(h: CreateElement): VNode {
-    // todo 增加分页渲染方式  1,使用分页组件 2,上滚（滑）加载更多
-
     // 高度自适应指令
     const directives = [
       { name: 'height-adaptive', value: { bottomOffset: this.getheightAdaptiveValue(), topOffset: this.directives.heightAdaptive.topOffset } }
@@ -175,14 +174,12 @@ export default class ElTableTs extends Vue {
 
 
     // 移除不支持自定义插槽的列类型 type[index/selection]
-    // todo index支持插槽
     const noSlots = ['index', 'selection']
 
     // 移除分页事件，防止事件冲突
     const tableListeners = omit(this.$listeners, ['page-change', 'size-change', 'prev-click', 'next-click'])
 
     // 从插槽中移除内置的插槽 pagination
-    // todo 分页内置插槽名支持自定义
     const customScopedSlots = omit(this.$scopedSlots, ['pagination'])
 
     const getCellValue = (column: TableColumn, row: any) => {
@@ -264,7 +261,7 @@ export default class ElTableTs extends Vue {
 
           return (
             <el-table-column
-              key={options.prop}
+              key={generateUUID()}
               {...{ props: options }}
               {...sampleScopedSlots}
             />
