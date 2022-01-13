@@ -27,8 +27,6 @@ declare interface IDirectives {
 
 @Component
 export default class ElTableTs extends Vue {
-  // 数据加载提示
-  @Prop(Boolean) readonly loading: boolean | undefined
 
   // 内置指令的配置项
   @Prop({ type: Object, default: () => { return { heightAdaptive: { bottomOffset: 40 } } } }) readonly directives: any | IDirectives
@@ -282,7 +280,7 @@ export default class ElTableTs extends Vue {
     }
 
     return (
-      <div class="el-table-ts" v-loading={this.loading}>
+      <div class="el-table-ts">
         <el-table
           ref="table"
           height="0"
