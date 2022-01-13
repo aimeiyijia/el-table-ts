@@ -215,7 +215,7 @@ export default class ElTableTs extends Vue {
                 return
               }
 
-              // 自定义单元格 指定slot name的优先级比自定义渲染函数优先级高
+              // 自定义单元格 指定slot name的优先级比自定义渲染函数优先级低
               column.customRender =
                 column.customRender ||
                 customScopedSlots[column.scopedSlots.customRender]
