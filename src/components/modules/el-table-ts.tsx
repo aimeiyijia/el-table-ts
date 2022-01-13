@@ -28,11 +28,13 @@ declare interface IDirectives {
 
 @Component
 export default class ElTableTs extends Vue {
-
   // 内置指令的配置项
   @Prop({ type: Object, default: () => { return { heightAdaptive: { bottomOffset: 40 } } } }) readonly directives: any | IDirectives
   // 表格每列配置项
   @Prop({ type: Array, default: () => [] }) readonly columns!: TableColumn[]
+
+  // 更加统一化的列配置项
+  @Prop({ type: Object, default: () => {} }) readonly colAttrs?: TableColumn
 
   // 数据相关
   @Prop({ type: Array, default: () => [] }) readonly data!: any[]
@@ -66,6 +68,11 @@ export default class ElTableTs extends Vue {
   @Watch('pagination', { deep: true })
   onPaginationChanged(val: Pagination) {
     this.setPagination()
+  }
+
+  // 将来留作拦截掉一些不支持统一配置的配置项
+  get columnsAttrs(){
+    return this.colAttrs
   }
 
   mounted() {
@@ -195,7 +202,7 @@ export default class ElTableTs extends Vue {
       columns
         .filter((i: any) => !i.hidden)
         .map(c => {
-          const options = Object.assign({ scopedSlots: {}, prop: '' }, c)
+          const options = Object.assign({ ...this.columnsAttrs, scopedSlots: {}, prop: '' }, c)
           let sampleScopedSlots = {}
 
 

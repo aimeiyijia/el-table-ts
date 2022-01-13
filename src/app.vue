@@ -12,6 +12,7 @@
       border
       :pagination="pagination"
       :total="100"
+      :col-attrs="{align: 'center'}"
       @current-change="pageChangeHandle"
       @size-change="sizeChangeHandle"
       @prev-click="prevClickHandle"
