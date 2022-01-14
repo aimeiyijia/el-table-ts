@@ -9,6 +9,7 @@
       :pagination="pagination"
       :total="100"
       @current-change="handlePageChange"
+      @size-change="handleSizeChange"
       @scroll="handleScroll"
       @select="handleSelect"
       @row-click="handleRowClick"
@@ -41,7 +42,7 @@ export default {
       pagination: {
         pageSizes: [10, 20, 50, 70],
         pageSize: 10,
-        layout: 'slot, pager',
+        layout: 'slot, pager, sizes',
         background: true,
         currentPage: 1,
       },
@@ -123,7 +124,6 @@ export default {
       directives: {
         // 高度自适应指令配置项
         heightAdaptive: {
-          topOffset: 100,
           bottomOffset: 100,
         },
       },
@@ -151,7 +151,11 @@ export default {
     },
     handlePageChange({ currentPage }) {
       this.pagination.currentPage = currentPage
-      console.log(currentPage, '分页')
+      console.log(currentPage, '触发分页')
+    },
+    handleSizeChange({ pageSize }) {
+      this.pagination.pageSize = pageSize
+      console.log(pageSize, '触发页数变化')
     },
     handleScroll(e) {
       console.log(e)

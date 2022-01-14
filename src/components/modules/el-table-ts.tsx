@@ -5,10 +5,13 @@ import omit from 'lodash/omit'
 import isString from 'lodash/isString'
 import isBoolean from 'lodash/isBoolean'
 import isObject from 'lodash/isObject'
+import cloneDeep from 'lodash/cloneDeep'
 import { generateUUID } from '../utils/uuid'
 import { Pagination, TableColumn } from 'element-ui'
 // 样式
 import '../styles/index.scss'
+
+import PagStore from '../utils/store'
 
 // 默认分页配置
 declare class ElTableTsDefPagination {
@@ -52,23 +55,12 @@ export default class ElTableTs extends Vue {
   isShowPag = true
 
   // 默认分页配置
-  private defPagination: ElTableTsDefPagination = {
-    currentPage: 1,
-    pageSizes: [10, 20, 30, 50],
-    pageSize: 10,
-    layout: 'prev, pager, next, sizes, total',
-    background: true,
-  }
+  private defPagination: any = null
 
-  // 传递给外部的分页指示参数
-  private pageSize = 0
-
-  private currentPage = 0
-
-  @Watch('pagination', { deep: true })
-  onPaginationChanged(val: Pagination) {
-    this.setPagination()
-  }
+  // @Watch('pagination', { deep: true })
+  // onPaginationChanged(val: Pagination) {
+  //   this.setPagination()
+  // }
 
   // 将来留作拦截掉一些不支持统一配置的配置项
   get columnsAttrs() {
@@ -77,7 +69,11 @@ export default class ElTableTs extends Vue {
 
   mounted() {
 
-    this.setPagination()
+    console.log(this, '挂载')
+
+    // this.setPagination()
+
+    this.defPagination = cloneDeep(this.pagination)
 
     this.setTableScrollListener()
 
@@ -91,10 +87,11 @@ export default class ElTableTs extends Vue {
     }
     if (isObject(pagination)) {
       this.isShowPag = true
-      Object.assign(this.defPagination, pagination)
+      Object.assign(cloneDeep(this.defPagination), pagination)
       const { pageSize, currentPage } = this.defPagination
-      this.pageSize = pageSize
-      this.currentPage = currentPage
+      PagStore.setCurrentPage(currentPage)
+      PagStore.setPageSize(pageSize)
+      console.log(PagStore, '设置完成')
     }
   }
 
@@ -110,12 +107,12 @@ export default class ElTableTs extends Vue {
   }
 
   pageSizeChange(pageSize: number): void {
-    this.pageSize = pageSize
+    PagStore.pageSize = pageSize
     this.emitSizeChangeEvent()
   }
 
   currentChange(currentPage: number): void {
-    this.currentPage = currentPage
+    PagStore.setCurrentPage(currentPage)
     this.emitPageChangeEvent()
   }
 
@@ -131,32 +128,32 @@ export default class ElTableTs extends Vue {
   @Emit('current-change')
   emitPageChangeEvent() {
     return {
-      pageSize: this.pageSize,
-      currentPage: this.currentPage
+      pageSize: PagStore.pageSize,
+      currentPage: PagStore.currentPage
     }
   }
 
   @Emit('size-change')
   emitSizeChangeEvent() {
     return {
-      pageSize: this.pageSize,
-      currentPage: this.currentPage
+      pageSize: PagStore.pageSize,
+      currentPage: PagStore.currentPage
     }
   }
 
   @Emit('prev-click')
   emitPrevClick() {
     return {
-      pageSize: this.pageSize,
-      currentPage: this.currentPage - 1
+      pageSize: PagStore.pageSize,
+      currentPage: PagStore.currentPage - 1
     }
   }
 
   @Emit('next-click')
   emitNextClick() {
     return {
-      pageSize: this.pageSize,
-      currentPage: this.currentPage + 1
+      pageSize: PagStore.pageSize,
+      currentPage: PagStore.currentPage + 1
     }
   }
 
@@ -283,6 +280,8 @@ export default class ElTableTs extends Vue {
       })
     }
 
+    console.log('重新渲染')
+
     return (
       <div class="el-table-ts">
         <el-table
@@ -307,7 +306,7 @@ export default class ElTableTs extends Vue {
               }
             }}
           >
-            <span class="el-pagination__slot">{renderPageSlot()}</span>
+            {/* <span class="el-pagination__slot">{renderPageSlot()}</span> */}
           </el-pagination>
         )}
       </div>

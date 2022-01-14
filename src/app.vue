@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <!-- <el-table-ts></el-table-ts> -->
-    <el-table-http></el-table-http>
+    <el-table-ts></el-table-ts>
+    <!-- <el-table-http></el-table-http> -->
   </div>
 </template>
 

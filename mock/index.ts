@@ -12,7 +12,7 @@ const dataTemplate = {
 
 export const MockData = Mock.mock({
   // 属性 list 的值是一个数组，其中含有 1 到 10 个元素
-  'data|10-20': [dataTemplate],
+  'data|13': [dataTemplate],
 })
 
 // Mock响应模板
