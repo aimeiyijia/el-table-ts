@@ -184,7 +184,7 @@ export default class ElTableTs extends Vue {
     const noSlots = ['index', 'selection']
 
     // 移除分页事件，防止事件冲突
-    const tableListeners = omit(this.$listeners, ['page-change', 'size-change', 'prev-click', 'next-click'])
+    const tableListeners = omit(this.$listeners, ['page-change','current-change', 'size-change', 'prev-click', 'next-click'])
 
     // 从插槽中移除内置的插槽 pagination
     const customScopedSlots = omit(this.$scopedSlots, ['pagination'])
