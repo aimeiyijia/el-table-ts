@@ -12,6 +12,8 @@ interface Ipath {
   dataPath: string
   // 不指定就默认dataName为data
   dataName: string
+  // 总条数的取值字段 默认 total
+  totalName: string
 }
 
 interface Ipag {
@@ -55,6 +57,9 @@ export default class ElTableHttp extends Vue {
 
   private currentPage = 0
 
+  // 总条数
+  private total = 0
+
   // 在组件挂载时将渲染方法暴露出去，由用户自行决定渲染表格时机
   mounted() {
     this.$emit('render', this.expostApi())
@@ -72,7 +77,7 @@ export default class ElTableHttp extends Vue {
     const { data, pag } = this.netWork
     this.requsetData = cloneDeep(data)
     this.pag = cloneDeep(pag)
-    this.data = await this.initHttp()
+    await this.initHttp()
   }
 
   // 判断使用那种方式进行请求
@@ -102,7 +107,7 @@ export default class ElTableHttp extends Vue {
   }
 
   // 发起请求以及处理错误
-  private async sendRequest(){
+  private async sendRequest() {
     const http = this.decideUseWhichMode()
     // 发起接口请求
     const [err, res] = await to<any>(http);
@@ -116,17 +121,16 @@ export default class ElTableHttp extends Vue {
 
     // data的解析路径（从axios response.data之后开始算）
     // 取解析路径配置项
-    let { path = { dataPath: 'data', dataName: 'data' } } = this.netWork
+    let { path = {} } = this.netWork
 
-    let { dataPath = "data", dataName = "data" } = path as Ipath
+    let { dataPath = "data", dataName = "data", totalName = 'total' } = path as Ipath
 
     // 找到表格数据所在位置（数据仓库）
     const dataDepository = res[dataPath as string]
     // 从数据仓库中取表格值，分页参数等
     // 取表格数据
-    const tableData = dataDepository[dataName as string]
-
-    return tableData
+    this.data = dataDepository[dataName as string]
+    this.total = dataDepository[totalName as string]
   }
 
   private pageSizeChange(page: any): void {
@@ -144,7 +148,7 @@ export default class ElTableHttp extends Vue {
   private async emitPageChangeEvent() {
     const { pageSizeName, pageNoName } = this.pag
     this.requsetData[pageNoName] = this.currentPage
-    this.data = await this.initHttp()
+    await this.initHttp()
     return {
       [pageSizeName]: this.pageSize,
       [pageNoName]: this.currentPage
@@ -155,7 +159,7 @@ export default class ElTableHttp extends Vue {
   private async emitSizeChangeEvent() {
     const { pageSizeName, pageNoName } = this.pag
     this.requsetData[pageSizeName] = this.pageSize
-    this.data = await this.initHttp()
+    await this.initHttp()
     return {
       [pageSizeName]: this.pageSize,
       [pageNoName]: this.currentPage
@@ -165,13 +169,14 @@ export default class ElTableHttp extends Vue {
   // 外界传递的data将失去作用
   private render(h: CreateElement): VNode {
     // 移除掉外部data属性防止干扰内部
-    const attrs = omit(this.$attrs, ['data'])
+    const attrs = omit(this.$attrs, ['data', 'total'])
 
     // 拦截分页事件
-    const tableListeners = omit(this.$listeners, ['page-change', 'size-change', 'prev-click', 'next-click'])
+    const tableListeners = omit(this.$listeners, ['page-change', 'current-change', 'size-change', 'prev-click', 'next-click'])
 
     return <el-table-ts
       data={this.data}
+      total={this.total}
       {...{ attrs }}
       {...{
         on: {

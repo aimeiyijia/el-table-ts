@@ -20,12 +20,7 @@ const calcTableHeight = (element: HTMLElement, offset: IOffset) => {
 
   const elOB = offset.bottomOffset || 40
 
-  // to fix: Property 'offsetTop' does not exist on type 'Element'.ts
-  // https://github.com/microsoft/TypeScript/issues/34694
-  let elOT = 0
-  if (element instanceof HTMLElement) elOT = offset.topOffset || element.offsetTop
-
-  const height = wiH - elOT - elOB
+  const height = wiH - elOB
   return height
 }
 
