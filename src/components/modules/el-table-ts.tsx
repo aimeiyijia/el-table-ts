@@ -34,7 +34,7 @@ export default class ElTableTs extends Vue {
   @Prop({ type: Array, default: () => [] }) readonly columns!: TableColumn[]
 
   // 更加统一化的列配置项
-  @Prop({ type: Object, default: () => {} }) readonly colAttrs?: TableColumn
+  @Prop({ type: Object, default: () => { } }) readonly colAttrs?: TableColumn
 
   // 数据相关
   @Prop({ type: Array, default: () => [] }) readonly data!: any[]
@@ -71,7 +71,7 @@ export default class ElTableTs extends Vue {
   }
 
   // 将来留作拦截掉一些不支持统一配置的配置项
-  get columnsAttrs(){
+  get columnsAttrs() {
     return this.colAttrs
   }
 
@@ -176,7 +176,7 @@ export default class ElTableTs extends Vue {
   render(h: CreateElement): VNode {
     // 高度自适应指令
     const directives = [
-      { name: 'height-adaptive', value: { bottomOffset: this.getheightAdaptiveValue(), topOffset: this.directives.heightAdaptive.topOffset } }
+      { name: 'height-adaptive', value: { bottomOffset: this.getheightAdaptiveValue() } }
     ]
 
 
@@ -184,7 +184,7 @@ export default class ElTableTs extends Vue {
     const noSlots = ['index', 'selection']
 
     // 移除分页事件，防止事件冲突
-    const tableListeners = omit(this.$listeners, ['page-change','current-change', 'size-change', 'prev-click', 'next-click'])
+    const tableListeners = omit(this.$listeners, ['page-change', 'current-change', 'size-change', 'prev-click', 'next-click'])
 
     // 从插槽中移除内置的插槽 pagination
     const customScopedSlots = omit(this.$scopedSlots, ['pagination'])
