@@ -150,11 +150,9 @@ export default {
       console.log(o, '排序触发')
     },
     handlePageChange({ currentPage }) {
-      this.pagination.currentPage = currentPage
       console.log(currentPage, '触发分页')
     },
     handleSizeChange({ pageSize }) {
-      this.pagination.pageSize = pageSize
       console.log(pageSize, '触发页数变化')
     },
     handleScroll(e) {

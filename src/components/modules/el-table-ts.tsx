@@ -5,7 +5,6 @@ import omit from 'lodash/omit'
 import isString from 'lodash/isString'
 import isBoolean from 'lodash/isBoolean'
 import isObject from 'lodash/isObject'
-import cloneDeep from 'lodash/cloneDeep'
 import { generateUUID } from '../utils/uuid'
 import { Pagination, TableColumn } from 'element-ui'
 // 样式
@@ -55,12 +54,18 @@ export default class ElTableTs extends Vue {
   isShowPag = true
 
   // 默认分页配置
-  private defPagination: any = null
+  private defPagination: ElTableTsDefPagination = {
+    currentPage: 1,
+    pageSizes: [10, 20, 30, 50],
+    pageSize: 10,
+    layout: 'prev, pager, next, sizes, total',
+    background: true,
+  }
 
-  // @Watch('pagination', { deep: true })
-  // onPaginationChanged(val: Pagination) {
-  //   this.setPagination()
-  // }
+  @Watch('pagination', { deep: true })
+  onPaginationChanged() {
+    this.setPagination()
+  }
 
   // 将来留作拦截掉一些不支持统一配置的配置项
   get columnsAttrs() {
@@ -69,11 +74,7 @@ export default class ElTableTs extends Vue {
 
   mounted() {
 
-    console.log(this, '挂载')
-
-    // this.setPagination()
-
-    this.defPagination = cloneDeep(this.pagination)
+    this.setPagination()
 
     this.setTableScrollListener()
 
@@ -87,11 +88,10 @@ export default class ElTableTs extends Vue {
     }
     if (isObject(pagination)) {
       this.isShowPag = true
-      Object.assign(cloneDeep(this.defPagination), pagination)
+      Object.assign(this.defPagination, pagination)
       const { pageSize, currentPage } = this.defPagination
       PagStore.setCurrentPage(currentPage)
       PagStore.setPageSize(pageSize)
-      console.log(PagStore, '设置完成')
     }
   }
 
@@ -280,8 +280,6 @@ export default class ElTableTs extends Vue {
       })
     }
 
-    console.log('重新渲染')
-
     return (
       <div class="el-table-ts">
         <el-table
@@ -306,7 +304,7 @@ export default class ElTableTs extends Vue {
               }
             }}
           >
-            {/* <span class="el-pagination__slot">{renderPageSlot()}</span> */}
+            <span class="el-pagination__slot">{renderPageSlot()}</span>
           </el-pagination>
         )}
       </div>

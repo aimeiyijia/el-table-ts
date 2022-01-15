@@ -3,7 +3,7 @@ import ElTableHttp from './modules/el-table-http'
 import _Vue, { PluginFunction, VueConstructor } from 'vue'
 
 interface InstallFunction extends PluginFunction<any> {
-  installed?: boolean;
+  installed?: boolean
 }
 
 const Components: { [key: string]: VueConstructor } = {
