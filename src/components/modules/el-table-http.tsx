@@ -144,7 +144,6 @@ export default class ElTableHttp extends Vue {
   }
 
   @Emit('page-change')
-  @Emit('current-change')
   private async emitPageChangeEvent() {
     const { pageSizeName, pageNoName } = this.pag
     this.requsetData[pageNoName] = this.currentPage

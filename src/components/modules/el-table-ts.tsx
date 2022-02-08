@@ -125,7 +125,6 @@ export default class ElTableTs extends Vue {
 
 
   @Emit('page-change')
-  @Emit('current-change')
   emitPageChangeEvent() {
     return {
       pageSize: PagStore.pageSize,
