@@ -1,4 +1,6 @@
-import { AxiosRequestConfig, AxiosResponse } from 'axios'
+
+import Vue from 'vue'
+import { AxiosRequestConfig } from 'axios'
 export declare class Path {
   // data的解析路径,不指定就按照默认路径去解析
   dataPath: string
@@ -21,3 +23,10 @@ export declare class NetWork {
   path?: Path
   pag?: Pag
 }
+
+// for future
+// export interface InstallationOptions {}
+// export function install (vue: typeof Vue, options: InstallationOptions): void
+
+// now
+export function install(vue: typeof Vue): void
