@@ -303,7 +303,7 @@ export default class ElTableTs extends Vue {
               }
             }}
           >
-            <span class="el-pagination__slot">{renderPageSlot()}</span>
+            {renderPageSlot() && <span class="el-pagination__slot">{renderPageSlot()}</span>}
           </el-pagination>
         )}
       </div>
