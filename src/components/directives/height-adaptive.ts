@@ -6,6 +6,8 @@ import { debounce } from 'ts-debounce'
 
 interface HTMLElement {
   __resizeListener: () => void
+  offsetTop: number
+  offsetParent: HTMLElement
 }
 
 interface IOffset {
@@ -13,14 +15,27 @@ interface IOffset {
   topOffset: number
 }
 
+//
+function getOffsetTop(elem: HTMLElement): number {
+  let top = elem.offsetTop;
+  let parent = elem.offsetParent;
+  while (parent) {
+    top += parent.offsetTop;
+    parent = parent.offsetParent;
+  }
+  return top;
+}
+
 // 表格从页面底部开始的高度。
 
 const calcTableHeight = (element: HTMLElement, offset: IOffset) => {
   const wiH = window.innerHeight || 400
 
+  const offsetTop = getOffsetTop(element)
+
   const elOB = offset.bottomOffset || 40
 
-  const height = wiH - elOB
+  const height = wiH - elOB - offsetTop
   return height
 }
 
@@ -50,7 +65,7 @@ const directive: DirectiveOptions = {
     elType.__resizeListener = () => {
       doTableResize(elType, binding, vnode)
     }
-    const f = debounce(elType.__resizeListener, 200)
+    const f = debounce(elType.__resizeListener, 100)
     addResizeListener(el, f)
     window.addEventListener('resize', f)
     // 立刻执行一次

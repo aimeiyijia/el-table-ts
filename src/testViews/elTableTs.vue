@@ -106,6 +106,7 @@ export default {
           label: '操作',
           fixed: 'right',
           prop: 'handle',
+          width: '240',
           scopedSlots: {
             // slot name
             customRender: 'handle',
