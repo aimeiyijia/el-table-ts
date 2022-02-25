@@ -1,11 +1,10 @@
 import Vue, { VNode, CreateElement } from 'vue'
 import '../directives/height-adaptive.ts'
 import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
-import omit from 'lodash/omit'
-import isString from 'lodash/isString'
-import isBoolean from 'lodash/isBoolean'
-import isObject from 'lodash/isObject'
 import { generateUUID } from '../utils/uuid'
+import { isBoolean, isString,  isObject} from '../utils/types'
+import { omit } from '../utils/opera'
+
 import { Pagination, TableColumn } from 'element-ui'
 // 样式
 import '../styles/index.scss'
@@ -31,7 +30,7 @@ declare interface IDirectives {
 @Component
 export default class ElTableTs extends Vue {
   // 内置指令的配置项
-  @Prop({ type: Object, default: () => { return { heightAdaptive: { bottomOffset: 40 } } } }) readonly directives: any | IDirectives
+  @Prop({ type: [Boolean, Object], default: () => { return { heightAdaptive: { bottomOffset: 40 } } } }) readonly directives: boolean | IDirectives | undefined
   // 表格每列配置项
   @Prop({ type: Array, default: () => [] }) readonly columns!: TableColumn[]
 
@@ -61,6 +60,8 @@ export default class ElTableTs extends Vue {
     layout: 'prev, pager, next, sizes, total',
     background: true,
   }
+
+  // 内置指令
 
   @Watch('pagination', { deep: true })
   onPaginationChanged() {
@@ -158,10 +159,11 @@ export default class ElTableTs extends Vue {
 
   getheightAdaptiveValue() {
     const defaultBottomOffset = 40
-    const { heightAdaptive } = this.directives
+    const { heightAdaptive } = this.directives as IDirectives
+
     if (heightAdaptive) {
       const { bottomOffset } = heightAdaptive
-      if (bottomOffset) {
+      if (bottomOffset || bottomOffset === 0) {
         return bottomOffset
       }
       return defaultBottomOffset
@@ -169,19 +171,26 @@ export default class ElTableTs extends Vue {
     return defaultBottomOffset
   }
 
-  render(h: CreateElement): VNode {
-    // 高度自适应指令
-    const directives = [
+  // 组件支持多种指令
+  splitDirectives() {
+    // 如果直接配置了directives="false"，那么指令都将失去作用
+    if (isBoolean(this.directives) && !this.directives) return []
+    const { heightAdaptive } = this.directives as IDirectives
+    if (isBoolean(heightAdaptive) && !heightAdaptive) return []
+    return [
       { name: 'height-adaptive', value: { bottomOffset: this.getheightAdaptiveValue() } }
     ]
+  }
 
+  render(h: CreateElement): VNode {
+    // 高度自适应指令
+    const directives = this.splitDirectives()
 
     // 移除不支持自定义插槽的列类型 type[index/selection]
     const noSlots = ['index', 'selection']
 
     // 移除分页事件，防止事件冲突
     const tableListeners = omit(this.$listeners, ['page-change', 'current-change', 'size-change', 'prev-click', 'next-click'])
-
     // 从插槽中移除内置的插槽 pagination
     const customScopedSlots = omit(this.$scopedSlots, ['pagination'])
 

@@ -8,6 +8,7 @@
       :col-attrs="{align: 'center'}"
       :pagination="pagination"
       :total="100"
+      :directives="directives"
       @current-change="handlePageChange"
       @size-change="handleSizeChange"
       @scroll="handleScroll"
@@ -77,7 +78,6 @@ export default {
         {
           label: 'ID',
           prop: 'id',
-          width: '80px',
         },
         {
           label: '姓名',
@@ -129,6 +129,12 @@ export default {
         },
       },
     }
+  },
+  created(){
+    setTimeout(() => {
+      this.directives.heightAdaptive.bottomOffset = 300
+      console.log(this.directives, '变化')
+    }, 2000)
   },
   methods: {
     handleSelect(selection, row) {

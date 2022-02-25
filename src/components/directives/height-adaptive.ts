@@ -1,11 +1,14 @@
 import Vue, { DirectiveOptions, VNode } from 'vue'
 import { DirectiveBinding } from 'vue/types/options'
-// @ts-ignore
-import { addResizeListener, removeResizeListener } from 'element-ui/src/utils/resize-event';
 import { debounce } from 'ts-debounce'
 
+// 用于存储全局性的resize事件
+const globalEventListener = {
+  f: () => {}
+}
+
 interface HTMLElement {
-  __resizeListener: () => void
+  f: () => void
   offsetTop: number
   offsetParent: HTMLElement
 }
@@ -62,22 +65,24 @@ const doTableResize = (el: HTMLElement, binding: DirectiveBinding, vnode: VNode)
 const directive: DirectiveOptions = {
   bind(el, binding, vnode) {
     const elType = el as unknown as HTMLElement
-    elType.__resizeListener = () => {
-      doTableResize(elType, binding, vnode)
-    }
-    const f = debounce(elType.__resizeListener, 100)
-    addResizeListener(el, f)
-    window.addEventListener('resize', f)
+    const resizeListener = () => doTableResize(elType, binding, vnode)
+    globalEventListener.f = debounce(resizeListener, 100)
+    window.addEventListener('resize', globalEventListener.f)
     // 立刻执行一次
     doTableResize(elType, binding, vnode)
   },
   update(el, binding, vnode) {
+    window.removeEventListener('resize', globalEventListener.f)
+
+    const elType = el as unknown as HTMLElement
+    const resizeListener = () => doTableResize(elType, binding, vnode)
+    globalEventListener.f = debounce(resizeListener, 100)
+    window.addEventListener('resize', globalEventListener.f)
+
     doTableResize(el as unknown as HTMLElement, binding, vnode)
   },
-  unbind(el) {
-    const elType = el as unknown as HTMLElement
-    removeResizeListener(el, elType.__resizeListener)
-    window.removeEventListener('resize', elType.__resizeListener)
+  unbind() {
+    window.removeEventListener('resize', globalEventListener.f)
   },
 }
 

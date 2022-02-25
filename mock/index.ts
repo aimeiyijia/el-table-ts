@@ -2,7 +2,7 @@ import Mock from 'mockjs'
 
 const dataTemplate = {
   // 属性 id 是一个自增数，起始值为 1，每次增 1
-  'id|184587-879874': 60,
+  'id|188888884587-888888879874': 60,
   'age|20-40': 20,
   name: '@cname',
   desc: {

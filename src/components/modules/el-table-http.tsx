@@ -1,9 +1,8 @@
 import Vue, { VNode, CreateElement } from 'vue'
 import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
 import to from 'await-to-js';
-import omit from 'lodash/omit'
-import cloneDeep from 'lodash/cloneDeep'
-import { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { omit, deepClone } from '../utils/opera'
+import { AxiosRequestConfig } from 'axios'
 import AxiosPlugin from '../plugin/axios'
 import ElTableTs from './el-table-ts'
 
@@ -75,8 +74,8 @@ export default class ElTableHttp extends Vue {
   public async getData() {
     // 取出请求参数
     const { data, pag } = this.netWork
-    this.requsetData = cloneDeep(data)
-    this.pag = cloneDeep(pag)
+    this.requsetData = deepClone(data)
+    this.pag = deepClone(pag)
     await this.initHttp()
   }
 
