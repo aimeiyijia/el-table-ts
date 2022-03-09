@@ -61,19 +61,8 @@ export default class ElTableHttp extends Vue {
   // 总条数
   private total = 0
 
-  // 在组件挂载时将渲染方法暴露出去，由用户自行决定渲染表格时机
-  mounted() {
-    this.$emit('render', this.expostApi())
-  }
-
-  // 决定要暴露出去的内部属性及方法
-  private expostApi() {
-    return {
-      render: this.getData,
-    }
-  }
   @Emit('render-complete')
-  renderComplete(tableInstance: any){
+  renderComplete(tableInstance: any) {
     return {
       ...tableInstance,
       render: this.getData,

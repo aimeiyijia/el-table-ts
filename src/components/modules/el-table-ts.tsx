@@ -2,7 +2,7 @@ import Vue, { VNode, CreateElement } from 'vue'
 import '../directives/height-adaptive.ts'
 import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
 import { generateUUID } from '../utils/uuid'
-import { isBoolean, isString, isObject } from '../utils/types'
+import { isBoolean, isString, isObject, isUndefined } from '../utils/types'
 import { omit } from '../utils/opera'
 
 import { Table, Pagination, TableColumn } from 'element-ui'
@@ -10,6 +10,7 @@ import { Table, Pagination, TableColumn } from 'element-ui'
 import '../styles/index.scss'
 
 import PagStore from '../utils/store'
+import { setTimeout } from 'timers'
 
 // 默认分页配置
 declare class ElTableTsDefPagination {
@@ -36,6 +37,7 @@ export default class ElTableTs extends Vue {
 
   // 更加统一化的列配置项
   @Prop({ type: Object, default: () => { } }) readonly colAttrs?: TableColumn
+  @Prop({ type: Boolean, default: true }) readonly autoToTop?: boolean
 
   // 数据相关
   @Prop({ type: Array, default: () => [] }) readonly data!: any[]
@@ -43,11 +45,6 @@ export default class ElTableTs extends Vue {
   // 分页
   @Prop({ type: [Boolean, Object], default: () => { return { pageSize: 10, currentPage: 1 } } }) readonly pagination: Pagination | undefined | boolean
   @Prop({ type: Number, default: 0 }) readonly total: number | undefined
-
-
-
-  // 表格组件的 bodyWrapper元素
-  private tableWrap: any = null
 
   // 是否展示分页器
   isShowPag = true
@@ -68,8 +65,12 @@ export default class ElTableTs extends Vue {
     this.setPagination()
   }
 
-  get tableInstance(){
-    return this.$refs['ElTableTsRef'] as Table
+  get tableInstance() {
+    return this.$refs['ElTableTsRef'] as Table | any
+  }
+
+  get tableBodyWrapper() {
+    return this.tableInstance.bodyWrapper as HTMLElement
   }
 
   // 将来留作拦截掉一些不支持统一配置的配置项
@@ -105,13 +106,16 @@ export default class ElTableTs extends Vue {
 
   // 设置表格滚动监听器
   setTableScrollListener() {
-    const table: any = this.tableInstance
-    this.tableWrap = table.bodyWrapper
-
-    table.bodyWrapper.addEventListener('scroll', this.tableScroll)
+    this.tableBodyWrapper.addEventListener('scroll', this.tableScroll)
     this.$once('hook:beforeDestroy', () => {
-      this.tableWrap.removeEventListener('scroll', this.tableScroll)
+      this.tableBodyWrapper.removeEventListener('scroll', this.tableScroll)
     })
+  }
+
+  setTableScrollToTop() {
+    if (isUndefined(this.autoToTop) || (isBoolean(this.autoToTop) && this.autoToTop)) {
+      this.tableBodyWrapper.scrollTop = 0
+    }
   }
 
   pageSizeChange(pageSize: number): void {
@@ -126,7 +130,7 @@ export default class ElTableTs extends Vue {
 
 
   @Emit('scroll')
-  tableScroll(e: MouseEvent) {
+  tableScroll(e: Event) {
     e.preventDefault()
     return e
   }

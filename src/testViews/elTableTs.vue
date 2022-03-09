@@ -5,6 +5,7 @@
       :columns="columns"
       stripe
       border
+      auto-to-top
       :col-attrs="{align: 'center'}"
       :pagination="pagination"
       :total="100"

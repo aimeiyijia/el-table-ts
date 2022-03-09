@@ -11,3 +11,7 @@ export function isString(obj: any): boolean {
 export function isArray(val: any): boolean {
   return Object.prototype.toString.call(val) === '[object Array]'
 }
+
+export function isUndefined(val: any): boolean {
+  return val === undefined
+}
