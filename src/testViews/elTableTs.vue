@@ -16,6 +16,10 @@
       @row-click="handleRowClick"
       @sort-change="handleSortChange"
     >
+      <!-- <template slot="empty">普通插槽</template> -->
+      <!-- <template #empty>作用域插槽</template> -->
+      <!-- <template slot="append">普通append插槽</template> -->
+      <!-- <template #append="data">{{data}}</template> -->
       <template #handle="{cellValue, row, column}">
         <el-button
           type="primary"
@@ -130,11 +134,11 @@ export default {
       },
     }
   },
-  created(){
-    setTimeout(() => {
-      this.directives.heightAdaptive.bottomOffset = 300
-      console.log(this.directives, '变化')
-    }, 2000)
+  created() {
+    // setTimeout(() => {
+    //   this.directives.heightAdaptive.bottomOffset = 300
+    //   console.log(this.directives, '变化')
+    // }, 2000)
   },
   methods: {
     handleSelect(selection, row) {

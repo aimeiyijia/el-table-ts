@@ -2,7 +2,7 @@ import Vue, { VNode, CreateElement } from 'vue'
 import '../directives/height-adaptive.ts'
 import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
 import { generateUUID } from '../utils/uuid'
-import { isBoolean, isString,  isObject} from '../utils/types'
+import { isBoolean, isString, isObject } from '../utils/types'
 import { omit } from '../utils/opera'
 
 import { Pagination, TableColumn } from 'element-ui'
@@ -191,8 +191,18 @@ export default class ElTableTs extends Vue {
 
     // 移除分页事件，防止事件冲突
     const tableListeners = omit(this.$listeners, ['page-change', 'current-change', 'size-change', 'prev-click', 'next-click'])
-    // 从插槽中移除内置的插槽 pagination
-    const customScopedSlots = omit(this.$scopedSlots, ['pagination'])
+    // 从插槽中移除内置的插槽 pagination，empty，append
+    const customScopedSlots = omit(this.$scopedSlots, ['pagination', 'empty', 'append'])
+    const { empty, append } = this.$scopedSlots
+    // 内置插槽
+    const inScopedSlots = {
+      scopedSlots: {
+        empty,
+        append: () => {
+          return append && append(this.data)
+        }
+      }
+    }
 
     const getCellValue = (column: TableColumn, row: any) => {
       return column.prop.split('.').reduce((obj, cur) => {
@@ -295,9 +305,12 @@ export default class ElTableTs extends Vue {
           height="0"
           data={this.data}
           {...{ directives }}
-          {...{ props: this.$attrs, on: tableListeners }}
+          {...{ props: this.$attrs, on: tableListeners, ...inScopedSlots }}
         >
           {renderColumns(this.columns)}
+
+          {/* 为了适配el-table中v-if="$slots.append" */}
+          <template slot="append">{append && append(this.data)}</template>
         </el-table>
         {this.isShowPag && (
           <el-pagination
