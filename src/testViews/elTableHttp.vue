@@ -6,7 +6,7 @@
       :directives="directives"
       stripe
       border
-      @render="render"
+      @render-complete="render"
     />
   </div>
 </template>

@@ -15,6 +15,7 @@
       @select="handleSelect"
       @row-click="handleRowClick"
       @sort-change="handleSortChange"
+      @render-complete="handleRender"
     >
       <!-- <template slot="empty">普通插槽</template> -->
       <!-- <template #empty>作用域插槽</template> -->
@@ -141,6 +142,9 @@ export default {
     // }, 2000)
   },
   methods: {
+    handleRender(instance){
+      console.log(instance, '表格实例')
+    },
     handleSelect(selection, row) {
       console.log(selection, row)
     },

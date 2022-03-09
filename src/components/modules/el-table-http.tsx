@@ -6,6 +6,8 @@ import { AxiosRequestConfig } from 'axios'
 import AxiosPlugin from '../plugin/axios'
 import ElTableTs from './el-table-ts'
 
+import { Table } from 'element-ui'
+
 interface Ipath {
   // data的解析路径,不指定就按照默认路径去解析
   dataPath: string
@@ -67,6 +69,13 @@ export default class ElTableHttp extends Vue {
   // 决定要暴露出去的内部属性及方法
   private expostApi() {
     return {
+      render: this.getData,
+    }
+  }
+  @Emit('render-complete')
+  renderComplete(tableInstance: any){
+    return {
+      ...tableInstance,
       render: this.getData,
     }
   }
@@ -179,6 +188,7 @@ export default class ElTableHttp extends Vue {
       {...{
         on: {
           ...tableListeners,
+          'render-complete': this.renderComplete,
           'page-change': this.currentChange,
           'size-change': this.pageSizeChange
         },

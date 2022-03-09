@@ -5,7 +5,7 @@ import { generateUUID } from '../utils/uuid'
 import { isBoolean, isString, isObject } from '../utils/types'
 import { omit } from '../utils/opera'
 
-import { Pagination, TableColumn } from 'element-ui'
+import { Table, Pagination, TableColumn } from 'element-ui'
 // 样式
 import '../styles/index.scss'
 
@@ -68,6 +68,10 @@ export default class ElTableTs extends Vue {
     this.setPagination()
   }
 
+  get tableInstance(){
+    return this.$refs['ElTableTsRef'] as Table
+  }
+
   // 将来留作拦截掉一些不支持统一配置的配置项
   get columnsAttrs() {
     return this.colAttrs
@@ -79,6 +83,9 @@ export default class ElTableTs extends Vue {
 
     this.setTableScrollListener()
 
+    this.$emit('render-complete', {
+      tableInstance: this.tableInstance
+    })
   }
 
   // 设置分页配置
@@ -98,7 +105,7 @@ export default class ElTableTs extends Vue {
 
   // 设置表格滚动监听器
   setTableScrollListener() {
-    const table: any = this.$refs.table
+    const table: any = this.tableInstance
     this.tableWrap = table.bodyWrapper
 
     table.bodyWrapper.addEventListener('scroll', this.tableScroll)
@@ -301,7 +308,7 @@ export default class ElTableTs extends Vue {
     return (
       <div class="el-table-ts">
         <el-table
-          ref="table"
+          ref="ElTableTsRef"
           height="0"
           data={this.data}
           {...{ directives }}
