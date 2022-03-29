@@ -8,6 +8,10 @@ export function isString(obj: any): boolean {
   return Object.prototype.toString.call(obj) === '[object String]'
 }
 
+export function isFunction(obj: any): boolean {
+  return Object.prototype.toString.call(obj) === '[object Function]'
+}
+
 export function isArray(val: any): boolean {
   return Object.prototype.toString.call(val) === '[object Array]'
 }

@@ -2,7 +2,7 @@ import Vue, { VNode, CreateElement } from 'vue'
 import '../directives/height-adaptive.ts'
 import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
 import { generateUUID } from '../utils/uuid'
-import { isBoolean, isString, isObject, isUndefined } from '../utils/types'
+import { isBoolean, isString, isObject, isUndefined, isFunction } from '../utils/types'
 import { omit } from '../utils/opera'
 
 import { Table, Pagination, TableColumn } from 'element-ui'
@@ -10,7 +10,6 @@ import { Table, Pagination, TableColumn } from 'element-ui'
 import '../styles/index.scss'
 
 import PagStore from '../utils/store'
-import { setTimeout } from 'timers'
 
 // 默认分页配置
 declare class ElTableTsDefPagination {
@@ -28,15 +27,19 @@ declare interface IDirectives {
   }
 }
 
+declare interface ITableColumn extends TableColumn {
+  hidden: boolean | ((columns: ITableColumn) => boolean)
+}
+
 @Component
 export default class ElTableTs extends Vue {
   // 内置指令的配置项
   @Prop({ type: [Boolean, Object], default: () => { return { heightAdaptive: { bottomOffset: 40 } } } }) readonly directives: boolean | IDirectives | undefined
   // 表格每列配置项
-  @Prop({ type: Array, default: () => [] }) readonly columns!: TableColumn[]
+  @Prop({ type: Array, default: () => [] }) readonly columns!: ITableColumn[]
 
   // 更加统一化的列配置项
-  @Prop({ type: Object, default: () => { } }) readonly colAttrs?: TableColumn
+  @Prop({ type: Object, default: () => { } }) readonly colAttrs?: ITableColumn
   @Prop({ type: Boolean, default: true }) readonly autoToTop?: boolean
 
   // 数据相关
@@ -215,7 +218,7 @@ export default class ElTableTs extends Vue {
       }
     }
 
-    const getCellValue = (column: TableColumn, row: any) => {
+    const getCellValue = (column: ITableColumn, row: any) => {
       return column.prop.split('.').reduce((obj, cur) => {
         if (obj) {
           return obj[cur]
@@ -224,10 +227,17 @@ export default class ElTableTs extends Vue {
     }
 
 
-    const renderColumns = (columns: TableColumn[]) =>
+    const renderColumns = (columns: ITableColumn[]) =>
       columns
-        .filter((i: any) => !i.hidden)
         .map(c => {
+          const { hidden } = c
+          let willHidden = false
+          if (isFunction(hidden)) {
+            willHidden = (hidden as Function)(c)
+          } else {
+            willHidden = isBoolean(hidden) ? hidden as boolean : false
+          }
+          if (willHidden) return
           const options = Object.assign({ ...this.columnsAttrs, scopedSlots: {}, prop: '' }, c)
           let sampleScopedSlots = {}
 
@@ -262,7 +272,7 @@ export default class ElTableTs extends Vue {
               }
               return cellValue
             },
-            header: ({ column: elColumn, $index, store, _self }: { column: TableColumn, $index: number, store: any, _self: any }) => {
+            header: ({ column: elColumn, $index, store, _self }: { column: ITableColumn, $index: number, store: any, _self: any }) => {
               const column: any = Object.assign({}, options, elColumn)
 
               if (column.scopedSlots && column.scopedSlots.customTitle && !isString(column.scopedSlots.customTitle)) {
@@ -299,7 +309,7 @@ export default class ElTableTs extends Vue {
               {...sampleScopedSlots}
             />
           )
-        })
+        }).filter(o => o)
 
     const renderPageSlot = () => {
       if (!this.$scopedSlots.hasOwnProperty('pagination')) return
