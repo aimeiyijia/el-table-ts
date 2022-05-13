@@ -22,8 +22,8 @@ declare class ElTableTsDefPagination {
 
 declare interface IDirectives {
   heightAdaptive?: {
-    bottomOffset: number;
-    topOffset: number;
+    parentEl?: string | Element
+    bottomOffset?: number
   }
 }
 
@@ -192,7 +192,13 @@ export default class ElTableTs extends Vue {
     const { heightAdaptive } = this.directives as IDirectives
     if (isBoolean(heightAdaptive) && !heightAdaptive) return []
     return [
-      { name: 'height-adaptive', value: { bottomOffset: this.getheightAdaptiveValue() } }
+      {
+        name: 'height-adaptive',
+        value: {
+          parentEl: heightAdaptive?.parentEl,
+          bottomOffset: this.getheightAdaptiveValue()
+        }
+      }
     ]
   }
 
