@@ -22,7 +22,7 @@ declare class ElTableTsDefPagination {
 
 declare interface IDirectives {
   heightAdaptive?: {
-    parentEl?: string | Element
+    container?: string | Element
     bottomOffset?: number
   }
 }
@@ -40,6 +40,8 @@ export default class ElTableTs extends Vue {
 
   // 更加统一化的列配置项
   @Prop({ type: Object, default: () => { } }) readonly colAttrs?: ITableColumn
+
+  // 是否在数据重渲染后自动滚动到顶部
   @Prop({ type: Boolean, default: true }) readonly autoToTop?: boolean
 
   // 数据相关
@@ -48,6 +50,9 @@ export default class ElTableTs extends Vue {
   // 分页
   @Prop({ type: [Boolean, Object], default: () => { return { pageSize: 10, currentPage: 1 } } }) readonly pagination: Pagination | undefined | boolean
   @Prop({ type: Number, default: 0 }) readonly total: number | undefined
+
+  // 表格所在的容器元素ID或Element，必须指定容器的高度
+  @Prop({ type: [String, Object], default: '' }) readonly container?: string | Element
 
   // 是否展示分页器
   isShowPag = true
@@ -195,7 +200,7 @@ export default class ElTableTs extends Vue {
       {
         name: 'height-adaptive',
         value: {
-          parentEl: heightAdaptive?.parentEl,
+          container: this.container,
           bottomOffset: this.getheightAdaptiveValue()
         }
       }

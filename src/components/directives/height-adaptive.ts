@@ -4,85 +4,76 @@ import { debounce } from 'ts-debounce'
 
 // 用于存储全局性的resize事件
 const globalEventListener = {
-  f: () => {}
+  f: () => { }
 }
 
-interface HTMLElement {
-  f: () => void
-  offsetTop: number
-  offsetParent: HTMLElement
-}
+// interface CustomHTMLElement extends HTMLElement {
+//   f: () => void
+//   offsetTop: number
+//   offsetParent: HTMLElement
+// }
 
 interface IOffset {
   bottomOffset?: number
-  parentEl?: string | Element
+  container?: string | HTMLElement
 }
 
-function isWindow( obj ) {
-  return obj != null && obj === obj.window;
+function getInnerHeight(elem: HTMLElement) {
+  const computed = getComputedStyle(elem);
+  const padding = parseInt(computed.paddingTop) + parseInt(computed.paddingBottom);
+
+  return elem.clientHeight - padding
 }
 
-function getInnerHeight(elem: any){
-  const name = 'inner'
-  if ( isWindow( elem ) ) {
-
-    // As of 5/8/2012 this will yield incorrect results for Mobile Safari, but there
-    // isn't a whole lot we can do. See pull request at this URL for discussion:
-    // https://github.com/jquery/jquery/pull/764
-    return elem.document.documentElement[ "client" + name ];
-  }
-
-  // Get document width or height
-  if ( elem.nodeType === 9 ) {
-    const doc = elem.documentElement;
-
-    // Either scroll[Width/Height] or offset[Width/Height] or client[Width/Height], whichever is greatest
-    // unfortunately, this causes bug #3838 in IE6/8 only, but there is currently no good, small way to fix it.
-    return Math.max(
-      elem.body[ "scroll" + name ], doc[ "scroll" + name ],
-      elem.body[ "offset" + name ], doc[ "offset" + name ],
-      doc[ "client" + name ]
-    );
-  }
-}
-
-function query(el: string | Element): Element {
+function query(el: string | HTMLElement): HTMLElement {
   if (typeof el === 'string') {
     const selected = document.querySelector(el)
     if (!selected) {
       console.warn('Cannot find element: ' + el)
     }
-    return selected as Element
+    return selected as HTMLElement
   } else {
     return el
   }
 }
 
-//
-function getOffsetTop(elem: HTMLElement): number {
+function getOffsetTop(elem: HTMLElement, inContainer: boolean): number {
   let top = elem.offsetTop;
-  let parent = elem.offsetParent;
+  if (inContainer) return top
+
+  let parent = elem.offsetParent as HTMLElement;
   while (parent) {
     top += parent.offsetTop;
-    parent = parent.offsetParent;
+    parent = parent.offsetParent as HTMLElement;
   }
   return top;
 }
 
-// 表格从页面底部开始的高度。
-
 const calcTableHeight = (element: HTMLElement, offset: IOffset) => {
-  let parentEl: Element = document.body
-  if(offset.parentEl){
-    parentEl = query(offset.parentEl)
+  const defaultHeight = 400
+
+  let containerEl: HTMLElement = document.body
+  if (offset.container) {
+    const queryEl = query(offset.container)
+    if (queryEl) {
+      queryEl.style.position = 'relative'
+      containerEl = queryEl
+    }
   }
-  const wiH = parentEl.innerHeight || 400
 
-  const offsetTop = getOffsetTop(element)
+  const containerHeight = getInnerHeight(containerEl) || defaultHeight
+  const topOffset = getOffsetTop(element, !!offset.container)
 
-  const elOB = offset.bottomOffset || 40
+  const bottomOffset = offset.bottomOffset || 0
 
-  const height = wiH - elOB - offsetTop
+  let height = containerHeight - bottomOffset - topOffset
+
+  // 高度是负数，将被设置为默认高度
+  if (height <= 0) {
+    console.warn('表格高度为负，已设置为默认高度(400)，请检查body元素或指定的容器元素高度')
+    height = defaultHeight
+  }
+
   return height
 }
 

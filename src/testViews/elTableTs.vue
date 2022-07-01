@@ -1,11 +1,12 @@
 <template>
-  <div class="elTable-container">
+  <div class="elTable-container" id="elTableContainer">
     <el-table-ts
       :data="list"
       :columns="columns"
       stripe
       border
       auto-to-top
+      container="#elTableContainer"
       :col-attrs="{align: 'center'}"
       :pagination="pagination"
       :total="100"
@@ -179,9 +180,9 @@ export default {
 }
 </script>
 <style lang="scss">
-html,
-body,
-#app {
-  height: 100%;
+
+#elTableContainer {
+  height: 400px;
+  /* position: relative; */
 }
 </style>
