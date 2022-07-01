@@ -182,7 +182,7 @@ export default {
 <style lang="scss">
 
 #elTableContainer {
-  height: 400px;
+  height: 600px;
   /* position: relative; */
 }
 </style>

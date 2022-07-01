@@ -7,13 +7,7 @@ const globalEventListener = {
   f: () => { }
 }
 
-// interface CustomHTMLElement extends HTMLElement {
-//   f: () => void
-//   offsetTop: number
-//   offsetParent: HTMLElement
-// }
-
-interface IOffset {
+interface IParams {
   bottomOffset?: number
   container?: string | HTMLElement
 }
@@ -28,9 +22,6 @@ function getInnerHeight(elem: HTMLElement) {
 function query(el: string | HTMLElement): HTMLElement {
   if (typeof el === 'string') {
     const selected = document.querySelector(el)
-    if (!selected) {
-      console.warn('Cannot find element: ' + el)
-    }
     return selected as HTMLElement
   } else {
     return el
@@ -49,12 +40,12 @@ function getOffsetTop(elem: HTMLElement, inContainer: boolean): number {
   return top;
 }
 
-const calcTableHeight = (element: HTMLElement, offset: IOffset) => {
+const calcTableHeight = (element: HTMLElement, params: IParams) => {
   const defaultHeight = 400
 
   let containerEl: HTMLElement = document.body
-  if (offset.container) {
-    const queryEl = query(offset.container)
+  if (params.container) {
+    const queryEl = query(params.container)
     if (queryEl) {
       queryEl.style.position = 'relative'
       containerEl = queryEl
@@ -62,9 +53,9 @@ const calcTableHeight = (element: HTMLElement, offset: IOffset) => {
   }
 
   const containerHeight = getInnerHeight(containerEl) || defaultHeight
-  const topOffset = getOffsetTop(element, !!offset.container)
+  const topOffset = getOffsetTop(element, !!params.container)
 
-  const bottomOffset = offset.bottomOffset || 0
+  const bottomOffset = params.bottomOffset || 0
 
   let height = containerHeight - bottomOffset - topOffset
 
