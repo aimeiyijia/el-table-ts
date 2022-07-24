@@ -96,6 +96,16 @@ export default {
             const { name: bName } = b
             return aName.localeCompare(bName)
           },
+          children: [
+            {
+              label: '曾用名',
+              prop: 'oldName',
+            },
+            {
+              label: '现用名',
+              prop: 'name',
+            },
+          ],
         },
         {
           label: '年龄',
@@ -144,7 +154,7 @@ export default {
     // }, 2000)
   },
   methods: {
-    handleRender(instance){
+    handleRender(instance) {
       console.log(instance, '表格实例')
     },
     handleSelect(selection, row) {
@@ -180,7 +190,6 @@ export default {
 }
 </script>
 <style lang="scss">
-
 #elTableContainer {
   height: 600px;
   /* position: relative; */

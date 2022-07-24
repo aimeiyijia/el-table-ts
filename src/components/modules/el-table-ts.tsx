@@ -2,7 +2,7 @@ import Vue, { VNode, CreateElement } from 'vue'
 import '../directives/height-adaptive.ts'
 import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
 import { generateUUID } from '../utils/uuid'
-import { isBoolean, isString, isObject, isUndefined, isFunction } from '../utils/types'
+import { isBoolean, isString, isObject, isArray, isUndefined, isFunction } from '../utils/types'
 import { omit } from '../utils/opera'
 
 import { Table, Pagination, TableColumn } from 'element-ui'
@@ -28,6 +28,7 @@ declare interface IDirectives {
 }
 
 declare interface ITableColumn extends TableColumn {
+  children: ITableColumn[]
   hidden: boolean | ((columns: ITableColumn) => boolean)
 }
 
@@ -74,7 +75,7 @@ export default class ElTableTs extends Vue {
   }
 
   get tableInstance() {
-    return this.$refs['ElTableTsRef'] as Table | any
+    return this.$refs.ElTableTsRef as Table | any
   }
 
   get tableBodyWrapper() {
@@ -237,11 +238,18 @@ export default class ElTableTs extends Vue {
       }, row)
     }
 
+    const renderChildrenColumns = (childrenColumns: ITableColumn[]) => {
+      if (!isArray(childrenColumns)) {
+        console.error('The children configuration item must be an array')
+        return []
+      }
+      return renderColumns(childrenColumns)
+    }
 
     const renderColumns = (columns: ITableColumn[]) =>
       columns
         .map(c => {
-          const { hidden } = c
+          const { hidden, children } = c
           let willHidden = false
           if (isFunction(hidden)) {
             willHidden = (hidden as Function)(c)
@@ -318,9 +326,12 @@ export default class ElTableTs extends Vue {
               key={generateUUID()}
               {...{ props: options }}
               {...sampleScopedSlots}
-            />
+            >
+              {children && renderChildrenColumns(children)}
+            </el-table-column>
           )
         }).filter(o => o)
+
 
     const renderPageSlot = () => {
       if (!this.$scopedSlots.hasOwnProperty('pagination')) return

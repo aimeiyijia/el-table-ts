@@ -5,6 +5,7 @@ const dataTemplate = {
   'id|188888884587-888888879874': 60,
   'age|20-40': 20,
   name: '@cname',
+  oldName: '@cname',
   desc: {
     'height|160-180': 165,
   },
