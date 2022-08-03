@@ -45,6 +45,10 @@ export default class ElTableTs extends Vue {
   // 是否在数据重渲染后自动滚动到顶部
   @Prop({ type: Boolean, default: true }) readonly autoToTop?: boolean
 
+  // falsey 假值是否渲染，默认渲染
+  // false, 0或者-0, 0n(BigInt), "" 或者 ''或者 ``, undefined, NaN, null,
+  @Prop({ type: Boolean, default: true }) readonly falseyRender?: boolean
+
   // 数据相关
   @Prop({ type: Array, default: () => [] }) readonly data!: any[]
 
@@ -231,11 +235,15 @@ export default class ElTableTs extends Vue {
     }
 
     const getCellValue = (column: ITableColumn, row: any) => {
-      return column.prop.split('.').reduce((obj, cur) => {
+      const value = column.prop.split('.').reduce((obj, cur) => {
         if (obj) {
           return obj[cur]
         }
       }, row)
+      if (this.falseyRender) {
+        return value
+      }
+      if(value) return value
     }
 
     const renderChildrenColumns = (childrenColumns: ITableColumn[]) => {

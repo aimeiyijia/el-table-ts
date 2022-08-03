@@ -7,7 +7,7 @@ const dataTemplate = {
   name: '@cname',
   oldName: '@cname',
   desc: {
-    'height|160-180': 165,
+    'height|0-180': 0,
   },
 }
 

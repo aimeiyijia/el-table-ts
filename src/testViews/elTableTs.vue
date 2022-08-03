@@ -6,6 +6,7 @@
       stripe
       border
       auto-to-top
+      :falsey-render="true"
       container="#elTableContainer"
       :col-attrs="{align: 'center'}"
       :pagination="pagination"
