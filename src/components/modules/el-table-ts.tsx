@@ -6,6 +6,7 @@ import { isBoolean, isString, isObject, isArray, isUndefined, isFunction } from 
 import { omit } from '../utils/opera'
 
 import { Table, Pagination, TableColumn } from 'element-ui'
+import EditeableCell from '../components/EditeableCell/index'
 // 样式
 import '../styles/index.scss'
 
@@ -32,7 +33,9 @@ declare interface ITableColumn extends TableColumn {
   hidden: boolean | ((columns: ITableColumn) => boolean)
 }
 
-@Component
+@Component({
+  components: { EditeableCell }
+})
 export default class ElTableTs extends Vue {
   // 内置指令的配置项
   @Prop({ type: [Boolean, Object], default: () => { return { heightAdaptive: { bottomOffset: 40 } } } }) readonly directives: boolean | IDirectives | undefined
@@ -243,7 +246,7 @@ export default class ElTableTs extends Vue {
       if (this.falseyRender) {
         return value
       }
-      if(value) return value
+      if (value) return value
     }
 
     const renderChildrenColumns = (childrenColumns: ITableColumn[]) => {
@@ -286,8 +289,10 @@ export default class ElTableTs extends Vue {
               column.customRender =
                 column.customRender ||
                 customScopedSlots[column.scopedSlots.customRender]
+
+              let cellContent
               if (column.customRender) {
-                return column.customRender({
+                cellContent = column.customRender({
                   cellValue,
                   row,
                   column,
@@ -296,8 +301,27 @@ export default class ElTableTs extends Vue {
                   store,
                   _self
                 })
+              } else {
+                cellContent = cellValue
               }
-              return cellValue
+
+              return (
+                <editeable-cell
+                  {...{ props: { value: cellContent } }}
+                  {...{
+                    on: {
+                      input: () => {
+                        console.log('变化')
+                      }
+                    }
+                  }}
+                  editable={true}
+                >
+                  <template slot="content">{cellContent}</template>
+                </editeable-cell>
+              )
+
+              // return cellContent
             },
             header: ({ column: elColumn, $index, store, _self }: { column: ITableColumn, $index: number, store: any, _self: any }) => {
               const column: any = Object.assign({}, options, elColumn)
@@ -342,11 +366,14 @@ export default class ElTableTs extends Vue {
 
 
     const renderPageSlot = () => {
-      if (!this.$scopedSlots.hasOwnProperty('pagination')) return
-      return this.$scopedSlots.pagination!({
-        total: this.total,
-        config: omit(this.defPagination, ['pageSize', 'currentPage'])
-      })
+      if (Object.prototype.hasOwnProperty.call(this.$scopedSlots, 'pagination')) {
+        // @ts-ignore
+        return this.$scopedSlots.pagination({
+          total: this.total,
+          config: omit(this.defPagination, ['pageSize', 'currentPage'])
+        })
+      }
+      return ''
     }
 
     return (

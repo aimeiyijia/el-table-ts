@@ -4,7 +4,7 @@ module.exports = {
   publicPath: process.env.NODE_ENV === 'production' ? '/el-table-ts/' : '/',
   configureWebpack: {
     resolve: {
-      extensions: ['.js', '.ts', '.vue', '.json'],
+      extensions: ['.js', '.ts', 'tsx', '.vue', '.json'],
     },
   },
   chainWebpack: config => {
