@@ -3,7 +3,7 @@ import '../directives/height-adaptive.ts'
 import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
 import { generateUUID } from '../utils/uuid'
 import { isBoolean, isString, isObject, isArray, isUndefined, isFunction } from '../utils/types'
-import { omit } from '../utils/opera'
+import { omit, setValueByPath } from '../utils/opera'
 
 import { Table, Pagination, TableColumn } from 'element-ui'
 import EditeableCell from '../components/EditeableCell/index'
@@ -305,13 +305,14 @@ export default class ElTableTs extends Vue {
                 cellContent = cellValue
               }
 
+              // 需要知道操作的行与列
               return (
                 <editeable-cell
                   {...{ props: { value: cellContent } }}
                   {...{
                     on: {
-                      input: () => {
-                        console.log('变化')
+                      input: (val: string) => {
+                        setValueByPath(row, column.prop, val)
                       }
                     }
                   }}

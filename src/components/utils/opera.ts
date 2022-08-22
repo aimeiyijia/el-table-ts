@@ -24,3 +24,13 @@ export function deepClone(val: any) {
     return val
   }
 }
+
+export function setValueByPath(obj: any, path: string, value: any) {
+  let i
+  const paths = path.split('.')
+  for (i = 0; i < paths.length - 1; i++) {
+    obj = obj[paths[i]]
+  }
+
+  obj[paths[i]] = value
+}

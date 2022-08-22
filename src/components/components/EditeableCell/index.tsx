@@ -9,11 +9,11 @@ import './index.scss'
 export default class editableCell extends Vue {
   @Prop({ default: '' }) readonly value!: any
 
-  @Prop({ type: String, default: '点击进入编辑' }) readonly toolTipContent!: string
+  @Prop({ type: String, default: '点击编辑，enter确认编辑，点击外部取消编辑' }) readonly toolTipContent!: string
 
   @Prop({ type: Number, default: 500 }) readonly toolTipDelay!: number
 
-  @Prop({ type: String, default: '点击进入编辑' }) readonly toolTipPlacement!: string
+  @Prop({ type: String, default: 'top' }) readonly toolTipPlacement!: string
 
   @Prop({ type: Boolean, default: false }) readonly editable!: boolean
 
@@ -28,11 +28,17 @@ export default class editableCell extends Vue {
 
   private editMode = false
 
+  private fieldValue = ''
+
   get listeners() {
     return {
       [this.closeEvent]: this.onInputExit,
       ...this.$listeners,
     }
+  }
+
+  created(){
+    this.fieldValue = this.value
   }
 
   onFieldClick() {
@@ -45,12 +51,22 @@ export default class editableCell extends Vue {
     })
   }
 
+  onFieldInput(val: string){
+    console.log(val, '输入变化')
+    this.fieldValue = val
+  }
+
   onInputExit() {
     this.editMode = false
   }
 
-  onInputChange(val: string | number) {
+  onFieldChange(val: string | number) {
     this.$emit('input', val)
+  }
+
+  onFieldBlur(){
+    this.editMode = false
+    console.log('退出编辑')
   }
 
   handleKeyDown(event: KeyboardEvent) {
@@ -78,7 +94,7 @@ export default class editableCell extends Vue {
             <div class="cell-content">
               {
                 // @ts-ignore
-                this.$scopedSlots!.content({})
+                this.fieldValue
               }
             </div>
 
@@ -90,13 +106,16 @@ export default class editableCell extends Vue {
               ref="input"
               {...{
                 props: {
-                  is: this.editableComponent,
-                  ...this.$attrs
+                  ...this.$attrs,
+                  value: this.fieldValue
                 },
                 on: {
+                  ...this.listeners,
+                  input: this.onFieldInput,
+                  change: this.onFieldChange,
                   focus: this.onFieldClick,
+                  blur: this.onFieldBlur,
                   keyUp: this.onInputExit,
-                  ...this.listeners
                 },
               }}
             >
