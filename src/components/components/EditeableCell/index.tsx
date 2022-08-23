@@ -85,7 +85,6 @@ export default class editableCell extends Vue {
                 this.fieldValue
               }
             </div>
-
           </el-tooltip>
         )}
         {
