@@ -30,6 +30,7 @@ declare interface IDirectives {
 
 declare interface ITableColumn extends TableColumn {
   children: ITableColumn[]
+  editable?: boolean
   hidden: boolean | ((columns: ITableColumn) => boolean)
 }
 
@@ -260,7 +261,7 @@ export default class ElTableTs extends Vue {
     const renderColumns = (columns: ITableColumn[]) =>
       columns
         .map(c => {
-          const { hidden, children } = c
+          const { hidden, children, editable } = c
           let willHidden = false
           if (isFunction(hidden)) {
             willHidden = (hidden as Function)(c)
@@ -306,7 +307,7 @@ export default class ElTableTs extends Vue {
               }
 
               // 需要知道操作的行与列
-              return (
+              return editable ? (
                 <editeable-cell
                   {...{ props: { value: cellContent } }}
                   {...{
@@ -316,11 +317,10 @@ export default class ElTableTs extends Vue {
                       }
                     }
                   }}
-                  editable={true}
                 >
                   <template slot="content">{cellContent}</template>
                 </editeable-cell>
-              )
+              ) : cellContent
 
               // return cellContent
             },

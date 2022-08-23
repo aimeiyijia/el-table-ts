@@ -115,6 +115,7 @@ export default {
           customRender: ({ cellValue }) => {
             return `${cellValue}岁`
           },
+          editable: true,
         },
         {
           label: '描述.身高',

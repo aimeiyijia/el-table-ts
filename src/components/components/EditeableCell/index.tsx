@@ -9,13 +9,11 @@ import './index.scss'
 export default class editableCell extends Vue {
   @Prop({ default: '' }) readonly value!: any
 
-  @Prop({ type: String, default: '点击编辑，enter确认编辑，点击外部取消编辑' }) readonly toolTipContent!: string
+  @Prop({ type: String, default: '点击编辑，点击外部取消编辑' }) readonly toolTipContent!: string
 
   @Prop({ type: Number, default: 500 }) readonly toolTipDelay!: number
 
   @Prop({ type: String, default: 'top' }) readonly toolTipPlacement!: string
-
-  @Prop({ type: Boolean, default: false }) readonly editable!: boolean
 
   // 是否初始化时就进入编辑状态
   @Prop({ type: Boolean, default: false }) readonly edit!: boolean
@@ -23,21 +21,11 @@ export default class editableCell extends Vue {
   // 进入编辑状态时使用的编辑组件
   @Prop({ type: String, default: 'el-input' }) readonly editableComponent!: string
 
-  // 何种事件触发关闭编辑
-  @Prop({ type: String, default: 'el-input' }) readonly closeEvent!: string
-
   private editMode = false
 
   private fieldValue = ''
 
-  get listeners() {
-    return {
-      [this.closeEvent]: this.onInputExit,
-      ...this.$listeners,
-    }
-  }
-
-  created(){
+  created() {
     this.fieldValue = this.value
   }
 
@@ -51,7 +39,7 @@ export default class editableCell extends Vue {
     })
   }
 
-  onFieldInput(val: string){
+  onFieldInput(val: string) {
     console.log(val, '输入变化')
     this.fieldValue = val
   }
@@ -64,24 +52,24 @@ export default class editableCell extends Vue {
     this.$emit('input', val)
   }
 
-  onFieldBlur(){
+  onFieldBlur() {
     this.editMode = false
     console.log('退出编辑')
   }
 
-  handleKeyDown(event: KeyboardEvent) {
-    console.log('User pressed: ', event.key);
+  // handleKeyDown(event: KeyboardEvent) {
+  //   console.log('User pressed: ', event.key);
 
-    if (event.key === 'Enter') {
-      // 👇️ your logic here
-      console.log('Enter key pressed ✅');
-    }
-  }
+  //   if (event.key === 'Enter') {
+  //     // 👇️ your logic here
+  //     console.log('Enter key pressed ✅');
+  //   }
+  // }
 
   render(h: CreateElement) {
     return (
       <div class="edit-cell edit-enabled-cell" onClick={this.onFieldClick}>
-        {(!this.editMode && this.editable) && (
+        {!this.editMode && (
           <el-tooltip
             {...{
               props: {
@@ -101,7 +89,7 @@ export default class editableCell extends Vue {
           </el-tooltip>
         )}
         {
-          ((this.editMode && this.editable) || this.edit) && (
+          (this.editMode || this.edit) && (
             <this.editableComponent
               ref="input"
               {...{
@@ -110,16 +98,14 @@ export default class editableCell extends Vue {
                   value: this.fieldValue
                 },
                 on: {
-                  ...this.listeners,
+                  ...this.$listeners,
                   input: this.onFieldInput,
                   change: this.onFieldChange,
                   focus: this.onFieldClick,
-                  blur: this.onFieldBlur,
-                  keyUp: this.onInputExit,
+                  blur: this.onFieldBlur
                 },
               }}
             >
-              {/* {this.$scopedSlots!.editComponentSlot({})} */}
             </this.editableComponent>
           )
         }
