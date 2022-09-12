@@ -35,7 +35,7 @@ declare interface ITableColumn extends TableColumn {
 }
 
 @Component({
-  components: { EditeableCell }
+  components: { EditeableCell, ElTable: Table, ElTableColumn: TableColumn, ElPagination: Pagination }
 })
 export default class ElTableTs extends Vue {
   // 内置指令的配置项
