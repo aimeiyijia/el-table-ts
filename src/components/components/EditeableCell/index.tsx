@@ -5,7 +5,9 @@ import { Input } from 'element-ui'
 
 import './index.scss'
 
-@Component({})
+@Component({
+  components: { ElInput: Input }
+})
 export default class editableCell extends Vue {
   @Prop({ default: '' }) readonly value!: any
 

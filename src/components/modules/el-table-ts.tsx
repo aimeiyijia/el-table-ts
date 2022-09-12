@@ -5,7 +5,7 @@ import { generateUUID } from '../utils/uuid'
 import { isBoolean, isString, isObject, isArray, isUndefined, isFunction } from '../utils/types'
 import { omit, setValueByPath } from '../utils/opera'
 
-import { Table, Pagination, TableColumn } from 'element-ui'
+import { Table, Pagination, TableColumn, Form, FormItem, Select, Option, Input } from 'element-ui'
 import EditeableCell from '../components/EditeableCell/index'
 // 样式
 import '../styles/index.scss'
@@ -35,7 +35,17 @@ declare interface ITableColumn extends TableColumn {
 }
 
 @Component({
-  components: { EditeableCell, ElTable: Table, ElTableColumn: TableColumn, ElPagination: Pagination }
+  components: {
+    EditeableCell,
+    ElTable: Table,
+    ElTableColumn: TableColumn,
+    ElForm: Form,
+    ElFormItem: FormItem,
+    ElSelect: Select,
+    ElOption: Option,
+    ElInput: Input,
+    ElPagination: Pagination
+  }
 })
 export default class ElTableTs extends Vue {
   // 内置指令的配置项
