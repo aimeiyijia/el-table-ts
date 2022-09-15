@@ -9,6 +9,7 @@ module.exports = {
     externals: process.env.NODE_ENV === 'development' ? {} : {
       'element-ui': 'element-ui',
       vue: 'vue',
+      axios: 'axios',
     },
   },
   chainWebpack: config => {
