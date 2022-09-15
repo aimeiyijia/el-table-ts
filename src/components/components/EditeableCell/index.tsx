@@ -18,12 +18,12 @@ export default class editableCell extends Vue {
   @Prop({ type: String, default: 'top' }) readonly toolTipPlacement!: string
 
   // 是否初始化时就进入编辑状态
-  @Prop({ type: Boolean, default: false }) readonly edit!: boolean
+  @Prop({ type: Boolean, default: false }) readonly editMode!: boolean
 
   // 进入编辑状态时使用的编辑组件
   @Prop({ type: String, default: 'el-input' }) readonly editableComponent!: string
 
-  private editMode = false
+  private editing = false
 
   private fieldValue = ''
 
@@ -32,7 +32,7 @@ export default class editableCell extends Vue {
   }
 
   onFieldClick() {
-    this.editMode = true
+    this.editing = true
     this.$nextTick(() => {
       const inputRef = this.$refs.input as Input
       if (inputRef && inputRef.focus) {
@@ -42,12 +42,11 @@ export default class editableCell extends Vue {
   }
 
   onFieldInput(val: string) {
-    console.log(val, '输入变化')
     this.fieldValue = val
   }
 
   onInputExit() {
-    this.editMode = false
+    this.editing = false
   }
 
   onFieldChange(val: string | number) {
@@ -55,8 +54,7 @@ export default class editableCell extends Vue {
   }
 
   onFieldBlur() {
-    this.editMode = false
-    console.log('退出编辑')
+    this.editing = false
   }
 
   // handleKeyDown(event: KeyboardEvent) {
@@ -71,7 +69,7 @@ export default class editableCell extends Vue {
   render(h: CreateElement) {
     return (
       <div class="edit-cell edit-enabled-cell" onClick={this.onFieldClick}>
-        {!this.editMode && (
+        {!this.editing && !this.editMode && (
           <el-tooltip
             {...{
               props: {
@@ -90,7 +88,7 @@ export default class editableCell extends Vue {
           </el-tooltip>
         )}
         {
-          (this.editMode || this.edit) && (
+          (this.editing || this.editMode) && (
             <this.editableComponent
               ref="input"
               {...{

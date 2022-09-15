@@ -43,6 +43,8 @@
 
 <script>
 import { MockData } from 'mock'
+
+console.log(MockData.data, '数据')
 export default {
   name: 'app',
   data() {
@@ -115,6 +117,9 @@ export default {
           customRender: ({ cellValue }) => {
             return `${cellValue}岁`
           },
+          // 初始状态下是否直接进入编辑，默认为false，需要在editable: true时点击单元格进入编辑
+          // 行与列设置平等
+          editMode: true,
           editable: true,
         },
         {

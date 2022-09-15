@@ -9,6 +9,9 @@ const dataTemplate = {
   desc: {
     'height|0-180': 0,
   },
+  // |1-2
+  "editMode|1-2": true,
+  "editable|1-2": true
 }
 
 export const MockData = Mock.mock({

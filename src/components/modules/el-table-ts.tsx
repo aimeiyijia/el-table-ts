@@ -31,6 +31,7 @@ declare interface IDirectives {
 declare interface ITableColumn extends TableColumn {
   children: ITableColumn[]
   editable?: boolean
+  editMode?: boolean
   hidden: boolean | ((columns: ITableColumn) => boolean)
 }
 
@@ -271,7 +272,7 @@ export default class ElTableTs extends Vue {
     const renderColumns = (columns: ITableColumn[]) =>
       columns
         .map(c => {
-          const { hidden, children, editable } = c
+          const { hidden, children, editable: colEditable, editMode: colEditMode } = c
           let willHidden = false
           if (isFunction(hidden)) {
             willHidden = (hidden as Function)(c)
@@ -286,6 +287,7 @@ export default class ElTableTs extends Vue {
           const scopedSlots = {
             default: ({ row, column: elColumn, $index, store, _self }: { row: any, column: TableColumn, $index: number, store: any, _self: any }) => {
 
+              const { editable: rowEditable, editMode: rowEditMode } = row
               const column: any = Object.assign({}, options, elColumn)
 
               // 获取单元格的原始值
@@ -317,9 +319,9 @@ export default class ElTableTs extends Vue {
               }
 
               // 需要知道操作的行与列
-              return editable ? (
+              return (colEditable && rowEditable) ? (
                 <editeable-cell
-                  {...{ props: { value: cellContent } }}
+                  {...{ props: { value: cellContent, editMode: colEditMode && rowEditMode } }}
                   {...{
                     on: {
                       input: (val: string) => {
