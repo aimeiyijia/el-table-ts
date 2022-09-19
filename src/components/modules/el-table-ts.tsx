@@ -11,6 +11,7 @@ import EditeableCell from '../components/EditeableCell/index'
 import '../styles/index.scss'
 
 import PagStore from '../utils/store'
+import { directive } from 'vue/types/umd'
 
 // 默认分页配置
 declare class ElTableTsDefPagination {
@@ -213,29 +214,42 @@ export default class ElTableTs extends Vue {
   // 组件支持多种指令
   splitDirectives() {
     // 如果直接配置了directives="false"，那么指令都将失去作用
-    if (isBoolean(this.directives) && !this.directives) return []
+    if (isBoolean(this.directives) && !this.directives) {
+      return {
+        allowHeightAdaptive: false,
+        directives: []
+      }
+    }
     const { heightAdaptive } = this.directives as IDirectives
-    if (isBoolean(heightAdaptive) && !heightAdaptive) return []
-    return [
-      {
+    if (isBoolean(heightAdaptive) && !heightAdaptive) {
+      return {
+        allowHeightAdaptive: false,
+        directives: []
+      }
+    }
+    return {
+      allowHeightAdaptive: true,
+      directives: [{
         name: 'height-adaptive',
         value: {
           container: this.container,
           bottomOffset: this.getheightAdaptiveValue()
         }
-      }
-    ]
+      }]
+    }
   }
 
   render(h: CreateElement): VNode {
     // 高度自适应指令
-    const directives = this.splitDirectives()
+    const { allowHeightAdaptive, directives } = this.splitDirectives()
+
+    const $attrs = allowHeightAdaptive ? Object.assign({ height: '0' }, this.$attrs) : this.$attrs
 
     // 移除不支持自定义插槽的列类型 type[index/selection]
     const noSlots = ['index', 'selection']
 
     // 移除分页事件，防止事件冲突
-    const tableListeners = omit(this.$listeners, ['page-change', 'current-change', 'size-change', 'prev-click', 'next-click'])
+    const $tableListeners = omit(this.$listeners, ['page-change', 'current-change', 'size-change', 'prev-click', 'next-click'])
     // 从插槽中移除内置的插槽 pagination，empty，append
     const customScopedSlots = omit(this.$scopedSlots, ['pagination', 'empty', 'append'])
     const { empty, append } = this.$scopedSlots
@@ -393,10 +407,9 @@ export default class ElTableTs extends Vue {
       <div class="el-table-ts">
         <el-table
           ref="ElTableTsRef"
-          height="0"
           data={this.data}
           {...{ directives }}
-          {...{ props: this.$attrs, on: tableListeners, ...inScopedSlots }}
+          {...{ props: $attrs, on: $tableListeners, ...inScopedSlots }}
         >
           {renderColumns(this.columns)}
 
