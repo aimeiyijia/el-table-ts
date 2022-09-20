@@ -33,6 +33,7 @@ declare interface ITableColumn extends TableColumn {
   children: ITableColumn[]
   editable?: boolean
   editMode?: boolean
+  customEdit?: boolean
   hidden: boolean | ((columns: ITableColumn) => boolean)
 }
 
@@ -286,7 +287,7 @@ export default class ElTableTs extends Vue {
     const renderColumns = (columns: ITableColumn[]) =>
       columns
         .map(c => {
-          const { hidden, children, editable: colEditable, editMode: colEditMode } = c
+          const { hidden, children, editable: colEditable, editMode: colEditMode, customEdit = false } = c
           let willHidden = false
           if (isFunction(hidden)) {
             willHidden = (hidden as Function)(c)
@@ -333,9 +334,9 @@ export default class ElTableTs extends Vue {
               }
 
               // 需要知道操作的行与列
-              return (colEditable && rowEditable) ? (
+              return !customEdit && (colEditable && rowEditable) ? (
                 <editeable-cell
-                  {...{ props: { value: cellContent, editMode: colEditMode && rowEditMode } }}
+                  {...{ props: { value: cellContent, editMode: (colEditable && rowEditable) && (colEditMode && rowEditMode) } }}
                   {...{
                     on: {
                       input: (val: string) => {

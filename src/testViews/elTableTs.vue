@@ -121,6 +121,8 @@ export default {
           // 行与列设置平等
           editMode: true,
           editable: true,
+          // 是否是自定义的edit，默认为false
+          // customEdit: true
         },
         {
           label: '描述.身高',
