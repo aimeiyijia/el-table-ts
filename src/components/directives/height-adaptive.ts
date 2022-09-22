@@ -61,7 +61,6 @@ const calcTableHeight = (element: HTMLElement, params: IParams) => {
 
   // 高度是负数，将被设置为默认高度
   if (height <= 0) {
-    console.warn('表格高度为负，已设置为默认高度(400)，请检查body元素或指定的容器元素高度')
     height = defaultHeight
   }
 
