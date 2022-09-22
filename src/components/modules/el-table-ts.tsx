@@ -345,7 +345,7 @@ export default class ElTableTs extends Vue {
                     }
                   }}
                 >
-                  <template slot="content">{cellContent}</template>
+                  <template>{cellContent}</template>
                 </editeable-cell>
               ) : cellContent
 
@@ -384,6 +384,7 @@ export default class ElTableTs extends Vue {
           return (
             <el-table-column
               key={generateUUID()}
+              class="hahaha"
               {...{ props: options }}
               {...sampleScopedSlots}
             >
