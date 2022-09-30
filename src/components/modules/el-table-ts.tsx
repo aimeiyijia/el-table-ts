@@ -333,7 +333,6 @@ export default class ElTableTs extends Vue {
                 cellContent = cellValue
               }
 
-              // 需要知道操作的行与列
               return !customEdit && (colEditable && rowEditable) ? (
                 <editeable-cell
                   {...{ props: { value: cellContent, editMode: (colEditable && rowEditable) && (colEditMode && rowEditMode) } }}
@@ -349,7 +348,6 @@ export default class ElTableTs extends Vue {
                 </editeable-cell>
               ) : cellContent
 
-              // return cellContent
             },
             header: ({ column: elColumn, $index, store, _self }: { column: ITableColumn, $index: number, store: any, _self: any }) => {
               const column: any = Object.assign({}, options, elColumn)
@@ -384,7 +382,6 @@ export default class ElTableTs extends Vue {
           return (
             <el-table-column
               key={generateUUID()}
-              class="hahaha"
               {...{ props: options }}
               {...sampleScopedSlots}
             >
