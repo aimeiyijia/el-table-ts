@@ -20,6 +20,9 @@
       @sort-change="handleSortChange"
       @render-complete="handleRender"
     >
+    <template #paginationLeft>
+      分页的左侧，通过插槽设置
+    </template>
       <!-- <template slot="empty">普通插槽</template> -->
       <!-- <template #empty>作用域插槽</template> -->
       <!-- <template slot="append">普通append插槽</template> -->

@@ -390,6 +390,13 @@ export default class ElTableTs extends Vue {
           )
         }).filter(o => o)
 
+    const renderPaginationLeftSlot = () => {
+      if (Object.prototype.hasOwnProperty.call(this.$scopedSlots, 'paginationLeft')) {
+        // @ts-ignore
+        return this.$scopedSlots.paginationLeft()
+      }
+      return ''
+    }
 
     const renderPageSlot = () => {
       if (Object.prototype.hasOwnProperty.call(this.$scopedSlots, 'pagination')) {
@@ -415,22 +422,25 @@ export default class ElTableTs extends Vue {
           {/* 为了适配el-table中v-if="$slots.append" */}
           <template slot="append">{append && append(this.data)}</template>
         </el-table>
-        {this.isShowPag && (
-          <el-pagination
-            {...{ props: this.defPagination }}
-            total={this.total}
-            {...{
-              on: {
-                'size-change': this.pageSizeChange,
-                'current-change': this.currentChange,
-                'prev-click': this.emitPrevClick,
-                'next-click': this.emitNextClick
-              }
-            }}
-          >
-            {renderPageSlot() && <span class="el-pagination__slot">{renderPageSlot()}</span>}
-          </el-pagination>
-        )}
+        <div class="el-table-ts__bottom">
+          <div>{renderPaginationLeftSlot()}</div>
+          {this.isShowPag && (
+            <el-pagination
+              {...{ props: this.defPagination }}
+              total={this.total}
+              {...{
+                on: {
+                  'size-change': this.pageSizeChange,
+                  'current-change': this.currentChange,
+                  'prev-click': this.emitPrevClick,
+                  'next-click': this.emitNextClick
+                }
+              }}
+            >
+              {renderPageSlot() && <span class="el-pagination__slot">{renderPageSlot()}</span>}
+            </el-pagination>
+          )}
+        </div>
       </div>
     )
   }

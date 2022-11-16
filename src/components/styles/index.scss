@@ -1,8 +1,18 @@
 .el-table-ts {
-  .el-pagination {
+  .el-table-ts__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     text-align: right;
+    padding: 0 5px;
+
     margin-top: 4px;
   }
+
+  .el-pagination {
+    padding-right: 0;
+  }
+
   .el-pagination__slot {
     float: right;
     padding: 2px 5px;
