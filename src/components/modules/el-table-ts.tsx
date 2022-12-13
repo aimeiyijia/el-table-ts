@@ -62,6 +62,9 @@ export default class ElTableTs extends Vue {
   // 是否在数据重渲染后自动滚动到顶部
   @Prop({ type: Boolean, default: true }) readonly autoToTop?: boolean
 
+  // 是否在数据更新后重新布局el-table，可能能解决一些异常
+  @Prop({ type: Boolean, default: true }) readonly autoDoLayout?: boolean
+
   // falsey 假值是否渲染，默认渲染
   // false, 0或者-0, 0n(BigInt), "" 或者 ''或者 ``, undefined, NaN, null,
   @Prop({ type: Boolean, default: true }) readonly falseyRender?: boolean
@@ -109,7 +112,6 @@ export default class ElTableTs extends Vue {
   }
 
   mounted() {
-
     this.setPagination()
 
     this.setTableScrollListener()
@@ -117,6 +119,12 @@ export default class ElTableTs extends Vue {
     this.$emit('render-complete', {
       tableInstance: this.tableInstance
     })
+  }
+
+  updated() {
+    if (this.autoDoLayout && this.tableInstance && this.tableInstance.doLayout) {
+      this.tableInstance.doLayout()
+    }
   }
 
   // 设置分页配置
@@ -143,7 +151,7 @@ export default class ElTableTs extends Vue {
   }
 
   setTableScrollToTop() {
-    if (isUndefined(this.autoToTop) || (isBoolean(this.autoToTop) && this.autoToTop)) {
+    if (this.autoToTop) {
       this.tableBodyWrapper.scrollTop = 0
     }
   }
@@ -168,6 +176,7 @@ export default class ElTableTs extends Vue {
 
   @Emit('page-change')
   emitPageChangeEvent() {
+    this.setTableScrollToTop()
     return {
       pageSize: PagStore.pageSize,
       currentPage: PagStore.currentPage
@@ -176,6 +185,7 @@ export default class ElTableTs extends Vue {
 
   @Emit('size-change')
   emitSizeChangeEvent() {
+    this.setTableScrollToTop()
     return {
       pageSize: PagStore.pageSize,
       currentPage: PagStore.currentPage
@@ -184,6 +194,7 @@ export default class ElTableTs extends Vue {
 
   @Emit('prev-click')
   emitPrevClick() {
+    this.setTableScrollToTop()
     return {
       pageSize: PagStore.pageSize,
       currentPage: PagStore.currentPage - 1
@@ -192,6 +203,7 @@ export default class ElTableTs extends Vue {
 
   @Emit('next-click')
   emitNextClick() {
+    this.setTableScrollToTop()
     return {
       pageSize: PagStore.pageSize,
       currentPage: PagStore.currentPage + 1

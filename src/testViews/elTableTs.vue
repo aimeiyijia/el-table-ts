@@ -6,6 +6,7 @@
       stripe
       border
       auto-to-top
+      auto-do-layout
       :falsey-render="true"
       container="#elTableContainer"
       :col-attrs="{align: 'center'}"
@@ -160,10 +161,9 @@ export default {
     }
   },
   created() {
-    // setTimeout(() => {
-    //   this.directives.heightAdaptive.bottomOffset = 300
-    //   console.log(this.directives, '变化')
-    // }, 2000)
+    setTimeout(() => {
+      this.columns.splice(1,1)
+    }, 2000)
   },
   methods: {
     handleRender(instance) {
