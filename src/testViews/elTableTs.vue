@@ -62,6 +62,7 @@ export default {
         currentPage: 1,
       },
       list: MockData.data,
+      // 设置多级表头后，border将一直未true
       columns: [
         {
           align: 'center',
