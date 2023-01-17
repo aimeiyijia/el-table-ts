@@ -68,23 +68,27 @@ const calcTableHeight = (element: HTMLElement, params: IParams) => {
 }
 
 const doTableResize = (el: HTMLElement, binding: DirectiveBinding, vnode: VNode) => {
-  const { componentInstance } = vnode
+  try {
+    const { componentInstance } = vnode
 
-  // todo ts 报 Table里面没有layout属性，但是在原型链上可以看到
-  const $table = componentInstance as any
-  const { value } = binding
-  if (!$table.height) {
-    throw new Error(
-      "el-table must set the height. Such as height='10px' or height='0'"
-    )
+    // todo ts 报 Table里面没有layout属性，但是在原型链上可以看到
+    const $table = componentInstance as any
+    const { value } = binding
+    if (!$table.height) {
+      throw new Error(
+        "el-table must set the height. Such as height='10px' or height='0'"
+      )
+    }
+
+    if (!$table) return
+    const height = calcTableHeight(el, value)
+    $table.$nextTick(() => {
+      $table.layout && $table.layout.setHeight && $table.layout.setHeight(height)
+      $table.doLayout && $table.doLayout()
+    })
+  } catch (error) {
+    // console.log(error, '页面布局计算出错')
   }
-
-  if (!$table) return
-  const height = calcTableHeight(el, value)
-  $table.$nextTick(() => {
-    $table.layout.setHeight(height)
-    $table.doLayout()
-  })
 }
 
 const directive: DirectiveOptions = {
