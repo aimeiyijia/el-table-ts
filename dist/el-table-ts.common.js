@@ -556,19 +556,23 @@ var calcTableHeight = function (element, params) {
   return height;
 };
 var doTableResize = function (el, binding, vnode) {
-  var componentInstance = vnode.componentInstance;
-  // todo ts 报 Table里面没有layout属性，但是在原型链上可以看到
-  var $table = componentInstance;
-  var value = binding.value;
-  if (!$table.height) {
-    throw new Error("el-table must set the height. Such as height='10px' or height='0'");
+  try {
+    var componentInstance = vnode.componentInstance;
+    // todo ts 报 Table里面没有layout属性，但是在原型链上可以看到
+    var $table_1 = componentInstance;
+    var value = binding.value;
+    if (!$table_1.height) {
+      throw new Error("el-table must set the height. Such as height='10px' or height='0'");
+    }
+    if (!$table_1) return;
+    var height_1 = calcTableHeight(el, value);
+    $table_1.$nextTick(function () {
+      $table_1.layout && $table_1.layout.setHeight && $table_1.layout.setHeight(height_1);
+      $table_1.doLayout && $table_1.doLayout();
+    });
+  } catch (error) {
+    // console.log(error, '页面布局计算出错')
   }
-  if (!$table) return;
-  var height = calcTableHeight(el, value);
-  $table.$nextTick(function () {
-    $table.layout.setHeight(height);
-    $table.doLayout();
-  });
 };
 var directive = {
   bind: function (el, binding, vnode) {
