@@ -34,6 +34,7 @@ declare interface ITableColumn extends TableColumn {
   editable?: boolean
   editMode?: boolean
   customEdit?: boolean
+  editFormConfig?: object
   hidden: boolean | ((columns: ITableColumn) => boolean)
 }
 
@@ -299,7 +300,7 @@ export default class ElTableTs extends Vue {
     const renderColumns = (columns: ITableColumn[]) =>
       columns
         .map(c => {
-          const { hidden, children, editable: colEditable, editMode: colEditMode, customEdit = false } = c
+          const { hidden, children, editable: colEditable, editMode: colEditMode, customEdit = false, editFormConfig = {} } = c
           let willHidden = false
           if (isFunction(hidden)) {
             willHidden = (hidden as Function)(c)
@@ -347,7 +348,14 @@ export default class ElTableTs extends Vue {
 
               return !customEdit && (colEditable && rowEditable) ? (
                 <editeable-cell
-                  {...{ props: { value: cellContent, editMode: (colEditable && rowEditable) && (colEditMode && rowEditMode) } }}
+                  {...{
+                    props:
+                    {
+                      value: cellContent,
+                      editMode: (colEditable && rowEditable) && (colEditMode && rowEditMode),
+                      editFormConfig
+                    }
+                  }}
                   {...{
                     on: {
                       input: (val: any) => {
