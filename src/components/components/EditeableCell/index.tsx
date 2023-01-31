@@ -25,13 +25,13 @@ export default class editableCell extends Vue {
 
   private editing = false
 
-  private fieldValue = ''
+  private fieldValue: any
 
   created() {
     this.fieldValue = this.value
   }
 
-  onFieldClick() {
+  onFieldClick(e: MouseEvent) {
     this.editing = true
     this.$nextTick(() => {
       const inputRef = this.$refs.input as Input
@@ -39,23 +39,32 @@ export default class editableCell extends Vue {
         inputRef.focus()
       }
     })
+    e.stopPropagation()
   }
 
-  onFieldInput(val: string) {
+  onFieldFoucs(e: PointerEvent){
+    this.$emit('focus', e)
+  }
+
+  onFieldInput(val: any) {
     this.fieldValue = val
+    this.$emit('input', this.fieldValue)
+  }
+
+  onFieldChange(val: any) {
+    this.$emit('change', val)
+  }
+
+  onFieldBlur(e: PointerEvent) {
+    this.editing = false
+    this.$emit('blur', e)
   }
 
   onInputExit() {
     this.editing = false
   }
 
-  onFieldChange(val: string | number) {
-    this.$emit('input', val)
-  }
 
-  onFieldBlur() {
-    this.editing = false
-  }
 
   // handleKeyDown(event: KeyboardEvent) {
   //   console.log('User pressed: ', event.key);
@@ -97,10 +106,9 @@ export default class editableCell extends Vue {
                   value: this.fieldValue
                 },
                 on: {
-                  ...this.$listeners,
                   input: this.onFieldInput,
                   change: this.onFieldChange,
-                  focus: this.onFieldClick,
+                  focus: this.onFieldFoucs,
                   blur: this.onFieldBlur
                 },
               }}

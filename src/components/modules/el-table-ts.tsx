@@ -1,5 +1,5 @@
 import Vue, { VNode, CreateElement } from 'vue'
-import '../directives/height-adaptive.ts'
+import '../directives/height-adaptive'
 import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
 import { generateUUID } from '../utils/uuid'
 import { isBoolean, isString, isObject, isArray, isUndefined, isFunction } from '../utils/types'
@@ -350,7 +350,7 @@ export default class ElTableTs extends Vue {
                   {...{ props: { value: cellContent, editMode: (colEditable && rowEditable) && (colEditMode && rowEditMode) } }}
                   {...{
                     on: {
-                      input: (val: string) => {
+                      input: (val: any) => {
                         setValueByPath(row, column.prop, val)
                       }
                     }
