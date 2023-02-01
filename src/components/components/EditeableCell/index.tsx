@@ -6,6 +6,8 @@ import { Input } from 'element-ui'
 import './index.scss'
 
 import { omit } from '@/components/utils/opera'
+import ElFormTypes from '../ElFormTypes'
+import type { ElFormType } from '../ElFormTypes'
 
 export type EditFormConfig = {
   value?: any
@@ -33,7 +35,7 @@ export default class editableCell extends Vue {
   @Prop({ type: Object, default: () => { } }) readonly editFormConfig!: EditFormConfig
 
   // 进入编辑状态时使用的编辑组件
-  @Prop({ type: String, default: 'el-input' }) readonly editableComponent!: string
+  @Prop({ type: String, default: 'Input' }) readonly editableComponent!: string
 
   private editing = false
 
@@ -53,7 +55,8 @@ export default class editableCell extends Vue {
   // }
 
   render(h: CreateElement) {
-    const { value, editComponent = 'el-input', on = {}, scopedSlots = {} } = this.editFormConfig
+    const { value, editComponent = 'Input', on = {}, scopedSlots = {} } = this.editFormConfig
+    const EditComponent = (ElFormTypes as ElFormType)[editComponent]
     const attrs = omit(this.editFormConfig, ['editComponent', 'on', 'scopedSlots'])
 
     const onFieldClick = (e: MouseEvent) => {
@@ -102,12 +105,15 @@ export default class editableCell extends Vue {
         )}
         {
           (this.editing || this.editMode) && (
-            <editComponent
+            <EditComponent
               ref="input"
               {...{
+                attrs: {
+                  ...attrs,
+                  value: this.fieldValue
+                },
                 props: {
                   ...attrs,
-                  value: value || this.fieldValue
                 },
                 on: {
                   ...on,
@@ -117,7 +123,7 @@ export default class editableCell extends Vue {
                 scopedSlots
               }}
             >
-            </editComponent>
+            </EditComponent>
           )
         }
       </div>

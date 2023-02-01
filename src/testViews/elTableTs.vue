@@ -127,7 +127,7 @@ export default {
           editMode: true,
           editable: true,
           editFormConfig: {
-            editComponent: 'el-input'
+            editComponent: 'Input'
           }
           // 是否是自定义的edit，默认为false
           // customEdit: true
