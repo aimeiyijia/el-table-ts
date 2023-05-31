@@ -2,16 +2,32 @@ import Vue, { VNode, CreateElement } from 'vue'
 import '../directives/height-adaptive'
 import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
 import { generateUUID } from '../utils/uuid'
-import { isBoolean, isString, isObject, isArray, isUndefined, isFunction } from '../utils/types'
+import { judgeAndMask } from '../utils/maskData'
+import {
+  isBoolean,
+  isString,
+  isObject,
+  isArray,
+  isUndefined,
+  isFunction
+} from '../utils/types'
 import { omit, setValueByPath } from '../utils/opera'
 
-import { Table, Pagination, TableColumn, Form, FormItem, Select, Option, Input } from 'element-ui'
+import {
+  Table,
+  Pagination,
+  TableColumn,
+  Form,
+  FormItem,
+  Select,
+  Option,
+  Input
+} from 'element-ui'
 import EditeableCell from '../components/EditeableCell/index'
 // 样式
 import '../styles/index.scss'
 
 import PagStore from '../utils/store'
-import { directive } from 'vue/types/umd'
 
 // 默认分页配置
 declare class ElTableTsDefPagination {
@@ -36,6 +52,9 @@ declare interface ITableColumn extends TableColumn {
   customEdit?: boolean
   editFormConfig?: object
   hidden: boolean | ((columns: ITableColumn) => boolean)
+  // 是否敏感信息脱敏
+  // 默认支持 手机、座机、身份证号、银行卡、邮箱
+  mask?: boolean
 }
 
 @Component({
@@ -53,12 +72,19 @@ declare interface ITableColumn extends TableColumn {
 })
 export default class ElTableTs extends Vue {
   // 内置指令的配置项
-  @Prop({ type: [Boolean, Object], default: () => { return { heightAdaptive: { bottomOffset: 40 } } } }) readonly directives: boolean | IDirectives | undefined
+  @Prop({
+    type: [Boolean, Object],
+    default: () => {
+      return { heightAdaptive: { bottomOffset: 40 } }
+    }
+  })
+  readonly directives: boolean | IDirectives | undefined
+
   // 表格每列配置项
   @Prop({ type: Array, default: () => [] }) readonly columns!: ITableColumn[]
 
   // 更加统一化的列配置项
-  @Prop({ type: Object, default: () => { } }) readonly colAttrs?: ITableColumn
+  @Prop({ type: Object, default: () => {} }) readonly colAttrs?: ITableColumn
 
   // 是否在数据重渲染后自动滚动到顶部
   @Prop({ type: Boolean, default: true }) readonly autoToTop?: boolean
@@ -74,11 +100,20 @@ export default class ElTableTs extends Vue {
   @Prop({ type: Array, default: () => [] }) readonly data!: any[]
 
   // 分页
-  @Prop({ type: [Boolean, Object], default: () => { return { pageSize: 10, currentPage: 1 } } }) readonly pagination: Pagination | undefined | boolean
+  @Prop({
+    type: [Boolean, Object],
+    default: () => {
+      return { pageSize: 10, currentPage: 1 }
+    }
+  })
+  readonly pagination: Pagination | undefined | boolean
+
   @Prop({ type: Number, default: 0 }) readonly total: number | undefined
 
   // 表格所在的容器元素ID或Element，必须指定容器的高度
-  @Prop({ type: [String, Object], default: '' }) readonly container?: string | Element
+  @Prop({ type: [String, Object], default: '' }) readonly container?:
+    | string
+    | Element
 
   // 是否展示分页器
   isShowPag = true
@@ -89,7 +124,7 @@ export default class ElTableTs extends Vue {
     pageSizes: [10, 20, 30, 50],
     pageSize: 10,
     layout: 'prev, pager, next, sizes, total',
-    background: true,
+    background: true
   }
 
   // 内置指令
@@ -123,7 +158,11 @@ export default class ElTableTs extends Vue {
   }
 
   updated() {
-    if (this.autoDoLayout && this.tableInstance && this.tableInstance.doLayout) {
+    if (
+      this.autoDoLayout &&
+      this.tableInstance &&
+      this.tableInstance.doLayout
+    ) {
       this.tableInstance.doLayout()
     }
   }
@@ -132,7 +171,7 @@ export default class ElTableTs extends Vue {
   setPagination() {
     const pagination = this.pagination
     if (isBoolean(pagination)) {
-      this.isShowPag = (pagination as boolean)
+      this.isShowPag = pagination as boolean
     }
     if (isObject(pagination)) {
       this.isShowPag = true
@@ -167,13 +206,11 @@ export default class ElTableTs extends Vue {
     this.emitPageChangeEvent()
   }
 
-
   @Emit('scroll')
   tableScroll(e: Event) {
     e.preventDefault()
     return e
   }
-
 
   @Emit('page-change')
   emitPageChangeEvent() {
@@ -243,13 +280,15 @@ export default class ElTableTs extends Vue {
     }
     return {
       allowHeightAdaptive: true,
-      directives: [{
-        name: 'height-adaptive',
-        value: {
-          container: this.container,
-          bottomOffset: this.getheightAdaptiveValue()
+      directives: [
+        {
+          name: 'height-adaptive',
+          value: {
+            container: this.container,
+            bottomOffset: this.getheightAdaptiveValue()
+          }
         }
-      }]
+      ]
     }
   }
 
@@ -257,15 +296,27 @@ export default class ElTableTs extends Vue {
     // 高度自适应指令
     const { allowHeightAdaptive, directives } = this.splitDirectives()
 
-    const $attrs = allowHeightAdaptive ? Object.assign({ height: '0' }, this.$attrs) : this.$attrs
+    const $attrs = allowHeightAdaptive
+      ? Object.assign({ height: '0' }, this.$attrs)
+      : this.$attrs
 
     // 移除不支持自定义插槽的列类型 type[index/selection]
     const noSlots = ['index', 'selection']
 
     // 移除分页事件，防止事件冲突
-    const $tableListeners = omit(this.$listeners, ['page-change', 'current-change', 'size-change', 'prev-click', 'next-click'])
+    const $tableListeners = omit(this.$listeners, [
+      'page-change',
+      'current-change',
+      'size-change',
+      'prev-click',
+      'next-click'
+    ])
     // 从插槽中移除内置的插槽 pagination，empty，append
-    const customScopedSlots = omit(this.$scopedSlots, ['pagination', 'empty', 'append'])
+    const customScopedSlots = omit(this.$scopedSlots, [
+      'pagination',
+      'empty',
+      'append'
+    ])
     const { empty, append } = this.$scopedSlots
     // 内置插槽
     const inScopedSlots = {
@@ -278,15 +329,19 @@ export default class ElTableTs extends Vue {
     }
 
     const getCellValue = (column: ITableColumn, row: any) => {
-      const value = column.prop.split('.').reduce((obj, cur) => {
+      const { mask = true, prop } = column
+      const value = prop.split('.').reduce((obj, cur) => {
         if (obj) {
           return obj[cur]
         }
       }, row)
+
+      const maskValue = mask ? judgeAndMask(value) : value
+
       if (this.falseyRender) {
-        return value
+        return maskValue
       }
-      if (value) return value
+      if (maskValue) return maskValue
     }
 
     const renderChildrenColumns = (childrenColumns: ITableColumn[]) => {
@@ -300,29 +355,53 @@ export default class ElTableTs extends Vue {
     const renderColumns = (columns: ITableColumn[]) =>
       columns
         .map(c => {
-          const { hidden, children, editable: colEditable, editMode: colEditMode, customEdit = false, editFormConfig = {} } = c
+          const {
+            hidden,
+            children,
+            editable: colEditable,
+            editMode: colEditMode,
+            customEdit = false,
+            editFormConfig = {}
+          } = c
           let willHidden = false
           if (isFunction(hidden)) {
             willHidden = (hidden as Function)(c)
           } else {
-            willHidden = isBoolean(hidden) ? hidden as boolean : false
+            willHidden = isBoolean(hidden) ? (hidden as boolean) : false
           }
           if (willHidden) return
-          const options = Object.assign({ ...this.columnsAttrs, scopedSlots: {}, prop: '' }, c)
+          const options = Object.assign(
+            { ...this.columnsAttrs, scopedSlots: {}, prop: '' },
+            c
+          )
           let sampleScopedSlots = {}
 
-
           const scopedSlots = {
-            default: ({ row, column: elColumn, $index, store, _self }: { row: any, column: TableColumn, $index: number, store: any, _self: any }) => {
-
+            default: ({
+              row,
+              column: elColumn,
+              $index,
+              store,
+              _self
+            }: {
+              row: any
+              column: TableColumn
+              $index: number
+              store: any
+              _self: any
+            }) => {
               const { editable: rowEditable, editMode: rowEditMode } = row
               const column: any = Object.assign({}, options, elColumn)
 
               // 获取单元格的原始值
               const cellValue = getCellValue(column, row)
 
-              if (column.scopedSlots && column.scopedSlots.customRender && !isString(column.scopedSlots.customRender)) {
-                console.error("slotName must be string")
+              if (
+                column.scopedSlots &&
+                column.scopedSlots.customRender &&
+                !isString(column.scopedSlots.customRender)
+              ) {
+                console.error('slotName must be string')
                 return
               }
 
@@ -346,13 +425,16 @@ export default class ElTableTs extends Vue {
                 cellContent = cellValue
               }
 
-              return !customEdit && (colEditable && rowEditable) ? (
+              return !customEdit && colEditable && rowEditable ? (
                 <editeable-cell
                   {...{
-                    props:
-                    {
+                    props: {
                       value: cellContent,
-                      editMode: (colEditable && rowEditable) && (colEditMode && rowEditMode),
+                      editMode:
+                        colEditable &&
+                        rowEditable &&
+                        colEditMode &&
+                        rowEditMode,
                       editFormConfig
                     }
                   }}
@@ -366,14 +448,29 @@ export default class ElTableTs extends Vue {
                 >
                   <template>{cellContent}</template>
                 </editeable-cell>
-              ) : cellContent
-
+              ) : (
+                cellContent
+              )
             },
-            header: ({ column: elColumn, $index, store, _self }: { column: ITableColumn, $index: number, store: any, _self: any }) => {
+            header: ({
+              column: elColumn,
+              $index,
+              store,
+              _self
+            }: {
+              column: ITableColumn
+              $index: number
+              store: any
+              _self: any
+            }) => {
               const column: any = Object.assign({}, options, elColumn)
 
-              if (column.scopedSlots && column.scopedSlots.customTitle && !isString(column.scopedSlots.customTitle)) {
-                console.error("slotName must be string")
+              if (
+                column.scopedSlots &&
+                column.scopedSlots.customTitle &&
+                !isString(column.scopedSlots.customTitle)
+              ) {
+                console.error('slotName must be string')
                 return
               }
 
@@ -408,10 +505,16 @@ export default class ElTableTs extends Vue {
               {children && renderChildrenColumns(children)}
             </el-table-column>
           )
-        }).filter(o => o)
+        })
+        .filter(o => o)
 
     const renderPaginationLeftSlot = () => {
-      if (Object.prototype.hasOwnProperty.call(this.$scopedSlots, 'paginationLeft')) {
+      if (
+        Object.prototype.hasOwnProperty.call(
+          this.$scopedSlots,
+          'paginationLeft'
+        )
+      ) {
         // @ts-ignore
         return this.$scopedSlots.paginationLeft()
       }
@@ -419,7 +522,9 @@ export default class ElTableTs extends Vue {
     }
 
     const renderPageSlot = () => {
-      if (Object.prototype.hasOwnProperty.call(this.$scopedSlots, 'pagination')) {
+      if (
+        Object.prototype.hasOwnProperty.call(this.$scopedSlots, 'pagination')
+      ) {
         // @ts-ignore
         return this.$scopedSlots.pagination({
           total: this.total,
@@ -457,7 +562,9 @@ export default class ElTableTs extends Vue {
                 }
               }}
             >
-              {renderPageSlot() && <span class="el-pagination__slot">{renderPageSlot()}</span>}
+              {renderPageSlot() && (
+                <span class="el-pagination__slot">{renderPageSlot()}</span>
+              )}
             </el-pagination>
           )}
         </div>

@@ -12,7 +12,9 @@
       :col-attrs="{align: 'center'}"
       :pagination="pagination"
       :total="100"
-      :directives="directives"
+      height="auto"
+      max-height="400"
+      :directives="false"
       @current-change="handlePageChange"
       @size-change="handleSizeChange"
       @scroll="handleScroll"
@@ -21,9 +23,7 @@
       @sort-change="handleSortChange"
       @render-complete="handleRender"
     >
-    <template #paginationLeft>
-      分页的左侧，通过插槽设置
-    </template>
+      <template #paginationLeft>分页的左侧，通过插槽设置</template>
       <!-- <template slot="empty">普通插槽</template> -->
       <!-- <template #empty>作用域插槽</template> -->
       <!-- <template slot="append">普通append插槽</template> -->
@@ -59,7 +59,7 @@ export default {
         pageSize: 10,
         layout: 'slot, pager, sizes',
         background: true,
-        currentPage: 1,
+        currentPage: 1
       },
       list: MockData.data,
       // 设置多级表头后，border将一直未true
@@ -67,6 +67,9 @@ export default {
         {
           align: 'center',
           type: 'selection',
+          selectable: () => {
+            return false
+          }
         },
         {
           label: '1',
@@ -81,18 +84,18 @@ export default {
           },
           customTitle: ({ $index }) => {
             return '你可以展开我'
-          },
+          }
         },
         {
           label: '序号',
           align: 'center',
           type: 'index',
-          width: '80px',
+          width: '80px'
         },
 
         {
           label: 'ID',
-          prop: 'id',
+          prop: 'id'
         },
         {
           label: '姓名',
@@ -107,13 +110,13 @@ export default {
           children: [
             {
               label: '曾用名',
-              prop: 'oldName',
+              prop: 'oldName'
             },
             {
               label: '现用名',
-              prop: 'name',
-            },
-          ],
+              prop: 'name'
+            }
+          ]
         },
         {
           label: '年龄',
@@ -127,14 +130,21 @@ export default {
           editMode: true,
           editable: true,
           editFormConfig: {
-            editComponent: 'Input'
+            editComponent: 'Input',
+            on: {}
           }
           // 是否是自定义的edit，默认为false
           // customEdit: true
         },
         {
           label: '描述.身高',
-          prop: 'desc.height',
+          prop: 'desc.height'
+        },
+        // 脱敏默认支持 手机、座机、身份证号、银行卡、邮箱
+        {
+          label: '邮箱(脱敏列)',
+          prop: 'email',
+          // mask: true
         },
         {
           label: '操作',
@@ -144,8 +154,8 @@ export default {
           scopedSlots: {
             // slot name
             customRender: 'handle',
-            customTitle: 'handleTitle',
-          },
+            customTitle: 'handleTitle'
+          }
           // customRender: ({cellValue, row, column, $index, h}) => h('el-button', '查看详情')
           // customRender: ({cellValue, row, column, $index}) => {
           //   return (<div>
@@ -153,15 +163,15 @@ export default {
           //     <el-button type="danger" onClick={() => this.handleDel(row)}>删除</el-button>
           //   </div>)
           // }
-        },
+        }
       ],
       // 内置指令配置项
       directives: {
         // 高度自适应指令配置项
         heightAdaptive: {
-          bottomOffset: 100,
-        },
-      },
+          bottomOffset: 100
+        }
+      }
     }
   },
   created() {
@@ -201,8 +211,8 @@ export default {
     handleScroll(e) {
       console.log(e)
       // console.log(pageSize, currentPage)
-    },
-  },
+    }
+  }
 }
 </script>
 <style lang="scss">

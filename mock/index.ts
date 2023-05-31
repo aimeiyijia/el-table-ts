@@ -7,16 +7,17 @@ const dataTemplate = {
   name: '@cname',
   oldName: '@cname',
   desc: {
-    'height|0-180': 0,
+    'height|0-180': 0
   },
+  email: '@email',
   // |1-2
-  "editMode|1-2": true,
-  "editable|1-2": true
+  'editMode|1-2': true,
+  'editable|1-2': true
 }
 
 export const MockData = Mock.mock({
   // 属性 list 的值是一个数组，其中含有 1 到 10 个元素
-  'data|13': [dataTemplate],
+  'data|13': [dataTemplate]
 })
 
 // Mock响应模板
@@ -27,6 +28,6 @@ Mock.mock(RegExp('http://test.data' + '.*'), {
     'data|16': [dataTemplate],
     total: 16,
     pageNo: 1,
-    pageSize: 10,
-  },
+    pageSize: 10
+  }
 })
