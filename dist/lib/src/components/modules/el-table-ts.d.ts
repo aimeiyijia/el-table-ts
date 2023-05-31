@@ -1,5 +1,5 @@
 import Vue, { VNode, CreateElement } from 'vue';
-import '../directives/height-adaptive.ts';
+import '../directives/height-adaptive';
 import { Pagination, TableColumn } from 'element-ui';
 import '../styles/index.scss';
 declare interface IDirectives {
@@ -13,7 +13,9 @@ declare interface ITableColumn extends TableColumn {
     editable?: boolean;
     editMode?: boolean;
     customEdit?: boolean;
+    editFormConfig?: object;
     hidden: boolean | ((columns: ITableColumn) => boolean);
+    mask?: boolean;
 }
 export default class ElTableTs extends Vue {
     readonly directives: boolean | IDirectives | undefined;
