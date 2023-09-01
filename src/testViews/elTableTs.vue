@@ -15,6 +15,8 @@
       height="auto"
       max-height="400"
       :directives="false"
+      :header-cell-class-name="headerCellClassName"
+      :cell-class-name="cellClassName"
       @current-change="handlePageChange"
       @size-change="handleSizeChange"
       @scroll="handleScroll"
@@ -137,13 +139,18 @@ export default {
           // customEdit: true
         },
         {
+          label: '存款',
+          prop: 'money',
+          money: true
+        },
+        {
           label: '描述.身高',
           prop: 'desc.height'
         },
         // 脱敏默认支持 手机、座机、身份证号、银行卡、邮箱
         {
           label: '邮箱(脱敏列)',
-          prop: 'email',
+          prop: 'email'
           // mask: true
         },
         {
@@ -180,6 +187,20 @@ export default {
     // }, 2000)
   },
   methods: {
+    headerCellClassName({ row, column, rowIndex, columnIndex }) {
+      // console.log(row, 'row')
+      // console.log(column, 'column')
+      // console.log(rowIndex, 'rowIndex')
+      // console.log(columnIndex, 'columnIndex')
+      return '我是头单元格class'
+    },
+    cellClassName({ row, column, rowIndex, columnIndex }) {
+      // console.log(row, 'row')
+      // console.log(column, 'column')
+      // console.log(rowIndex, 'rowIndex')
+      // console.log(columnIndex, 'columnIndex')
+      return '我是单元格class'
+    },
     handleRender(instance) {
       console.log(instance, '表格实例')
     },

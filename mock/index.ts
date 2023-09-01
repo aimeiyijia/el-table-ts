@@ -6,6 +6,7 @@ const dataTemplate = {
   'age|20-40': 20,
   name: '@cname',
   oldName: '@cname',
+  'money': 100,
   desc: {
     'height|0-180': 0
   },

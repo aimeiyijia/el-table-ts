@@ -11,7 +11,7 @@ import {
   isUndefined,
   isFunction
 } from '../utils/types'
-import { omit, setValueByPath } from '../utils/opera'
+import { omit, setValueByPath, deepQuery, formatMoney } from '../utils/opera'
 
 import {
   Table,
@@ -52,6 +52,9 @@ declare interface ITableColumn extends TableColumn {
   customEdit?: boolean
   editFormConfig?: object
   hidden: boolean | ((columns: ITableColumn) => boolean)
+  // 是否是金额类 列
+  // 是：数据均居右，且保留两位小数点
+  money?: boolean
   // 是否敏感信息脱敏
   // 默认支持 手机、座机、身份证号、银行卡、邮箱
   mask?: boolean
@@ -299,7 +302,7 @@ export default class ElTableTs extends Vue {
     const $attrs = allowHeightAdaptive
       ? Object.assign({ height: '0' }, this.$attrs)
       : this.$attrs
-
+    const attrs = omit($attrs, ['header-cell-class-name', 'cell-class-name'])
     // 移除不支持自定义插槽的列类型 type[index/selection]
     const noSlots = ['index', 'selection']
 
@@ -425,6 +428,12 @@ export default class ElTableTs extends Vue {
                 cellContent = cellValue
               }
 
+              const { money } = options
+              if (!column.customRender && money) {
+                console.log(options, '-options')
+                cellContent = formatMoney(cellContent)
+              }
+
               return !customEdit && colEditable && rowEditable ? (
                 <editeable-cell
                   {...{
@@ -534,13 +543,87 @@ export default class ElTableTs extends Vue {
       return ''
     }
 
+    // const interceptAttrs = {
+    //   'header-cell-class-name': $attrs['header-cell-class-name'],
+    //   'cell-class-name': $attrs['cell-class-name']
+    // }
+    const interceptAttrs = {
+      headerCellClassName: ({
+        row,
+        column,
+        rowIndex,
+        columnIndex
+      }: {
+        row: any
+        column: any
+        rowIndex: number
+        columnIndex: number
+      }): string => {
+        const headerCellClassName = $attrs[
+          'header-cell-class-name'
+        ] as Table['headerCellClassName']
+        const customHeaderCellClassName = headerCellClassName
+          ? isFunction(headerCellClassName)
+            ? (headerCellClassName as Function)({
+                row,
+                column,
+                rowIndex,
+                columnIndex
+              })
+            : headerCellClassName
+          : ''
+        const option = this.columns[columnIndex] || {}
+        const { money } = option
+        if (money) {
+          return 'el-table-header__cell-money ' + customHeaderCellClassName
+        }
+        return customHeaderCellClassName
+      },
+      // 'cell-class-name': $attrs['cell-class-name']
+      cellClassName: ({
+        row,
+        column,
+        rowIndex,
+        columnIndex
+      }: {
+        row: any
+        column: any
+        rowIndex: number
+        columnIndex: number
+      }): string => {
+        const cellClassName = $attrs[
+          'cell-class-name'
+        ] as Table['cellClassName']
+        const customCellClassName = cellClassName
+          ? isFunction(cellClassName)
+            ? (cellClassName as Function)({
+                row,
+                column,
+                rowIndex,
+                columnIndex
+              })
+            : cellClassName
+          : ''
+        const option = deepQuery(this.columns, column.property, 'prop') || {}
+        const { money = false } = option
+        if (money) {
+          return 'el-table-body__cell-money ' + customCellClassName
+        }
+        return customCellClassName
+      }
+    }
+    console.log()
     return (
       <div class="el-table-ts">
         <el-table
           ref="ElTableTsRef"
           data={this.data}
           {...{ directives }}
-          {...{ props: $attrs, on: $tableListeners, ...inScopedSlots }}
+          {...{
+            props: { ...attrs, ...interceptAttrs },
+            on: $tableListeners,
+            ...inScopedSlots
+          }}
         >
           {renderColumns(this.columns)}
 

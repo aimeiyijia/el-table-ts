@@ -1,4 +1,15 @@
 .el-table-ts {
+  .el-table {
+    .el-table__cell {
+      &.el-table-header__cell-money {
+        text-align: right;
+      }
+      &.el-table-body__cell-money {
+        text-align: right;
+      }
+    }
+  }
+
   .el-table-ts__bottom {
     display: flex;
     justify-content: space-between;
@@ -21,4 +32,3 @@
     font-size: 13px;
   }
 }
-
