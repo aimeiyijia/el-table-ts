@@ -92,7 +92,7 @@ export declare const ElTreeMixinOptions: {
         };
         defaultCheckedKeys: ArrayConstructor;
         defaultExpandedKeys: ArrayConstructor;
-        currentNodeKey: (StringConstructor | NumberConstructor)[];
+        currentNodeKey: (NumberConstructor | StringConstructor)[];
         renderContent: FunctionConstructor;
         showCheckbox: BooleanConstructor;
         props: ObjectConstructor;

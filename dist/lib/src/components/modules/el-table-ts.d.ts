@@ -15,6 +15,7 @@ declare interface ITableColumn extends TableColumn {
     customEdit?: boolean;
     editFormConfig?: object;
     hidden: boolean | ((columns: ITableColumn) => boolean);
+    money?: boolean;
     mask?: boolean;
 }
 export default class ElTableTs extends Vue {

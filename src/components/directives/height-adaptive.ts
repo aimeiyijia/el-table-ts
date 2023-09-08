@@ -4,7 +4,7 @@ import { debounce } from 'ts-debounce'
 
 // 用于存储全局性的resize事件
 const globalEventListener = {
-  f: () => { }
+  f: () => {}
 }
 
 interface IParams {
@@ -13,8 +13,9 @@ interface IParams {
 }
 
 function getInnerHeight(elem: HTMLElement) {
-  const computed = getComputedStyle(elem);
-  const padding = parseInt(computed.paddingTop) + parseInt(computed.paddingBottom);
+  const computed = getComputedStyle(elem)
+  const padding =
+    parseInt(computed.paddingTop) + parseInt(computed.paddingBottom)
 
   return elem.clientHeight - padding
 }
@@ -28,16 +29,14 @@ function query(el: string | HTMLElement): HTMLElement {
   }
 }
 
-function getOffsetTop(elem: HTMLElement, inContainer: boolean): number {
-  let top = elem.offsetTop;
-  if (inContainer) return top
-
-  let parent = elem.offsetParent as HTMLElement;
+function getOffsetTop(elem: HTMLElement): number {
+  let top = elem.offsetTop
+  let parent = elem.offsetParent as HTMLElement
   while (parent) {
-    top += parent.offsetTop;
-    parent = parent.offsetParent as HTMLElement;
+    top += parent.offsetTop
+    parent = parent.offsetParent as HTMLElement
   }
-  return top;
+  return top
 }
 
 const calcTableHeight = (element: HTMLElement, params: IParams) => {
@@ -53,7 +52,7 @@ const calcTableHeight = (element: HTMLElement, params: IParams) => {
   }
 
   const containerHeight = getInnerHeight(containerEl) || defaultHeight
-  const topOffset = getOffsetTop(element, !!params.container)
+  const topOffset = containerEl ? 0 : getOffsetTop(element)
 
   const bottomOffset = params.bottomOffset || 0
 
@@ -67,7 +66,11 @@ const calcTableHeight = (element: HTMLElement, params: IParams) => {
   return height
 }
 
-const doTableResize = (el: HTMLElement, binding: DirectiveBinding, vnode: VNode) => {
+const doTableResize = (
+  el: HTMLElement,
+  binding: DirectiveBinding,
+  vnode: VNode
+) => {
   try {
     const { componentInstance } = vnode
 
@@ -83,7 +86,9 @@ const doTableResize = (el: HTMLElement, binding: DirectiveBinding, vnode: VNode)
     if (!$table) return
     const height = calcTableHeight(el, value)
     $table.$nextTick(() => {
-      $table.layout && $table.layout.setHeight && $table.layout.setHeight(height)
+      $table.layout &&
+        $table.layout.setHeight &&
+        $table.layout.setHeight(height)
       $table.doLayout && $table.doLayout()
     })
   } catch (error) {
@@ -112,7 +117,7 @@ const directive: DirectiveOptions = {
   },
   unbind() {
     window.removeEventListener('resize', globalEventListener.f)
-  },
+  }
 }
 
 Vue.directive('height-adaptive', directive)
