@@ -8,13 +8,10 @@
       auto-to-top
       auto-do-layout
       :falsey-render="true"
-      container="#elTableContainer"
       :col-attrs="{align: 'center'}"
       :pagination="pagination"
       :total="100"
-      height="auto"
-      max-height="400"
-      :directives="false"
+      :directives="directives"
       :header-cell-class-name="headerCellClassName"
       :cell-class-name="cellClassName"
       @current-change="handlePageChange"
@@ -176,7 +173,7 @@ export default {
       directives: {
         // 高度自适应指令配置项
         heightAdaptive: {
-          bottomOffset: 100
+          bottomOffset: 200
         }
       }
     }

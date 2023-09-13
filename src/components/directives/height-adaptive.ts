@@ -1,11 +1,9 @@
 import Vue, { DirectiveOptions, VNode } from 'vue'
 import { DirectiveBinding } from 'vue/types/options'
-import { debounce } from 'ts-debounce'
-
-// 用于存储全局性的resize事件
-const globalEventListener = {
-  f: () => {}
-}
+import {
+  addResizeListener,
+  removeResizeListener
+} from 'element-ui/src/utils/resize-event.js'
 
 interface IParams {
   bottomOffset?: number
@@ -29,8 +27,9 @@ function query(el: string | HTMLElement): HTMLElement {
   }
 }
 
-function getOffsetTop(elem: HTMLElement): number {
+function getOffsetTop(elem: HTMLElement, inContainer: boolean): number {
   let top = elem.offsetTop
+  if (inContainer) return top
   let parent = elem.offsetParent as HTMLElement
   while (parent) {
     top += parent.offsetTop
@@ -52,9 +51,9 @@ const calcTableHeight = (element: HTMLElement, params: IParams) => {
   }
 
   const containerHeight = getInnerHeight(containerEl) || defaultHeight
-  const topOffset = containerEl ? 0 : getOffsetTop(element)
+  const topOffset = getOffsetTop(element, !!params.container)
 
-  const bottomOffset = params.bottomOffset || 0
+  const bottomOffset = params.bottomOffset || 40
 
   let height = containerHeight - bottomOffset - topOffset
 
@@ -97,26 +96,18 @@ const doTableResize = (
 }
 
 const directive: DirectiveOptions = {
-  bind(el, binding, vnode) {
-    const elType = el as unknown as HTMLElement
-    const resizeListener = () => doTableResize(elType, binding, vnode)
-    globalEventListener.f = debounce(resizeListener, 100)
-    window.addEventListener('resize', globalEventListener.f)
-    // 立刻执行一次
-    doTableResize(elType, binding, vnode)
+  bind(el: any, binding, vnode) {
+    el.resizeListener = () => {
+      doTableResize(el, binding, vnode)
+    }
+    // parameter 1 is must be "Element" type
+    addResizeListener(window.document.body, el.resizeListener)
   },
-  update(el, binding, vnode) {
-    window.removeEventListener('resize', globalEventListener.f)
-
-    const elType = el as unknown as HTMLElement
-    const resizeListener = () => doTableResize(elType, binding, vnode)
-    globalEventListener.f = debounce(resizeListener, 100)
-    window.addEventListener('resize', globalEventListener.f)
-
-    doTableResize(el as unknown as HTMLElement, binding, vnode)
+  inserted(el, binding, vnode) {
+    doTableResize(el, binding, vnode)
   },
-  unbind() {
-    window.removeEventListener('resize', globalEventListener.f)
+  unbind(el: any) {
+    removeResizeListener(window.document.body, el.resizeListener)
   }
 }
 

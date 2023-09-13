@@ -430,7 +430,6 @@ export default class ElTableTs extends Vue {
 
               const { money } = options
               if (!column.customRender && money) {
-                console.log(options, '-options')
                 cellContent = formatMoney(cellContent)
               }
 
