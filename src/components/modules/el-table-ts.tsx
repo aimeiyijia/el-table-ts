@@ -78,7 +78,7 @@ export default class ElTableTs extends Vue {
   @Prop({
     type: [Boolean, Object],
     default: () => {
-      return { heightAdaptive: { bottomOffset: 40 } }
+      return { heightAdaptive: { bottomOffset: 0 } }
     }
   })
   readonly directives: boolean | IDirectives | undefined
@@ -252,12 +252,12 @@ export default class ElTableTs extends Vue {
   }
 
   getheightAdaptiveValue() {
-    const defaultBottomOffset = 40
+    const defaultBottomOffset = this.pagination ? 36 : 0
     const { heightAdaptive } = this.directives as IDirectives
 
     if (heightAdaptive) {
       const { bottomOffset } = heightAdaptive
-      if (bottomOffset || bottomOffset === 0) {
+      if (bottomOffset) {
         return bottomOffset
       }
       return defaultBottomOffset

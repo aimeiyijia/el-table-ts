@@ -1,6 +1,7 @@
 <template>
   <div class="elTable-container" id="elTableContainer">
     <el-table-ts
+      container="#elTableContainer"
       :data="list"
       :columns="columns"
       stripe

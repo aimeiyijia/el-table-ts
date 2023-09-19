@@ -53,7 +53,7 @@ const calcTableHeight = (element: HTMLElement, params: IParams) => {
   const containerHeight = getInnerHeight(containerEl) || defaultHeight
   const topOffset = getOffsetTop(element, !!params.container)
 
-  const bottomOffset = params.bottomOffset || 40
+  const bottomOffset = params.bottomOffset || 0
 
   let height = containerHeight - bottomOffset - topOffset
 
