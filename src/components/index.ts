@@ -8,7 +8,7 @@ interface InstallFunction extends PluginFunction<any> {
 
 const Components: { [key: string]: VueConstructor } = {
   ElTableTs: ElTableTs,
-  ElTableHttp: ElTableHttp,
+  ElTableHttp: ElTableHttp
 }
 
 const install: InstallFunction = (Vue: typeof _Vue) => {
@@ -20,5 +20,5 @@ const install: InstallFunction = (Vue: typeof _Vue) => {
 
   install.installed = true
 }
-
+export { ElTableTs, ElTableHttp }
 export default install
