@@ -611,7 +611,6 @@ export default class ElTableTs extends Vue {
         return customCellClassName
       }
     }
-    console.log()
     return (
       <div class="el-table-ts">
         <el-table
