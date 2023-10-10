@@ -4238,8 +4238,12 @@ const directive = {
     // parameter 1 is must be "Element" type
     addResizeListener(window.document.body, el.resizeListener);
   },
-  inserted(el, binding, vnode) {
+  update(el, binding, vnode) {
     doTableResize(el, binding, vnode);
+  },
+  inserted(el) {
+    removeResizeListener(window.document.body, el.resizeListener);
+    addResizeListener(window.document.body, el.resizeListener);
   },
   unbind(el) {
     removeResizeListener(window.document.body, el.resizeListener);
@@ -7040,8 +7044,22 @@ let el_table_ts_ElTableTs = class ElTableTs extends external_vue_default.a {
       currentPage: utils_store.currentPage + 1
     };
   }
+  getPaginationSpaceHeight() {
+    const pagEl = document.querySelector('.el-table-ts__bottom');
+    if (pagEl) {
+      const {
+        marginTop,
+        marginBottom
+      } = getComputedStyle(pagEl);
+      const mt = parseFloat(marginTop);
+      const mb = parseFloat(marginBottom);
+      return pagEl.offsetHeight + mt + mb;
+    }
+    return 0;
+  }
   getheightAdaptiveValue() {
-    const defaultBottomOffset = this.pagination ? 36 : 0;
+    const pagHeight = this.getPaginationSpaceHeight();
+    const defaultBottomOffset = this.pagination ? pagHeight : 0;
     const {
       heightAdaptive
     } = this.directives;
@@ -7255,8 +7273,9 @@ let el_table_ts_ElTableTs = class ElTableTs extends external_vue_default.a {
         }
       }, sampleScopedSlots]), [children && renderChildrenColumns(children)]);
     }).filter(o => o);
+    const hasPaginationLeftSlot = Object.prototype.hasOwnProperty.call(this.$scopedSlots, 'paginationLeft');
     const renderPaginationLeftSlot = () => {
-      if (Object.prototype.hasOwnProperty.call(this.$scopedSlots, 'paginationLeft')) {
+      if (hasPaginationLeftSlot) {
         // @ts-ignore
         return this.$scopedSlots.paginationLeft();
       }
@@ -7325,7 +7344,6 @@ let el_table_ts_ElTableTs = class ElTableTs extends external_vue_default.a {
         return customCellClassName;
       }
     };
-    console.log();
     return h("div", {
       "class": "el-table-ts"
     }, [h("el-table", helper_default()([{
@@ -7345,8 +7363,11 @@ let el_table_ts_ElTableTs = class ElTableTs extends external_vue_default.a {
     }]), [renderColumns(this.columns), h("template", {
       "slot": "append"
     }, [append && append(this.data)])]), h("div", {
-      "class": "el-table-ts__bottom"
-    }, [h("div", [renderPaginationLeftSlot()]), this.isShowPag && h("el-pagination", {
+      "class": {
+        'el-table-ts__bottom': true,
+        'el-table-ts__bottom-has-leftslot': hasPaginationLeftSlot
+      }
+    }, [hasPaginationLeftSlot && h("div", [renderPaginationLeftSlot()]), this.isShowPag && h("el-pagination", {
       "props": {
         ...this.defPagination
       },

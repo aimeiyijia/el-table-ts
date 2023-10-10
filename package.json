@@ -1,6 +1,6 @@
 {
   "name": "el-table-ts",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "main": "dist/el-table-ts.common.js",
   "typings": "types/index.d.ts",
   "private": false,

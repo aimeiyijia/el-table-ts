@@ -59,6 +59,7 @@ export default class ElTableTs extends Vue {
         pageSize: number;
         currentPage: number;
     };
+    getPaginationSpaceHeight(): number;
     getheightAdaptiveValue(): number;
     splitDirectives(): {
         allowHeightAdaptive: boolean;
