@@ -251,8 +251,20 @@ export default class ElTableTs extends Vue {
     }
   }
 
+  getPaginationSpaceHeight() {
+    const pagEl = document.querySelector('.el-table-ts__bottom')
+    if (pagEl) {
+      const { marginTop, marginBottom } = getComputedStyle(pagEl)
+      const mt = parseFloat(marginTop)
+      const mb = parseFloat(marginBottom)
+      return (pagEl as HTMLElement).offsetHeight + mt + mb
+    }
+    return 0
+  }
+
   getheightAdaptiveValue() {
-    const defaultBottomOffset = this.pagination ? 36 : 0
+    const pagHeight = this.getPaginationSpaceHeight()
+    const defaultBottomOffset = this.pagination ? pagHeight : 0
     const { heightAdaptive } = this.directives as IDirectives
 
     if (heightAdaptive) {
@@ -516,13 +528,12 @@ export default class ElTableTs extends Vue {
         })
         .filter(o => o)
 
+    const hasPaginationLeftSlot = Object.prototype.hasOwnProperty.call(
+      this.$scopedSlots,
+      'paginationLeft'
+    )
     const renderPaginationLeftSlot = () => {
-      if (
-        Object.prototype.hasOwnProperty.call(
-          this.$scopedSlots,
-          'paginationLeft'
-        )
-      ) {
+      if (hasPaginationLeftSlot) {
         // @ts-ignore
         return this.$scopedSlots.paginationLeft()
       }
@@ -628,8 +639,13 @@ export default class ElTableTs extends Vue {
           {/* 为了适配el-table中v-if="$slots.append" */}
           <template slot="append">{append && append(this.data)}</template>
         </el-table>
-        <div class="el-table-ts__bottom">
-          <div>{renderPaginationLeftSlot()}</div>
+        <div
+          class={{
+            'el-table-ts__bottom': true,
+            'el-table-ts__bottom-has-leftslot': hasPaginationLeftSlot
+          }}
+        >
+          {hasPaginationLeftSlot && <div>{renderPaginationLeftSlot()}</div>}
           {this.isShowPag && (
             <el-pagination
               {...{ props: this.defPagination }}

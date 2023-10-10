@@ -103,8 +103,12 @@ const directive: DirectiveOptions = {
     // parameter 1 is must be "Element" type
     addResizeListener(window.document.body, el.resizeListener)
   },
-  inserted(el, binding, vnode) {
+  update(el: any, binding, vnode) {
     doTableResize(el, binding, vnode)
+  },
+  inserted(el: any) {
+    removeResizeListener(window.document.body, el.resizeListener)
+    addResizeListener(window.document.body, el.resizeListener)
   },
   unbind(el: any) {
     removeResizeListener(window.document.body, el.resizeListener)

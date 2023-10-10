@@ -173,9 +173,7 @@ export default {
       // 内置指令配置项
       directives: {
         // 高度自适应指令配置项
-        heightAdaptive: {
-          bottomOffset: 200
-        }
+        heightAdaptive: {}
       }
     }
   },
@@ -238,5 +236,8 @@ export default {
 #elTableContainer {
   height: 600px;
   /* position: relative; */
+}
+.el-pagination {
+  padding: 24px 5px;
 }
 </style>

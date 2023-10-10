@@ -12,12 +12,15 @@
 
   .el-table-ts__bottom {
     display: flex;
-    justify-content: space-between;
+    justify-content: right;
     align-items: center;
     text-align: right;
     padding: 0 5px;
 
     margin-top: 4px;
+  }
+  .el-table-ts__bottom-has-leftslot {
+    justify-content: space-between;
   }
 
   .el-pagination {
