@@ -4,6 +4,7 @@ import { AxiosRequestConfig } from 'axios'
 import { ElTableColumn } from 'element-ui/types/table-column'
 
 
+
 // 默认分页
 export declare interface IDefPagination {
   currentPage: number

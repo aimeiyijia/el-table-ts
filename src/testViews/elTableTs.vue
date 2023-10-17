@@ -124,22 +124,41 @@ export default {
           // 内置的formatter不支持，请使用customRender
           customRender: ({ cellValue }) => {
             return `${cellValue}岁`
-          },
+          }
+        },
+        {
+          label: '出生日期',
+          prop: 'birth',
           // 初始状态下是否直接进入编辑，默认为false，需要在editable: true时点击单元格进入编辑
           // 行与列设置平等
           editMode: true,
           editable: true,
           editFormConfig: {
-            editComponent: 'Input',
+            editComponent: 'DatePicker',
+            // 必须指定，表格值无法直接渲染date类型
+            valueFormat: 'yyyy-MM-dd',
             on: {}
           }
-          // 是否是自定义的edit，默认为false
-          // customEdit: true
         },
         {
           label: '存款',
           prop: 'money',
-          money: true
+          money: true,
+          // 初始状态下是否直接进入编辑，默认为false，需要在editable: true时点击单元格进入编辑
+          // 行与列设置平等
+          editMode: true,
+          editable: true,
+          editFormConfig: {
+            editComponent: 'Select',
+            options: [
+              { value: '100.00', label: '100.00' },
+              { value: '110.00', label: '110.00' },
+              { value: '120.00', label: '120.00' },
+            ],
+            on: {}
+          }
+          // 是否是自定义的edit，默认为false
+          // customEdit: true
         },
         {
           label: '描述.身高',

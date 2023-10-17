@@ -3,6 +3,8 @@ import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
 
 import { Input } from 'element-ui'
 
+import vClickOutside from 'v-click-outside'
+
 import './index.scss'
 
 import { omit } from '@/components/utils/opera'
@@ -17,12 +19,16 @@ export type EditFormConfig = {
 }
 
 @Component({
-  components: { ElInput: Input }
+  components: { ElInput: Input },
+  directives: {
+    clickOutside: vClickOutside.directive
+  }
 })
 export default class editableCell extends Vue {
   @Prop({ default: '' }) readonly value!: any
 
-  @Prop({ type: String, default: '点击编辑，点击外部取消编辑' }) readonly toolTipContent!: string
+  @Prop({ type: String, default: '点击编辑，点击外部取消编辑' })
+  readonly toolTipContent!: string
 
   @Prop({ type: Number, default: 500 }) readonly toolTipDelay!: number
 
@@ -32,7 +38,8 @@ export default class editableCell extends Vue {
   @Prop({ type: Boolean, default: false }) readonly editMode!: boolean
 
   // 编辑组件的配置项
-  @Prop({ type: Object, default: () => { } }) readonly editFormConfig!: EditFormConfig
+  @Prop({ type: Object, default: () => {} })
+  readonly editFormConfig!: EditFormConfig
 
   // 进入编辑状态时使用的编辑组件
   @Prop({ type: String, default: 'Input' }) readonly editableComponent!: string
@@ -55,9 +62,18 @@ export default class editableCell extends Vue {
   // }
 
   render(h: CreateElement) {
-    const { value, editComponent = 'Input', on = {}, scopedSlots = {} } = this.editFormConfig
+    const {
+      value,
+      editComponent = 'Input',
+      on = {},
+      scopedSlots = {}
+    } = this.editFormConfig
     const EditComponent = (ElFormTypes as ElFormType)[editComponent]
-    const attrs = omit(this.editFormConfig, ['editComponent', 'on', 'scopedSlots'])
+    const attrs = omit(this.editFormConfig, [
+      'editComponent',
+      'on',
+      'scopedSlots'
+    ])
 
     const onFieldClick = (e: MouseEvent) => {
       this.editing = true
@@ -71,28 +87,32 @@ export default class editableCell extends Vue {
     }
 
     const onFieldInput = (val: any) => {
+      console.log(val, '---')
       this.fieldValue = val
       this.$emit('input', this.fieldValue)
       const { input } = on
       input && input(this.fieldValue)
     }
 
-    const onFieldBlur = (e: PointerEvent) => {
+    const onClickCellOutside = (e: FocusEvent) => {
+      console.log(this.fieldValue, 'fieldValue')
       this.editing = false
-      const { blur } = on
-      blur && blur(e)
     }
 
     return (
-      <div class="edit-cell edit-enabled-cell" onClick={onFieldClick}>
+      <div
+        class="edit-cell edit-enabled-cell"
+        onClick={onFieldClick}
+        v-click-outside={onClickCellOutside}
+      >
         {!this.editing && !this.editMode && (
           <el-tooltip
             {...{
               props: {
                 placement: this.toolTipPlacement,
                 openDelay: this.toolTipDelay,
-                content: this.toolTipContent,
-              },
+                content: this.toolTipContent
+              }
             }}
           >
             <div class="cell-content">
@@ -103,29 +123,26 @@ export default class editableCell extends Vue {
             </div>
           </el-tooltip>
         )}
-        {
-          (this.editing || this.editMode) && (
-            <EditComponent
-              ref="input"
-              {...{
-                attrs: {
-                  ...attrs,
-                  value: this.fieldValue
-                },
-                props: {
-                  ...attrs,
-                },
-                on: {
-                  ...on,
-                  input: onFieldInput,
-                  blur: onFieldBlur
-                },
-                scopedSlots
-              }}
-            >
-            </EditComponent>
-          )
-        }
+        {(this.editing || this.editMode) && (
+          <EditComponent
+            ref="input"
+            {...{
+              attrs: {
+                ...attrs,
+                value: this.fieldValue
+              },
+              props: {
+                ...attrs
+              },
+              on: {
+                ...on,
+                input: onFieldInput
+                // blur: onFieldBlur
+              },
+              scopedSlots
+            }}
+          ></EditComponent>
+        )}
       </div>
     )
   }

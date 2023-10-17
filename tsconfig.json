@@ -44,7 +44,8 @@
     "src/**/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "tests/**/*.tsx",
+    "types/v-click-outside.d.ts"
   ],
   "exclude": [
     "node_modules"
