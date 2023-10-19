@@ -8,6 +8,8 @@ import vClickOutside from 'v-click-outside'
 import './index.scss'
 
 import { omit } from '@/components/utils/opera'
+import { isDate } from '@/components/utils/types'
+
 import ElFormTypes from '../ElFormTypes'
 import type { ElFormType } from '../ElFormTypes'
 
@@ -87,7 +89,6 @@ export default class editableCell extends Vue {
     }
 
     const onFieldInput = (val: any) => {
-      console.log(val, '---')
       this.fieldValue = val
       this.$emit('input', this.fieldValue)
       const { input } = on
@@ -95,8 +96,12 @@ export default class editableCell extends Vue {
     }
 
     const onClickCellOutside = (e: FocusEvent) => {
-      console.log(this.fieldValue, 'fieldValue')
       this.editing = false
+    }
+
+    const renderFieldValue = (val: any) => {
+      if (isDate(val)) return val.toString()
+      return val
     }
 
     return (
@@ -118,7 +123,7 @@ export default class editableCell extends Vue {
             <div class="cell-content">
               {
                 // @ts-ignore
-                this.fieldValue
+                renderFieldValue(this.fieldValue)
               }
             </div>
           </el-tooltip>

@@ -136,7 +136,7 @@ export default {
           editFormConfig: {
             editComponent: 'DatePicker',
             // 必须指定，表格值无法直接渲染date类型
-            valueFormat: 'yyyy-MM-dd',
+            // valueFormat: 'yyyy-MM-dd',
             on: {}
           }
         },

@@ -19,3 +19,7 @@ export function isArray(val: any): boolean {
 export function isUndefined(val: any): boolean {
   return val === undefined
 }
+export function isDate(date: any) {
+  return Object.prototype.toString.call(date) === '[object Date]'
+  // return date instanceof Date && !isNaN(date.valueOf())
+}
