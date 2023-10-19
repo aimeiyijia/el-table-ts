@@ -1,5 +1,6 @@
 import Vue, { DirectiveOptions, VNode } from 'vue'
 import { DirectiveBinding } from 'vue/types/options'
+import { debounce } from 'ts-debounce'
 import {
   addResizeListener,
   removeResizeListener
@@ -65,11 +66,12 @@ const calcTableHeight = (element: HTMLElement, params: IParams) => {
   return height
 }
 
+let oldHeight = 0
 const doTableResize = (
   el: HTMLElement,
   binding: DirectiveBinding,
   vnode: VNode
-) => {
+): any => {
   try {
     const { componentInstance } = vnode
 
@@ -84,6 +86,8 @@ const doTableResize = (
 
     if (!$table) return
     const height = calcTableHeight(el, value)
+    if (height === oldHeight) return
+    oldHeight = height
     $table.$nextTick(() => {
       $table.layout &&
         $table.layout.setHeight &&
@@ -96,19 +100,11 @@ const doTableResize = (
 }
 
 const directive: DirectiveOptions = {
-  bind(el: any, binding, vnode) {
-    el.resizeListener = () => {
-      doTableResize(el, binding, vnode)
-    }
-    // parameter 1 is must be "Element" type
-    addResizeListener(window.document.body, el.resizeListener)
-  },
   update(el: any, binding, vnode) {
+    el.resizeListener = debounce(() => doTableResize(el, binding, vnode), 16)
+    window.removeEventListener('resize', el.resizeListener)
+    window.addEventListener('resize', el.resizeListener)
     doTableResize(el, binding, vnode)
-  },
-  inserted(el: any) {
-    removeResizeListener(window.document.body, el.resizeListener)
-    addResizeListener(window.document.body, el.resizeListener)
   },
   unbind(el: any) {
     removeResizeListener(window.document.body, el.resizeListener)
