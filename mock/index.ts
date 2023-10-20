@@ -7,14 +7,15 @@ const dataTemplate = {
   name: '@cname',
   oldName: '@cname',
   birth: '@date("yyyy-MM-dd")',
-  'money': 100,
+  'money|1-40000': 2,
+  'married|0-1': 1,
   desc: {
     'height|0-180': 0
   },
   email: '@email',
   // |1-2
-  'editMode|1-2': true,
-  'editable|1-2': true
+  'editMode': false,
+  'editable': true
 }
 
 export const MockData = Mock.mock({

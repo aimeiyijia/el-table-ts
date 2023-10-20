@@ -455,7 +455,9 @@ export default class ElTableTs extends Vue {
                         rowEditable &&
                         colEditMode &&
                         rowEditMode,
-                      editFormConfig
+                      editFormConfig,
+                      row,
+                      column
                     }
                   }}
                   {...{

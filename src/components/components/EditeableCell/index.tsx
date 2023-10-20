@@ -1,7 +1,7 @@
 import Vue, { VNode, CreateElement } from 'vue'
 import { Component, Prop, Emit, Watch } from 'vue-property-decorator'
 
-import { Input } from 'element-ui'
+import type { Input, TableColumn } from 'element-ui'
 
 import vClickOutside from 'v-click-outside'
 
@@ -13,15 +13,17 @@ import { isDate } from '@/components/utils/types'
 import ElFormTypes from '../ElFormTypes'
 import type { ElFormType } from '../ElFormTypes'
 
+import renderFn from './val'
+
 export type EditFormConfig = {
   value?: any
   editComponent?: string
+  options?: { value: number | string, label: number | string }[]
   on?: any
   scopedSlots?: object
 }
 
 @Component({
-  components: { ElInput: Input },
   directives: {
     clickOutside: vClickOutside.directive
   }
@@ -43,8 +45,13 @@ export default class editableCell extends Vue {
   @Prop({ type: Object, default: () => {} })
   readonly editFormConfig!: EditFormConfig
 
-  // 进入编辑状态时使用的编辑组件
-  @Prop({ type: String, default: 'Input' }) readonly editableComponent!: string
+  // 行配置
+  @Prop({ type: Object, default: () => {} })
+  readonly row!: any
+
+  // 列配置
+  @Prop({ type: Object, default: () => {} })
+  readonly column!: TableColumn
 
   private editing = false
 
@@ -100,8 +107,10 @@ export default class editableCell extends Vue {
     }
 
     const renderFieldValue = (val: any) => {
-      if (isDate(val)) return val.toString()
-      return val
+      const render = renderFn[editComponent]
+      return render
+        ? render(val, this.editFormConfig, this.row, this.column)
+        : val
     }
 
     return (

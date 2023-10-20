@@ -1,7 +1,7 @@
 <template>
   <div class="elTable-container" id="elTableContainer">
+    <!-- container="#elTableContainer" -->
     <el-table-ts
-      container="#elTableContainer"
       :data="list"
       :columns="columns"
       stripe
@@ -9,10 +9,10 @@
       auto-to-top
       auto-do-layout
       :falsey-render="true"
+      :directives="directives"
       :col-attrs="{align: 'center'}"
       :pagination="pagination"
       :total="100"
-      :directives="directives"
       :header-cell-class-name="headerCellClassName"
       :cell-class-name="cellClassName"
       @current-change="handlePageChange"
@@ -144,6 +144,10 @@ export default {
           label: '存款',
           prop: 'money',
           money: true,
+        },
+        {
+          label: '是否结婚',
+          prop: 'married',
           // 初始状态下是否直接进入编辑，默认为false，需要在editable: true时点击单元格进入编辑
           // 行与列设置平等
           editMode: true,
@@ -151,9 +155,8 @@ export default {
           editFormConfig: {
             editComponent: 'Select',
             options: [
-              { value: '100.00', label: '100.00' },
-              { value: '110.00', label: '110.00' },
-              { value: '120.00', label: '120.00' },
+              { value: 0, label: '否' },
+              { value: 1, label: '是' }
             ],
             on: {}
           }
@@ -253,7 +256,7 @@ export default {
 </script>
 <style lang="scss">
 #elTableContainer {
-  height: 600px;
+  /* height: 600px; */
   /* position: relative; */
 }
 .el-pagination {
