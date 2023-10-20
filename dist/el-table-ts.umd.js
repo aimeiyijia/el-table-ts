@@ -3377,6 +3377,15 @@ module.exports = function (namespace, method) {
 
 /***/ }),
 
+/***/ "aa1a":
+/***/ (function(module, exports, __webpack_require__) {
+
+!function(e,n){ true?module.exports=n():undefined}(this,function(){var e="__v-click-outside",n="undefined"!=typeof window,t="undefined"!=typeof navigator,r=n&&("ontouchstart"in window||t&&navigator.msMaxTouchPoints>0)?["touchstart"]:["click"];function i(e){var n=e.event,t=e.handler;(0,e.middleware)(n)&&t(n)}function a(n,t){var a=function(e){var n="function"==typeof e;if(!n&&"object"!=typeof e)throw new Error("v-click-outside: Binding value must be a function or an object");return{handler:n?e:e.handler,middleware:e.middleware||function(e){return e},events:e.events||r,isActive:!(!1===e.isActive),detectIframe:!(!1===e.detectIframe),capture:!!e.capture}}(t.value),d=a.handler,o=a.middleware,c=a.detectIframe,u=a.capture;if(a.isActive){if(n[e]=a.events.map(function(e){return{event:e,srcTarget:document.documentElement,handler:function(e){return function(e){var n=e.el,t=e.event,r=e.handler,a=e.middleware,d=t.composedPath&&t.composedPath()||t.path;(d?d.indexOf(n)<0:!n.contains(t.target))&&i({event:t,handler:r,middleware:a})}({el:n,event:e,handler:d,middleware:o})},capture:u}}),c){var l={event:"blur",srcTarget:window,handler:function(e){return function(e){var n=e.el,t=e.event,r=e.handler,a=e.middleware;setTimeout(function(){var e=document.activeElement;e&&"IFRAME"===e.tagName&&!n.contains(e)&&i({event:t,handler:r,middleware:a})},0)}({el:n,event:e,handler:d,middleware:o})},capture:u};n[e]=[].concat(n[e],[l])}n[e].forEach(function(t){var r=t.event,i=t.srcTarget,a=t.handler;return setTimeout(function(){n[e]&&i.addEventListener(r,a,u)},0)})}}function d(n){(n[e]||[]).forEach(function(e){return e.srcTarget.removeEventListener(e.event,e.handler,e.capture)}),delete n[e]}var o=n?{bind:a,update:function(e,n){var t=n.value,r=n.oldValue;JSON.stringify(t)!==JSON.stringify(r)&&(d(e),a(e,{value:t}))},unbind:d}:{};return{install:function(e){e.directive("click-outside",o)},directive:o}});
+//# sourceMappingURL=v-click-outside.umd.js.map
+
+
+/***/ }),
+
 /***/ "ab1c":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4116,6 +4125,10 @@ function __classPrivateFieldIn(state, receiver) {
 var external_vue_ = __webpack_require__("8bbf");
 var external_vue_default = /*#__PURE__*/__webpack_require__.n(external_vue_);
 
+// CONCATENATED MODULE: ./node_modules/.pnpm/ts-debounce@3.0.0/node_modules/ts-debounce/dist/src/index.esm.js
+function r(r,e,n){var i,t,o;void 0===e&&(e=50),void 0===n&&(n={});var a=null!=(i=n.isImmediate)&&i,u=null!=(t=n.callback)&&t,c=n.maxWait,v=Date.now(),l=[];function f(){if(void 0!==c){var r=Date.now()-v;if(r+e>=c)return c-r}return e}var d=function(){var e=[].slice.call(arguments),n=this;return new Promise(function(i,t){var c=a&&void 0===o;if(void 0!==o&&clearTimeout(o),o=setTimeout(function(){if(o=void 0,v=Date.now(),!a){var i=r.apply(n,e);u&&u(i),l.forEach(function(r){return(0,r.resolve)(i)}),l=[]}},f()),c){var d=r.apply(n,e);return u&&u(d),i(d)}l.push({resolve:i,reject:t})})};return d.cancel=function(r){void 0!==o&&clearTimeout(o),l.forEach(function(e){return(0,e.reject)(r)}),l=[]},d}
+//# sourceMappingURL=index.esm.js.map
+
 // EXTERNAL MODULE: ./node_modules/.pnpm/resize-observer-polyfill@1.5.1/node_modules/resize-observer-polyfill/dist/ResizeObserver.es.js
 var ResizeObserver_es = __webpack_require__("4105");
 
@@ -4164,6 +4177,7 @@ const removeResizeListener = function(element, fn) {
 
 
 
+
 function getInnerHeight(elem) {
   const computed = getComputedStyle(elem);
   const padding = parseInt(computed.paddingTop) + parseInt(computed.paddingBottom);
@@ -4207,6 +4221,7 @@ const calcTableHeight = (element, params) => {
   }
   return height;
 };
+let oldHeight = 0;
 const doTableResize = (el, binding, vnode) => {
   try {
     const {
@@ -4222,6 +4237,8 @@ const doTableResize = (el, binding, vnode) => {
     }
     if (!$table) return;
     const height = calcTableHeight(el, value);
+    if (height === oldHeight) return;
+    oldHeight = height;
     $table.$nextTick(() => {
       $table.layout && $table.layout.setHeight && $table.layout.setHeight(height);
       $table.doLayout && $table.doLayout();
@@ -4231,19 +4248,11 @@ const doTableResize = (el, binding, vnode) => {
   }
 };
 const directive = {
-  bind(el, binding, vnode) {
-    el.resizeListener = () => {
-      doTableResize(el, binding, vnode);
-    };
-    // parameter 1 is must be "Element" type
-    addResizeListener(window.document.body, el.resizeListener);
-  },
   update(el, binding, vnode) {
+    el.resizeListener = r(() => doTableResize(el, binding, vnode), 16);
+    window.removeEventListener('resize', el.resizeListener);
+    window.addEventListener('resize', el.resizeListener);
     doTableResize(el, binding, vnode);
-  },
-  inserted(el) {
-    removeResizeListener(window.document.body, el.resizeListener);
-    addResizeListener(window.document.body, el.resizeListener);
   },
   unbind(el) {
     removeResizeListener(window.document.body, el.resizeListener);
@@ -5133,6 +5142,10 @@ function isArray(val) {
 function isUndefined(val) {
   return val === undefined;
 }
+function isDate(date) {
+  return Object.prototype.toString.call(date) === '[object Date]';
+  // return date instanceof Date && !isNaN(date.valueOf())
+}
 // CONCATENATED MODULE: ./src/components/utils/opera.ts
 function omit(obj, fields) {
   const shallowCopy = Object.assign({}, obj);
@@ -5253,6 +5266,10 @@ function digitUppercase(n) {
 }
 // EXTERNAL MODULE: external "element-ui"
 var external_element_ui_ = __webpack_require__("5f72");
+
+// EXTERNAL MODULE: ./node_modules/.pnpm/registry.npmmirror.com+v-click-outside@3.2.0/node_modules/v-click-outside/dist/v-click-outside.umd.js
+var v_click_outside_umd = __webpack_require__("aa1a");
+var v_click_outside_umd_default = /*#__PURE__*/__webpack_require__.n(v_click_outside_umd);
 
 // EXTERNAL MODULE: ./src/components/components/EditeableCell/index.scss
 var EditeableCell = __webpack_require__("7f86");
@@ -6768,7 +6785,31 @@ const ElFormTypes = {
   Upload: upload
 };
 /* harmony default export */ var components_ElFormTypes = (ElFormTypes);
+// CONCATENATED MODULE: ./src/components/components/EditeableCell/val.ts
+
+// 日期类型转成字符串显示
+const renderDate = function (value, config, row, column) {
+  if (isDate(value)) return value.toString();
+  return value;
+};
+// 处理select类型 options里取出label
+const renderSelect = function (value, config, row, column) {
+  const {
+    options = []
+  } = config;
+  const target = options.find(o => o.value === value);
+  if (target) {
+    return target.label || '';
+  }
+  return '';
+};
+const renderFn = {
+  DatePicker: renderDate,
+  Select: renderSelect
+};
+/* harmony default export */ var EditeableCell_val = (renderFn);
 // CONCATENATED MODULE: ./src/components/components/EditeableCell/index.tsx
+
 
 
 
@@ -6820,18 +6861,22 @@ let EditeableCell_editableCell = class editableCell extends external_vue_default
       } = on;
       input && input(this.fieldValue);
     };
-    const onFieldBlur = e => {
+    const onClickCellOutside = e => {
       this.editing = false;
-      const {
-        blur
-      } = on;
-      blur && blur(e);
+    };
+    const renderFieldValue = val => {
+      const render = EditeableCell_val[editComponent];
+      return render ? render(val, this.editFormConfig, this.row, this.column) : val;
     };
     return h("div", {
       "class": "edit-cell edit-enabled-cell",
       "on": {
         "click": onFieldClick
-      }
+      },
+      "directives": [{
+        name: "click-outside",
+        value: onClickCellOutside
+      }]
     }, [!this.editing && !this.editMode && h("el-tooltip", {
       "props": {
         ...{
@@ -6844,7 +6889,7 @@ let EditeableCell_editableCell = class editableCell extends external_vue_default
       "class": "cell-content"
     }, [
     // @ts-ignore
-    this.fieldValue])]), (this.editing || this.editMode) && h(EditComponent, helper_default()([{
+    renderFieldValue(this.fieldValue)])]), (this.editing || this.editMode) && h(EditComponent, helper_default()([{
       "ref": "input"
     }, {
       attrs: {
@@ -6856,9 +6901,10 @@ let EditeableCell_editableCell = class editableCell extends external_vue_default
       },
       on: {
         ...on,
-        input: onFieldInput,
-        blur: onFieldBlur
+        input: onFieldInput
+        // blur: onFieldBlur
       },
+
       scopedSlots
     }]))]);
   }
@@ -6887,12 +6933,16 @@ __decorate([Prop({
   default: () => {}
 })], EditeableCell_editableCell.prototype, "editFormConfig", void 0);
 __decorate([Prop({
-  type: String,
-  default: 'Input'
-})], EditeableCell_editableCell.prototype, "editableComponent", void 0);
+  type: Object,
+  default: () => {}
+})], EditeableCell_editableCell.prototype, "row", void 0);
+__decorate([Prop({
+  type: Object,
+  default: () => {}
+})], EditeableCell_editableCell.prototype, "column", void 0);
 EditeableCell_editableCell = __decorate([vue_class_component_esm({
-  components: {
-    ElInput: external_element_ui_["Input"]
+  directives: {
+    clickOutside: v_click_outside_umd_default.a.directive
   }
 })], EditeableCell_editableCell);
 /* harmony default export */ var components_EditeableCell = (EditeableCell_editableCell);
@@ -7224,7 +7274,9 @@ let el_table_ts_ElTableTs = class ElTableTs extends external_vue_default.a {
               ...{
                 value: cellContent,
                 editMode: colEditable && rowEditable && colEditMode && rowEditMode,
-                editFormConfig
+                editFormConfig,
+                row,
+                column
               }
             },
             "on": {

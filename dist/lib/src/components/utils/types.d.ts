@@ -4,3 +4,4 @@ export declare function isString(obj: any): boolean;
 export declare function isFunction(obj: any): boolean;
 export declare function isArray(val: any): boolean;
 export declare function isUndefined(val: any): boolean;
+export declare function isDate(date: any): boolean;
