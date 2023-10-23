@@ -57,9 +57,14 @@ export default class editableCell extends Vue {
 
   private fieldValue: any
 
-  created() {
+  @Watch('value', { immediate: true, deep: true })
+  valueChange() {
     this.fieldValue = this.value
   }
+
+  // created() {
+  //   this.fieldValue = this.value
+  // }
 
   // handleKeyDown(event: KeyboardEvent) {
   //   console.log('User pressed: ', event.key);
