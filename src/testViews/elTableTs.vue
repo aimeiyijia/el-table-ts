@@ -1,7 +1,9 @@
 <template>
   <div class="elTable-container" id="elTableContainer">
+    <el-button type="danger" @click="handleDelete">删除</el-button>
     <!-- container="#elTableContainer" -->
     <el-table-ts
+      ref="elTableTs"
       :data="list"
       :columns="columns"
       stripe
@@ -47,6 +49,7 @@
 
 <script>
 import { MockData } from 'mock'
+import { deepClone } from '../components/utils/opera.ts'
 
 console.log(MockData.data, '数据')
 export default {
@@ -66,10 +69,10 @@ export default {
       columns: [
         {
           align: 'center',
-          type: 'selection',
-          selectable: () => {
-            return false
-          }
+          type: 'selection'
+          // selectable: () => {
+          //   return false
+          // }
         },
         {
           label: '1',
@@ -143,7 +146,7 @@ export default {
         {
           label: '存款',
           prop: 'money',
-          money: true,
+          money: true
         },
         {
           label: '是否结婚',
@@ -223,7 +226,19 @@ export default {
       console.log(instance, '表格实例')
     },
     handleSelect(selection, row) {
-      console.log(selection, row)
+      console.log(selection, 'selection')
+      console.log(row, 'row')
+    },
+    handleDelete() {
+      const list1 = deepClone(this.list)
+      const selection = this.$refs.elTableTs.tableInstance.selection
+      selection.forEach(o => {
+        const index = this.list.findIndex(m => m.id === o.id)
+        if (index > -1) {
+          list1.splice(index, 1)
+        }
+      })
+      this.list = list1
     },
     handleDetail({ row }) {
       console.log(row, `详情操作`)

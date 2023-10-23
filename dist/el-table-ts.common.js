@@ -6815,9 +6815,12 @@ let EditeableCell_editableCell = class editableCell extends external_vue_default
     super(...arguments);
     _defineProperty(this, "editing", false);
   }
-  created() {
+  valueChange() {
     this.fieldValue = this.value;
   }
+  // created() {
+  //   this.fieldValue = this.value
+  // }
   // handleKeyDown(event: KeyboardEvent) {
   //   console.log('User pressed: ', event.key);
   //   if (event.key === 'Enter') {
@@ -6931,6 +6934,10 @@ __decorate([Prop({
   type: Object,
   default: () => {}
 })], EditeableCell_editableCell.prototype, "column", void 0);
+__decorate([Watch('value', {
+  immediate: true,
+  deep: true
+})], EditeableCell_editableCell.prototype, "valueChange", null);
 EditeableCell_editableCell = __decorate([vue_class_component_esm({
   directives: {
     clickOutside: v_click_outside_umd_default.a.directive

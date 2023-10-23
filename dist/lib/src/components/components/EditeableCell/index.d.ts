@@ -22,6 +22,6 @@ export default class editableCell extends Vue {
     readonly column: TableColumn;
     private editing;
     private fieldValue;
-    created(): void;
+    valueChange(): void;
     render(h: CreateElement): JSX.Element;
 }
