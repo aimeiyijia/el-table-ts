@@ -66,7 +66,10 @@ const calcTableHeight = (element: HTMLElement, params: IParams) => {
   return height
 }
 
-let oldHeight = 0
+const doLayout = debounce(function($table, height) {
+  $table.layout && $table.layout.setHeight && $table.layout.setHeight(height)
+  $table.doLayout && $table.doLayout()
+}, 100)
 const doTableResize = (
   el: HTMLElement,
   binding: DirectiveBinding,
@@ -86,13 +89,8 @@ const doTableResize = (
 
     if (!$table) return
     const height = calcTableHeight(el, value)
-    if (height === oldHeight) return
-    oldHeight = height
     $table.$nextTick(() => {
-      $table.layout &&
-        $table.layout.setHeight &&
-        $table.layout.setHeight(height)
-      $table.doLayout && $table.doLayout()
+      doLayout($table, height)
     })
   } catch (error) {
     // console.log(error, '页面布局计算出错')
