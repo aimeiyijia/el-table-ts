@@ -65,11 +65,6 @@ const calcTableHeight = (element: HTMLElement, params: IParams) => {
 
   return height
 }
-
-const doLayout = debounce(function($table, height) {
-  $table.layout && $table.layout.setHeight && $table.layout.setHeight(height)
-  $table.doLayout && $table.doLayout()
-}, 100)
 const doTableResize = (
   el: HTMLElement,
   binding: DirectiveBinding,
@@ -90,7 +85,10 @@ const doTableResize = (
     if (!$table) return
     const height = calcTableHeight(el, value)
     $table.$nextTick(() => {
-      doLayout($table, height)
+      $table.layout &&
+        $table.layout.setHeight &&
+        $table.layout.setHeight(height)
+      $table.doLayout && $table.doLayout()
     })
   } catch (error) {
     // console.log(error, '页面布局计算出错')
@@ -98,9 +96,12 @@ const doTableResize = (
 }
 
 const directive: DirectiveOptions = {
-  update(el: any, binding, vnode) {
-    el.resizeListener = debounce(() => doTableResize(el, binding, vnode), 16)
-    window.removeEventListener('resize', el.resizeListener)
+  bind(el: any, binding, vnode: any) {
+    doTableResize(el, binding, vnode)
+  },
+  update(el: any, binding, vnode: any) {
+    el.resizeListener && window.removeEventListener('resize', el.resizeListener)
+    el.resizeListener = debounce(() => doTableResize(el, binding, vnode), 100)
     window.addEventListener('resize', el.resizeListener)
     doTableResize(el, binding, vnode)
   },
