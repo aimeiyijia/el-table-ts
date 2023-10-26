@@ -18,6 +18,10 @@ import renderFn from './val'
 export type EditFormConfig = {
   value?: any
   editComponent?: string
+  type?: string
+  rangeSeparator?: string
+  valueSeparator?: string
+  customValue?: Function
   options?: { value: number | string, label: number | string }[]
   on?: any
   scopedSlots?: object

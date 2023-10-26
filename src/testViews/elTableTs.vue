@@ -132,6 +132,7 @@ export default {
         {
           label: '出生日期',
           prop: 'birth',
+          width: '240px',
           // 初始状态下是否直接进入编辑，默认为false，需要在editable: true时点击单元格进入编辑
           // 行与列设置平等
           editMode: true,
@@ -139,7 +140,9 @@ export default {
           editFormConfig: {
             editComponent: 'DatePicker',
             // 必须指定，表格值无法直接渲染date类型
-            // valueFormat: 'yyyy-MM-dd',
+            valueFormat: 'yyyy-MM-dd',
+            valueSeparator: '  123  ',
+            type: 'daterange',
             on: {}
           }
         },
@@ -156,7 +159,7 @@ export default {
           editMode: true,
           editable: true,
           editFormConfig: {
-            editComponent: 'Select',
+            editComponent: 'Radio',
             options: [
               { value: 0, label: '否' },
               { value: 1, label: '是' }
