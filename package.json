@@ -12,6 +12,7 @@
     "build": "vue-cli-service build --target lib --name el-table-ts ./src/components/index.ts"
   },
   "dependencies": {
+    "@babel/preset-env": "^7.23.2",
     "await-to-js": "^3.0.0",
     "normalize.css": "^8.0.1",
     "ts-debounce": "^3.0.0",
